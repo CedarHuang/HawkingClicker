@@ -4,6 +4,7 @@ from tkinter import ttk
 import config
 import edit_page
 import list_view
+import menu
 from __version__ import __version__
 
 root = None
@@ -12,6 +13,8 @@ def init():
     global root
     root = tk.Tk()
     root.title(f'HawkingClicker {__version__}')
+
+    menu.init(root)
 
     button_frame = ttk.Frame(root)
     button_frame.pack(side='top', fill='x')
