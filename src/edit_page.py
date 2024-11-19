@@ -35,21 +35,21 @@ class EditPage:
         range_entry.pack(side='left', fill='x', expand=True)
         self.range_entry = range_entry
 
-        # Location
-        location_frame = ttk.Frame(root)
-        location_frame.pack(side='top', fill='x')
-        location_label1 = ttk.Label(location_frame, text='位置: (')
-        location_label1.pack(side='left')
-        location_entry_x = ttk.Entry(location_frame)
-        location_entry_x.pack(side='left', fill='x', expand=True)
-        location_label2 = ttk.Label(location_frame, text=', ')
-        location_label2.pack(side='left')
-        location_entry_y = ttk.Entry(location_frame)
-        location_entry_y.pack(side='left', fill='x', expand=True)
-        location_label3 = ttk.Label(location_frame, text=')')
-        location_label3.pack(side='left')
-        self.location_entry_x = location_entry_x
-        self.location_entry_y = location_entry_y
+        # Position
+        position_frame = ttk.Frame(root)
+        position_frame.pack(side='top', fill='x')
+        position_label1 = ttk.Label(position_frame, text='位置: (')
+        position_label1.pack(side='left')
+        position_entry_x = ttk.Entry(position_frame)
+        position_entry_x.pack(side='left', fill='x', expand=True)
+        position_label2 = ttk.Label(position_frame, text=', ')
+        position_label2.pack(side='left')
+        position_entry_y = ttk.Entry(position_frame)
+        position_entry_y.pack(side='left', fill='x', expand=True)
+        position_label3 = ttk.Label(position_frame, text=')')
+        position_label3.pack(side='left')
+        self.position_entry_x = position_entry_x
+        self.position_entry_y = position_entry_y
 
         # Type
         type_frame = ttk.Frame(root)
@@ -130,8 +130,8 @@ class EditPage:
         if self.item is None:
             self.item = item.Item()
             self.range_entry.insert(0, 'GLOBAL')
-            self.location_entry_x.insert(0, -1)
-            self.location_entry_y.insert(0, -1)
+            self.position_entry_x.insert(0, -1)
+            self.position_entry_y.insert(0, -1)
             self.type_combobox.current(0)
             self.button_combobox.current(0)
             self.hotkey_button.config(text='')
@@ -140,8 +140,8 @@ class EditPage:
             self.status_combobox.current(0)
         else:
             self.range_entry.insert(0, self.item.range)
-            self.location_entry_x.insert(0, self.item.location[0])
-            self.location_entry_y.insert(0, self.item.location[1])
+            self.position_entry_x.insert(0, self.item.position[0])
+            self.position_entry_y.insert(0, self.item.position[1])
             self.type_combobox.set(self.item.type)
             self.button_combobox.set(self.item.button)
             self.hotkey_button.config(text=self.item.hotkey)
@@ -201,7 +201,7 @@ class EditPage:
             if temp.range == '':
                 raise Exception('Range is empty')
 
-            temp.location = (int(self.location_entry_x.get()), int(self.location_entry_y.get()))
+            temp.position = (int(self.position_entry_x.get()), int(self.position_entry_y.get()))
 
             temp.type = self.type_combobox.get()
 

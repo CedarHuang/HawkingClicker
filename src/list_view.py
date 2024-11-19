@@ -7,11 +7,11 @@ tree = None
 
 def init(master):
     global tree
-    tree = ttk.Treeview(master, columns=('Range', 'Location', 'Type', 'Button', 'Hotkey', 'Interval', 'Clicks', 'Status'), show='headings')
+    tree = ttk.Treeview(master, columns=('Range', 'Position', 'Type', 'Button', 'Hotkey', 'Interval', 'Clicks', 'Status'), show='headings')
     tree.pack(side='left')
 
     tree.heading('Range', text='范围')
-    tree.heading('Location', text='位置')
+    tree.heading('Position', text='位置')
     tree.heading('Type', text='类型')
     tree.heading('Button', text='按键')
     tree.heading('Hotkey', text='热键')

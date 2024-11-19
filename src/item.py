@@ -1,7 +1,7 @@
 class Item:
     def __init__(self):
         self.range = None
-        self.location = None
+        self.position = None
         self.type = None
         self.button = None
         self.hotkey = None

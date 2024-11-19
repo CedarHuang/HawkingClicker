@@ -92,7 +92,7 @@ def check_range(item):
 
     if item.range == 'CHECK_WINDOW':
         title = win32gui.GetWindowText(hwnd)
-        item.location = (process_name, title)
+        item.position = (process_name, title)
         list_view.refresh()
 
     if process_name == item.range:
@@ -101,7 +101,7 @@ def check_range(item):
     return False
 
 def get_position(item):
-    x, y = item.location
+    x, y = item.position
     if x >= 0 and y >= 0:
         return x, y
     nx, ny = pyautogui.position()
