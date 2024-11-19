@@ -1,3 +1,4 @@
+import os
 import tkinter as tk
 from tkinter import ttk
 
@@ -18,6 +19,8 @@ def init():
 
     button_frame = ttk.Frame(root)
     button_frame.pack(side='top', fill='x')
+    config_dir = ttk.Button(button_frame, text='⚙', command=on_config_dir_click)
+    config_dir.pack(side='left')
     create = ttk.Button(button_frame, text='+', command=on_create_click)
     create.pack(side='left', fill='x', expand=True)
     delete = ttk.Button(button_frame, text='-', command=on_delete_click)
@@ -26,6 +29,9 @@ def init():
     tree_frame = ttk.Frame(root)
     tree_frame.pack(side='top')
     list_view.init(tree_frame)
+
+def on_config_dir_click():
+    os.startfile(config.config_dir)
 
 def on_create_click():
     edit_page.EditPage(root, -1).show(list_view.refresh)
