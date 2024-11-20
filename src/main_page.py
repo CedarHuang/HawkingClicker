@@ -13,7 +13,7 @@ root = None
 def init():
     global root
     root = tk.Tk()
-    root.title(f'HawkingClicker {__version__}')
+    root.title(f'HawkingClicker v{__version__}')
 
     menu.init(root)
 
