@@ -215,7 +215,7 @@ class EditPage:
             temp.button = self.button_combobox.get()
 
             temp.hotkey = self.hotkey_button.cget('text')
-            if temp.hotkey == '':
+            if temp.hotkey == '' or temp.hotkey == '...':
                 raise Exception(f'{i18n.t('Hotkey')} {i18n.t('IsEmpty')}')
 
             if temp.type == 'Multi':
