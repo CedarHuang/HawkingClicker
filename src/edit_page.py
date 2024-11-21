@@ -5,6 +5,7 @@ import keyboard
 import config
 import event_listen
 import item
+import i18n
 
 class EditPage:
     def __init__(self, master, index):
@@ -29,7 +30,7 @@ class EditPage:
         # Range
         range_frame = ttk.Frame(root)
         range_frame.pack(side='top', fill='x')
-        range_label = ttk.Label(range_frame, text='范围: ')
+        range_label = ttk.Label(range_frame, text=f'{i18n.t('Range')}: ')
         range_label.pack(side='left')
         range_entry = ttk.Entry(range_frame)
         range_entry.pack(side='left', fill='x', expand=True)
@@ -38,7 +39,8 @@ class EditPage:
         # Position
         position_frame = ttk.Frame(root)
         position_frame.pack(side='top', fill='x')
-        position_label1 = ttk.Label(position_frame, text='位置: (')
+        position_label1 = ttk.Label(position_frame, text=f'{i18n.t('Position')}: (')
+
         position_label1.pack(side='left')
         position_entry_x = ttk.Entry(position_frame)
         position_entry_x.pack(side='left', fill='x', expand=True)
@@ -54,7 +56,8 @@ class EditPage:
         # Type
         type_frame = ttk.Frame(root)
         type_frame.pack(side='top', fill='x')
-        type_label = ttk.Label(type_frame, text='类型: ')
+        type_label = ttk.Label(type_frame, text=f'{i18n.t('Type')}: ')
+
         type_label.pack(side='left')
         type_combobox = ttk.Combobox(type_frame, state='readonly')
         type_combobox['values'] = ('Click', 'Press', 'Multi')
@@ -65,7 +68,8 @@ class EditPage:
         # Button
         button_frame = ttk.Frame(root)
         button_frame.pack(side='top', fill='x')
-        button_label = ttk.Label(button_frame, text='按键: ')
+        button_label = ttk.Label(button_frame, text=f'{i18n.t('Button')}: ')
+
         button_label.pack(side='left')
         button_combobox = ttk.Combobox(button_frame, state='readonly')
         button_combobox['values'] = ('Left', 'Right')
@@ -75,7 +79,8 @@ class EditPage:
         # Hotkey
         hotkey_frame = ttk.Frame(root)
         hotkey_frame.pack(side='top', fill='x')
-        hotkey_label = ttk.Label(hotkey_frame, text='热键: ')
+        hotkey_label = ttk.Label(hotkey_frame, text=f'{i18n.t('Hotkey')}: ')
+
         hotkey_label.pack(side='left')
         hotkey_button = ttk.Button(hotkey_frame, command=self.on_hotkey_click)
         hotkey_button.pack(side='left', fill='x', expand=True)
@@ -85,7 +90,7 @@ class EditPage:
         interval_pin = ttk.Frame(root)
         interval_pin.pack(side='top', fill='x')
         interval_frame = ttk.Frame(interval_pin)
-        interval_label1 = ttk.Label(interval_frame, text='频率: ')
+        interval_label1 = ttk.Label(interval_frame, text=f'{i18n.t('Interval')}: ')
         interval_label1.pack(side='left')
         interval_entry = ttk.Entry(interval_frame)
         interval_entry.pack(side='left', fill='x', expand=True)
@@ -98,7 +103,8 @@ class EditPage:
         clicks_pin = ttk.Frame(root)
         clicks_pin.pack(side='top', fill='x')
         clicks_frame = ttk.Frame(clicks_pin)
-        clicks_label = ttk.Label(clicks_frame, text='次数: ')
+        clicks_label = ttk.Label(clicks_frame, text=f'{i18n.t('Clicks')}: ')
+
         clicks_label.pack(side='left')
         clicks_entry = ttk.Entry(clicks_frame)
         clicks_entry.pack(side='left', fill='x', expand=True)
@@ -108,7 +114,8 @@ class EditPage:
         # Status
         status_frame = ttk.Frame(root)
         status_frame.pack(side='top', fill='x')
-        status_label = ttk.Label(status_frame, text='状态: ')
+        status_label = ttk.Label(status_frame, text=f'{i18n.t('Status')}: ')
+
         status_label.pack(side='left')
         status_combobox = ttk.Combobox(status_frame, state='readonly')
         status_combobox['values'] = ('Enable', 'Disable')
@@ -116,7 +123,7 @@ class EditPage:
         self.status_combobox = status_combobox
 
         # Save
-        save = ttk.Button(root, text='保存', command=self.on_save_click)
+        save = ttk.Button(root, text=i18n.t('Save'), command=self.on_save_click)
         save.pack(fill='x', expand=True)
         save_check_label = ttk.Label(root, text='')
         self.save_check_label = save_check_label
@@ -199,7 +206,7 @@ class EditPage:
 
             temp.range = self.range_entry.get()
             if temp.range == '':
-                raise Exception('Range is empty')
+                raise Exception(f'{i18n.t('Range')} {i18n.t('IsEmpty')}')
 
             temp.position = (int(self.position_entry_x.get()), int(self.position_entry_y.get()))
 
@@ -209,7 +216,7 @@ class EditPage:
 
             temp.hotkey = self.hotkey_button.cget('text')
             if temp.hotkey == '':
-                raise Exception('Hotkey is empty')
+                raise Exception(f'{i18n.t('Hotkey')} {i18n.t('IsEmpty')}')
 
             if temp.type == 'Multi':
                 temp.interval = int(self.interval_entry.get())
