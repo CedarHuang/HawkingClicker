@@ -27,7 +27,7 @@ jobs:
 
     - name: Build with PyInstaller
       run: |
-        pyinstaller -w --name=HawkingClicker ./src/main.py
+        pyinstaller -w --name=HawkingClicker --icon=assets/icon.ico --add-data 'assets:assets' src/main.py
 
     - name: Compress build artifacts
       run: |

@@ -6,6 +6,7 @@ import config
 import event_listen
 import item
 import i18n
+import utils
 
 class EditPage:
     def __init__(self, master, index):
@@ -25,6 +26,7 @@ class EditPage:
         self.root = root
 
         root.title('')
+        root.iconbitmap(utils.assets_path('icon.ico'))
         root.grab_set()
 
         # Range

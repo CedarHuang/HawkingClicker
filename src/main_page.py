@@ -6,6 +6,7 @@ import config
 import edit_page
 import list_view
 import menu
+import utils
 from __version__ import __version__
 
 root = None
@@ -14,6 +15,7 @@ def init():
     global root
     root = tk.Tk()
     root.title(f'HawkingClicker v{__version__}')
+    root.iconbitmap(utils.assets_path('icon.ico'))
 
     menu.init(root)
 
