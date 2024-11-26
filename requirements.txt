@@ -2,4 +2,5 @@ appdirs==1.4.4
 keyboard==0.13.5
 psutil==6.1.0
 pyautogui==0.9.54
+pystray==0.19.5
 pywin32==308

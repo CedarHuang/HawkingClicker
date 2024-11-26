@@ -6,6 +6,7 @@ import config
 import edit_page
 import list_view
 import menu
+import tray
 import utils
 from __version__ import __version__
 
@@ -32,6 +33,8 @@ def init():
     tree_frame.pack(side='top')
     list_view.init(tree_frame)
 
+    root.protocol('WM_DELETE_WINDOW', on_close)
+
 def on_config_dir_click():
     os.startfile(config.config_dir)
 
@@ -46,3 +49,10 @@ def on_delete_click():
     config.items.pop(selected_index)
     config.save()
     list_view.refresh()
+
+def on_close():
+    if tray.icon.visible:
+        root.withdraw()
+    else:
+        tray.stop()
+        root.destroy()

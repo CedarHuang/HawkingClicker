@@ -1,6 +1,9 @@
 en = {
     'HawkingClicker': 'HawkingClicker',
 
+    'Open': 'Open',
+    'Exit': 'Exit',
+
     'Help': 'Help',
     'About': 'About',
 

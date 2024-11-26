@@ -1,6 +1,9 @@
 zh_CN = {
     'HawkingClicker': '霍金点击器',
 
+    'Open': '打开',
+    'Exit': '退出',
+
     'Help': '帮助',
     'About': '关于',
 
