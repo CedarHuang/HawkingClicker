@@ -9,52 +9,52 @@ import config
 import list_view
 
 def start():
-    for item in config.items:
-        if item.status != 'Enable':
+    for event in config.events:
+        if event.status != 'Enable':
             continue
-        if item.hotkey == None or item.hotkey == '':
+        if event.hotkey == None or event.hotkey == '':
             continue
-        keyboard.add_hotkey(item.hotkey, callback_factory(item))
+        keyboard.add_hotkey(event.hotkey, callback_factory(event))
 
 def stop():
     keyboard.unhook_all()
 
-def callback_factory(item):
-    match item.type:
+def callback_factory(event):
+    match event.type:
         case 'Click':
-            return click_factory(item)
+            return click_factory(event)
         case 'Press':
-            return press_factory(item)
+            return press_factory(event)
         case 'Multi':
-            return multi_factory(item)
+            return multi_factory(event)
         case _:
             return lambda: None
 
-def click_factory(item):
+def click_factory(event):
     def callback():
-        if not check_range(item):
+        if not check_range(event):
             return
-        x, y = get_position(item)
-        pyautogui.click(x, y, button=item.button)
+        x, y = get_position(event)
+        pyautogui.click(x, y, button=event.button)
 
     return callback
 
-def press_factory(item):
+def press_factory(event):
     mouse_down = False
     def callback():
         nonlocal mouse_down
-        if not check_range(item):
+        if not check_range(event):
             return
         if not mouse_down:
-            pyautogui.mouseDown(button=item.button)
+            pyautogui.mouseDown(button=event.button)
             mouse_down = True
         else:
-            pyautogui.mouseUp(button=item.button)
+            pyautogui.mouseUp(button=event.button)
             mouse_down = False
 
     return callback
 
-def multi_factory(item):
+def multi_factory(event):
     ing = False
     stop = threading.Event()
     def callback():
@@ -64,14 +64,14 @@ def multi_factory(item):
             return
 
         ing = True
-        if not check_range(item):
+        if not check_range(event):
             return
-        x, y = get_position(item)
-        interval = item.interval / 1000
-        clicks = item.clicks if item.clicks >= 0 else sys.maxsize
+        x, y = get_position(event)
+        interval = event.interval / 1000
+        clicks = event.clicks if event.clicks >= 0 else sys.maxsize
         count = 0
         while not stop.is_set():
-            pyautogui.click(x, y, button=item.button)
+            pyautogui.click(x, y, button=event.button)
             count += 1
             if count >= clicks:
                 break
@@ -81,8 +81,8 @@ def multi_factory(item):
 
     return lambda: threading.Thread(target=callback).start()
 
-def check_range(item):
-    if item.range == 'GLOBAL':
+def check_range(event):
+    if event.range == 'GLOBAL':
         return True
 
     hwnd = win32gui.GetForegroundWindow()
@@ -90,18 +90,18 @@ def check_range(item):
     process = psutil.Process(pid)
     process_name = process.name()
 
-    if item.range == 'CHECK_WINDOW':
+    if event.range == 'CHECK_WINDOW':
         title = win32gui.GetWindowText(hwnd)
-        item.position = (process_name, title)
+        event.position = (process_name, title)
         list_view.refresh()
 
-    if process_name == item.range:
+    if process_name == event.range:
         return True
 
     return False
 
-def get_position(item):
-    x, y = item.position
+def get_position(event):
+    x, y = event.position
     if x >= 0 and y >= 0:
         return x, y
     nx, ny = pyautogui.position()

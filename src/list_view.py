@@ -29,8 +29,8 @@ def init(master):
 def refresh():
     for item in tree.get_children():
         tree.delete(item)
-    for item in config.items:
-        tree.insert('', 'end', values=item.to_tuple())
+    for event in config.events:
+        tree.insert('', 'end', values=event.to_tuple())
 
 def select_row_by_index(index):
     row_ids = tree.get_children()
@@ -43,7 +43,7 @@ def on_up_click():
         return
     selected_index = tree.index(selected_item)
     if selected_index > 0:
-        config.swap(selected_index, selected_index - 1)
+        config.events.swap(selected_index, selected_index - 1)
         refresh()
         select_row_by_index(selected_index - 1)
 
@@ -52,8 +52,8 @@ def on_down_click():
     if selected_item == ():
         return
     selected_index = tree.index(selected_item)
-    if selected_index < len(config.items) - 1:
-        config.swap(selected_index, selected_index + 1)
+    if selected_index < len(config.events) - 1:
+        config.events.swap(selected_index, selected_index + 1)
         refresh()
         select_row_by_index(selected_index + 1)
 

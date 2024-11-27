@@ -44,10 +44,9 @@ def on_create_click():
 def on_delete_click():
     selected_item = list_view.tree.selection()
     selected_index = list_view.tree.index(selected_item)
-    if selected_index >= len(config.items):
+    if selected_index >= len(config.events):
         return
-    config.items.pop(selected_index)
-    config.save()
+    config.events.pop(selected_index)
     list_view.refresh()
 
 def on_close():

@@ -4,7 +4,6 @@ import keyboard
 
 import config
 import event_listen
-import item
 import i18n
 import utils
 
@@ -14,10 +13,10 @@ class EditPage:
         self.index = index
         self.record = False
 
-        if index >= 0 and index < len(config.items):
-            self.item = config.items[self.index]
+        if index >= 0 and index < len(config.events):
+            self.event = config.events[self.index]
         else:
-            self.item = None
+            self.event = None
 
     def show(self, on_hide):
         self.on_hide = on_hide
@@ -136,8 +135,7 @@ class EditPage:
         self.on_type_combobox_select(None)
 
     def fill_data(self):
-        if self.item is None:
-            self.item = item.Item()
+        if self.event is None:
             self.range_entry.insert(0, 'GLOBAL')
             self.position_entry_x.insert(0, -1)
             self.position_entry_y.insert(0, -1)
@@ -148,15 +146,15 @@ class EditPage:
             self.clicks_entry.insert(0, -1)
             self.status_combobox.current(0)
         else:
-            self.range_entry.insert(0, self.item.range)
-            self.position_entry_x.insert(0, self.item.position[0])
-            self.position_entry_y.insert(0, self.item.position[1])
-            self.type_combobox.set(self.item.type)
-            self.button_combobox.set(self.item.button)
-            self.hotkey_button.config(text=self.item.hotkey)
-            self.interval_entry.insert(0, self.item.interval if self.item.interval != -1 else 200)
-            self.clicks_entry.insert(0, self.item.clicks)
-            self.status_combobox.set(self.item.status)
+            self.range_entry.insert(0, self.event.range)
+            self.position_entry_x.insert(0, self.event.position[0])
+            self.position_entry_y.insert(0, self.event.position[1])
+            self.type_combobox.set(self.event.type)
+            self.button_combobox.set(self.event.button)
+            self.hotkey_button.config(text=self.event.hotkey)
+            self.interval_entry.insert(0, self.event.interval if self.event.interval != -1 else 200)
+            self.clicks_entry.insert(0, self.event.clicks)
+            self.status_combobox.set(self.event.status)
 
     def hide(self):
         self.root.grab_release()
@@ -204,7 +202,7 @@ class EditPage:
 
     def on_save_click(self):
         def value_check():
-            temp = item.Item()
+            temp = config.Event()
 
             temp.range = self.range_entry.get()
             if temp.range == '':
@@ -233,14 +231,11 @@ class EditPage:
 
         try:
             temp = value_check()
-            self.item.__dict__ = temp.__dict__
         except Exception as e:
             self.save_check_label.config(text=f'{e}')
             self.save_check_label.pack()
             return
 
-        if self.index == -1:
-            config.items.append(self.item)
-        config.save()
+        config.events.update(self.index, temp)
+
         self.hide()
-        pass
