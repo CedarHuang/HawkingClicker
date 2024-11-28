@@ -7,6 +7,7 @@ zh_CN = {
     'Tools': '工具',
     'Settings': '设置',
     'EnableTray': '启用托盘',
+    'Startup': '开机启动',
 
     'Help': '帮助',
     'About': '关于',

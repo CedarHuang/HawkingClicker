@@ -4,6 +4,7 @@ import os
 
 import event_listen
 import tray
+import utils
 
 app_name = 'HawkingClicker'
 app_author = 'CedarHuang'
@@ -80,7 +81,8 @@ events = Events()
 
 class Settings:
     def __init__(self):
-        self.enable_tray = None
+        self.enable_tray = False
+        self.startup = False
         try:
             with open(settings_config_path, 'r') as file:
                 self.__dict__.update(json.load(file))
@@ -91,6 +93,7 @@ class Settings:
         with open(settings_config_path, 'w') as file:
             json.dump(self.__dict__, file, indent=4)
         tray.update_visible()
+        utils.update_startup(self.startup)
 
     def update(self, settings):
         self.__dict__ = settings.__dict__

@@ -7,6 +7,7 @@ en = {
     'Tools': 'Tools',
     'Settings': 'Settings',
     'EnableTray': 'Enable Tray',
+    'Startup': 'Launch on Startup',
 
     'Help': 'Help',
     'About': 'About',

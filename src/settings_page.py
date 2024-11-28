@@ -24,6 +24,11 @@ class SettingsPage:
         tray_check.pack(side='top', fill='x', expand=True)
         self.tray_check = tray_check
 
+        # Startup
+        startup_check = ttk.Checkbutton(root, text=i18n.t('Startup'))
+        startup_check.pack(side='top', fill='x', expand=True)
+        self.startup_check = startup_check
+
         # Save
         save = ttk.Button(root, text=i18n.t('Save'), command=self.on_save_click)
         save.pack(side='top', fill='x', expand=True)
@@ -34,6 +39,7 @@ class SettingsPage:
 
     def fill_data(self):
         self.tray_check.state(CEHCK_SELECTED if config.settings.enable_tray else CEHCK_UNSELECTED)
+        self.startup_check.state(CEHCK_SELECTED if config.settings.startup else CEHCK_UNSELECTED)
 
     def hide(self):
         self.root.destroy()
@@ -41,5 +47,6 @@ class SettingsPage:
     def on_save_click(self):
         temp = config.Settings()
         temp.enable_tray = self.tray_check.instate(CEHCK_SELECTED)
+        temp.startup  = self.startup_check.instate(CEHCK_SELECTED)
         config.settings.update(temp)
         self.hide()
