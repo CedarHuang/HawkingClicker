@@ -2,6 +2,7 @@ import pystray
 import threading
 from PIL import Image
 
+import config
 import i18n
 import main_page
 import utils
@@ -19,7 +20,10 @@ def start():
     )
     icon = pystray.Icon('HawkingClicker', image, f'HawkingClicker v{__version__}', menu)
 
-    threading.Thread(target=icon.run, daemon=True).start()
+    threading.Thread(target=icon.run, args=(update_visible,), daemon=True).start()
+
+def update_visible(_ = None):
+    icon.visible = config.settings.enable_tray
 
 def stop():
     icon.visible = False

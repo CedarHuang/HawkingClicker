@@ -3,14 +3,17 @@ import json
 import os
 
 import event_listen
+import tray
 
 app_name = 'HawkingClicker'
 app_author = 'CedarHuang'
 
 event_config_name = 'event.json'
+settings_config_name = 'settings.json'
 
 config_dir = appdirs.user_config_dir(app_name, app_author, roaming=True)
 event_config_path = os.path.join(config_dir, event_config_name)
+settings_config_path = os.path.join(config_dir, settings_config_name)
 
 if not os.path.exists(config_dir):
     try:
@@ -74,3 +77,23 @@ class Events(list):
         self.save()
 
 events = Events()
+
+class Settings:
+    def __init__(self):
+        self.enable_tray = None
+        try:
+            with open(settings_config_path, 'r') as file:
+                self.__dict__.update(json.load(file))
+        except:
+            pass
+
+    def save(self):
+        with open(settings_config_path, 'w') as file:
+            json.dump(self.__dict__, file, indent=4)
+        tray.update_visible()
+
+    def update(self, settings):
+        self.__dict__ = settings.__dict__
+        self.save()
+
+settings = Settings()

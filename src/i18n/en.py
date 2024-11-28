@@ -4,6 +4,10 @@ en = {
     'Open': 'Open',
     'Exit': 'Exit',
 
+    'Tools': 'Tools',
+    'Settings': 'Settings',
+    'EnableTray': 'Enable Tray',
+
     'Help': 'Help',
     'About': 'About',
 

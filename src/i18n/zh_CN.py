@@ -4,6 +4,10 @@ zh_CN = {
     'Open': '打开',
     'Exit': '退出',
 
+    'Tools': '工具',
+    'Settings': '设置',
+    'EnableTray': '启用托盘',
+
     'Help': '帮助',
     'About': '关于',
 
