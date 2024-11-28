@@ -42,9 +42,9 @@ def click_factory(event):
 def press_factory(event):
     mouse_down = False
     def callback():
-        nonlocal mouse_down
         if not check_range(event):
             return
+        nonlocal mouse_down
         if not mouse_down:
             pyautogui.mouseDown(button=event.button)
             mouse_down = True
@@ -58,14 +58,14 @@ def multi_factory(event):
     ing = False
     stop = threading.Event()
     def callback():
+        if not check_range(event):
+            return
         nonlocal ing, stop
         if ing:
             stop.set()
             return
 
         ing = True
-        if not check_range(event):
-            return
         x, y = get_position(event)
         interval = event.interval / 1000
         clicks = event.clicks if event.clicks >= 0 else sys.maxsize
