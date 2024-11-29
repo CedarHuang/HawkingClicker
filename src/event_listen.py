@@ -57,14 +57,8 @@ def press_factory(event):
 def multi_factory(event):
     ing = False
     stop = threading.Event()
-    def callback():
-        if not check_range(event):
-            return
+    def callback_impl():
         nonlocal ing, stop
-        if ing:
-            stop.set()
-            return
-
         ing = True
         x, y = get_position(event)
         interval = event.interval / 1000
@@ -79,7 +73,16 @@ def multi_factory(event):
         ing = False
         stop.clear()
 
-    return lambda: threading.Thread(target=callback).start()
+    def callback():
+        if not check_range(event):
+            return
+        nonlocal ing, stop
+        if ing:
+            stop.set()
+            return
+        threading.Thread(target=callback_impl).start()
+
+    return callback
 
 def check_range(event):
     if event.range == 'GLOBAL':
