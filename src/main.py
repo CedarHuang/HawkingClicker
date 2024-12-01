@@ -9,7 +9,7 @@ import tray
 if __name__ == '__main__':
 
     if not single_instance.check():
-        exit()
+        sys.exit()
 
     event_listen.start()
 
