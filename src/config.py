@@ -54,7 +54,10 @@ class Events(list):
 
     def save(self):
         with open(event_config_path, 'w') as file:
-            dicts = [i.to_dict() for i in self]
+            dicts = [
+                {k: v for k, v in event.to_dict().items() if not k.startswith('_')}
+                for event in self
+            ]
             json.dump(dicts, file, indent=4)
         event_listen.stop()
         event_listen.start()

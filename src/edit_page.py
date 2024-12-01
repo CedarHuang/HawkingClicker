@@ -136,7 +136,7 @@ class EditPage:
 
     def fill_data(self):
         if self.event is None:
-            self.range_entry.insert(0, 'GLOBAL')
+            self.range_entry.insert(0, '')
             self.position_entry_x.insert(0, -1)
             self.position_entry_y.insert(0, -1)
             self.type_combobox.current(0)

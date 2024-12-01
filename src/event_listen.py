@@ -1,3 +1,4 @@
+import fnmatch
 import keyboard
 import psutil
 import pyautogui
@@ -20,6 +21,7 @@ def stop():
     keyboard.unhook_all()
 
 def callback_factory(event):
+    parse_range(event)
     match event.type:
         case 'Click':
             return click_factory(event)
@@ -84,21 +86,33 @@ def multi_factory(event):
 
     return callback
 
+def parse_range(event):
+    _range = []
+    for i in event.range.split(':', 1):
+        i = i.strip()
+        if i == '':
+            i = '*'
+        _range.append(i)
+    _range.extend(['*'] * (2 - len(_range)))
+    event._range = _range
+
 def check_range(event):
-    if event.range == 'GLOBAL':
+    e_p_name, e_w_title = event._range
+    if e_p_name == '*' and e_w_title == '*':
         return True
 
     hwnd = win32gui.GetForegroundWindow()
     _, pid = win32process.GetWindowThreadProcessId(hwnd)
     process = psutil.Process(pid)
     process_name = process.name()
+    title = win32gui.GetWindowText(hwnd)
 
-    if event.range == 'CHECK_WINDOW':
-        title = win32gui.GetWindowText(hwnd)
+    if e_p_name == 'CHECK_WINDOW':
         event.position = (process_name, title)
         list_view.refresh()
+        return False
 
-    if process_name == event.range:
+    if fnmatch.fnmatchcase(process_name, e_p_name) and fnmatch.fnmatchcase(title, e_w_title):
         return True
 
     return False
