@@ -3,9 +3,13 @@ import sys
 import config
 import event_listen
 import main_page
+import single_instance
 import tray
 
 if __name__ == '__main__':
+
+    if not single_instance.check():
+        exit()
 
     event_listen.start()
 
