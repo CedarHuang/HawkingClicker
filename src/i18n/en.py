@@ -15,6 +15,8 @@ i18n = {
     'Help': 'Help',
     'EnableTray': 'Enable Tray',
     'Startup': 'Launch on Startup',
+    'StartupAsAdmin': 'As Admin',
+    'RunningAsAdminIsRequiredToSet': 'Running as admin is required to set',
     'Open': 'Open',
     'Exit': 'Exit',
 }

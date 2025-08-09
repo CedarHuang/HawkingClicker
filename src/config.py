@@ -86,21 +86,23 @@ class Settings:
     def __init__(self):
         self.enable_tray = False
         self.startup = False
+        self.startup_as_admin = False
         try:
             with open(settings_config_path, 'r') as file:
                 self.__dict__.update(json.load(file))
         except:
             pass
 
-    def save(self):
+    def save(self, update_startup = False):
         with open(settings_config_path, 'w') as file:
             json.dump(self.__dict__, file, indent=4)
         tray.update_visible()
-        # TODO: 以管理员身份开机启动
-        utils.update_startup(self.startup, False)
+        if update_startup:
+            utils.update_startup(self.startup, self.startup_as_admin)
 
     def update(self, settings):
+        update_startup = self.startup != settings.startup or self.startup_as_admin != settings.startup_as_admin
         self.__dict__ = settings.__dict__
-        self.save()
+        self.save(update_startup)
 
 settings = Settings()

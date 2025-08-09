@@ -15,6 +15,8 @@ i18n = {
     'Help': '帮助',
     'EnableTray': '启用托盘',
     'Startup': '开机启动',
+    'StartupAsAdmin': '以管理员身份',
+    'RunningAsAdminIsRequiredToSet': '必须以管理员身份运行时才能设置',
     'Open': '打开',
     'Exit': '退出',
 }

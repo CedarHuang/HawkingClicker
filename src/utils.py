@@ -15,12 +15,12 @@ def assets_path(asset_file_name):
 def exe_path():
     return os.path.abspath(sys.argv[0])
 
-def add_to_startup():
+def create_startup_to_winreg():
     key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, r'Software\Microsoft\Windows\CurrentVersion\Run', 0, winreg.KEY_SET_VALUE)
     winreg.SetValueEx(key, 'HawkingClicker', 0, winreg.REG_SZ, f'{exe_path()} silent')
     winreg.CloseKey(key)
 
-def remove_from_startup():
+def delete_startup_from_winreg():
     try:
         key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, r'Software\Microsoft\Windows\CurrentVersion\Run', 0, winreg.KEY_WRITE)
         winreg.DeleteValue(key, 'HawkingClicker')
@@ -28,7 +28,7 @@ def remove_from_startup():
     except:
         pass
 
-def create_scheduled_task():
+def create_startup_to_scheduled_task():
     scheduler = win32com.client.Dispatch('Schedule.Service')
     scheduler.Connect()
     root_folder = scheduler.GetFolder('\\')
@@ -54,7 +54,7 @@ def create_scheduled_task():
         'HawkingClicker', task, TASK_CREATE_OR_UPDATE, None, None, TASK_LOGON_INTERACTIVE_TOKEN
     )
 
-def delete_scheduled_task():
+def delete_startup_from_scheduled_task():
     scheduler = win32com.client.Dispatch('Schedule.Service')
     scheduler.Connect()
     root_folder = scheduler.GetFolder('\\')
@@ -63,18 +63,17 @@ def delete_scheduled_task():
     except:
         pass
 
-def is_admin():
+def is_running_as_admin():
     try:
         return ctypes.windll.shell32.IsUserAnAdmin()
     except:
         return False
 
-def update_startup(status, run_as_admin):
+def update_startup(status, startup_as_admin):
+    delete_startup_from_scheduled_task()
+    delete_startup_from_winreg()
     if status:
-        if is_admin() and run_as_admin:
-            create_scheduled_task()
+        if is_running_as_admin() and startup_as_admin:
+            create_startup_to_scheduled_task()
         else:
-            add_to_startup()
-    else:
-        delete_scheduled_task()
-        remove_from_startup()
+            create_startup_to_winreg()
