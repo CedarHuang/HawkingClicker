@@ -1,6 +1,8 @@
+import ctypes
 import os
 import sys
 import winreg
+import win32com.client
 
 def base_path():
     if hasattr(sys, '_MEIPASS'):
@@ -26,8 +28,53 @@ def remove_from_startup():
     except:
         pass
 
-def update_startup(status):
+def create_scheduled_task():
+    scheduler = win32com.client.Dispatch('Schedule.Service')
+    scheduler.Connect()
+    root_folder = scheduler.GetFolder('\\')
+
+    task = scheduler.NewTask(0)
+    task.RegistrationInfo.Description = 'HawkingClicker Startup'
+
+    TASK_RUNLEVEL_HIGHEST = 1
+    task.Principal.RunLevel = TASK_RUNLEVEL_HIGHEST
+
+    TASK_TRIGGER_LOGON = 9
+    trigger = task.Triggers.Create(TASK_TRIGGER_LOGON)
+    trigger.Enabled = True
+
+    TASK_ACTION_EXEC = 0
+    action = task.Actions.Create(TASK_ACTION_EXEC)
+    action.Path = exe_path()
+    action.Arguments = 'silent'
+
+    TASK_CREATE_OR_UPDATE = 6
+    TASK_LOGON_INTERACTIVE_TOKEN = 3
+    root_folder.RegisterTaskDefinition(
+        'HawkingClicker', task, TASK_CREATE_OR_UPDATE, None, None, TASK_LOGON_INTERACTIVE_TOKEN
+    )
+
+def delete_scheduled_task():
+    scheduler = win32com.client.Dispatch('Schedule.Service')
+    scheduler.Connect()
+    root_folder = scheduler.GetFolder('\\')
+    try:
+        root_folder.DeleteTask('HawkingClicker', 0)
+    except:
+        pass
+
+def is_admin():
+    try:
+        return ctypes.windll.shell32.IsUserAnAdmin()
+    except:
+        return False
+
+def update_startup(status, run_as_admin):
     if status:
-        add_to_startup()
+        if is_admin() and run_as_admin:
+            create_scheduled_task()
+        else:
+            add_to_startup()
     else:
+        delete_scheduled_task()
         remove_from_startup()

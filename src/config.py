@@ -96,7 +96,8 @@ class Settings:
         with open(settings_config_path, 'w') as file:
             json.dump(self.__dict__, file, indent=4)
         tray.update_visible()
-        utils.update_startup(self.startup)
+        # TODO: 以管理员身份开机启动
+        utils.update_startup(self.startup, False)
 
     def update(self, settings):
         self.__dict__ = settings.__dict__
