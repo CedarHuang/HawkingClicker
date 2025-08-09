@@ -72,7 +72,7 @@ class EditPage:
         button_label = ttk.Label(button_frame, text=f'{i18n.t('Button')}: ')
 
         button_label.pack(side='left')
-        button_combobox = ttk.Combobox(button_frame, state='readonly')
+        button_combobox = ttk.Combobox(button_frame, state='normal')
         button_combobox['values'] = ('Left', 'Right')
         button_combobox.pack(side='left', fill='x', expand=True)
         self.button_combobox = button_combobox
