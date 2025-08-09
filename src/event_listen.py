@@ -36,23 +36,22 @@ def click_factory(event):
     def callback():
         if not check_range(event):
             return
-        x, y = get_position(event)
-        pyautogui.click(x, y, button=event.button)
+        button_click(event)
 
     return callback
 
 def press_factory(event):
-    mouse_down = False
+    already_down = False
     def callback():
         if not check_range(event):
             return
-        nonlocal mouse_down
-        if not mouse_down:
-            pyautogui.mouseDown(button=event.button)
-            mouse_down = True
+        nonlocal already_down
+        if not already_down:
+            button_down(event)
+            already_down = True
         else:
-            pyautogui.mouseUp(button=event.button)
-            mouse_down = False
+            button_up(event)
+            already_down = False
 
     return callback
 
@@ -62,12 +61,11 @@ def multi_factory(event):
     def callback_impl():
         nonlocal ing, stop
         ing = True
-        x, y = get_position(event)
         interval = event.interval / 1000
         clicks = event.clicks if event.clicks >= 0 else sys.maxsize
         count = 0
         while not stop.is_set():
-            pyautogui.click(x, y, button=event.button)
+            button_click(event)
             count += 1
             if count >= clicks:
                 break
@@ -117,7 +115,7 @@ def check_range(event):
 
     return False
 
-def get_position(event):
+def get_mouse_position(event):
     x, y = event.position
     if x >= 0 and y >= 0:
         return x, y
@@ -127,3 +125,25 @@ def get_position(event):
     if y < 0:
         y = ny
     return x, y
+
+MOUSE_BUTTON = ('Left', 'Right')
+
+def button_click(event):
+    if event.button in MOUSE_BUTTON:
+        x, y = get_mouse_position(event)
+        pyautogui.mouseDown(x, y, button=event.button)
+        pyautogui.mouseUp(x, y, button=event.button)
+    else:
+        pyautogui.press(event.button)
+
+def button_down(event):
+    if event.button in MOUSE_BUTTON:
+        pyautogui.mouseDown(button=event.button)
+    # else: # TODO: 不明原因导致所有event失效 暂不支持
+    #     pyautogui.keyDown(button)
+
+def button_up(event):
+    if event.button in MOUSE_BUTTON:
+        pyautogui.mouseUp(button=event.button)
+    # else:
+    #     pyautogui.keyUp(button)
