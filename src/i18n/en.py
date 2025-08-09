@@ -1,4 +1,4 @@
-en = {
+i18n = {
     'HawkingClicker': 'HawkingClicker',
 
     'Open': 'Open',

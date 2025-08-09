@@ -1,4 +1,4 @@
-zh_CN = {
+i18n = {
     'HawkingClicker': '霍金点击器',
 
     'Open': '打开',
