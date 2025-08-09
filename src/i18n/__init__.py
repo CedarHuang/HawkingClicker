@@ -2,13 +2,14 @@ import importlib
 import locale
 
 from . import en
+# 显式导入 诱使Pyinstaller正确打包
+from . import zh_CN
 
 language, _ = locale.getdefaultlocale()
 
 _i18n = None
 try:
-    language_module = importlib.import_module(f'.{language}', package=__package__)
-    _i18n = language_module.i18n
+    _i18n = globals()[language].i18n
 except:
     _i18n = en.i18n
 
