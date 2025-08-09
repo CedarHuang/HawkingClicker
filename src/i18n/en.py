@@ -1,17 +1,5 @@
 i18n = {
-    'HawkingClicker': 'HawkingClicker',
-
-    'Open': 'Open',
-    'Exit': 'Exit',
-
-    'Tools': 'Tools',
-    'Settings': 'Settings',
-    'EnableTray': 'Enable Tray',
-    'Startup': 'Launch on Startup',
-
-    'Help': 'Help',
-    'About': 'About',
-
+    'Save': 'Save',
     'Range': 'Range',
     'Position': 'Position',
     'Type': 'Type',
@@ -20,8 +8,13 @@ i18n = {
     'Interval': 'Interval',
     'Clicks': 'Clicks',
     'Status': 'Status',
-
-    'Save': 'Save',
-
     'IsEmpty': 'is empty',
+    'About': 'About',
+    'Tools': 'Tools',
+    'Settings': 'Settings',
+    'Help': 'Help',
+    'EnableTray': 'Enable Tray',
+    'Startup': 'Launch on Startup',
+    'Open': 'Open',
+    'Exit': 'Exit',
 }
