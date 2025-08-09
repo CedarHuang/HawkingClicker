@@ -4,8 +4,8 @@ import keyboard
 
 import config
 import event_listen
-import i18n
 import utils
+from i18n import i18n
 
 class EditPage:
     def __init__(self, master, index):
@@ -31,7 +31,7 @@ class EditPage:
         # Range
         range_frame = ttk.Frame(root)
         range_frame.pack(side='top', fill='x')
-        range_label = ttk.Label(range_frame, text=f'{i18n.t('Range')}: ')
+        range_label = ttk.Label(range_frame, text=f'{i18n('Range')}: ')
         range_label.pack(side='left')
         range_entry = ttk.Entry(range_frame)
         range_entry.pack(side='left', fill='x', expand=True)
@@ -40,7 +40,7 @@ class EditPage:
         # Position
         position_frame = ttk.Frame(root)
         position_frame.pack(side='top', fill='x')
-        position_label1 = ttk.Label(position_frame, text=f'{i18n.t('Position')}: (')
+        position_label1 = ttk.Label(position_frame, text=f'{i18n('Position')}: (')
 
         position_label1.pack(side='left')
         position_entry_x = ttk.Entry(position_frame)
@@ -57,7 +57,7 @@ class EditPage:
         # Type
         type_frame = ttk.Frame(root)
         type_frame.pack(side='top', fill='x')
-        type_label = ttk.Label(type_frame, text=f'{i18n.t('Type')}: ')
+        type_label = ttk.Label(type_frame, text=f'{i18n('Type')}: ')
 
         type_label.pack(side='left')
         type_combobox = ttk.Combobox(type_frame, state='readonly')
@@ -69,7 +69,7 @@ class EditPage:
         # Button
         button_frame = ttk.Frame(root)
         button_frame.pack(side='top', fill='x')
-        button_label = ttk.Label(button_frame, text=f'{i18n.t('Button')}: ')
+        button_label = ttk.Label(button_frame, text=f'{i18n('Button')}: ')
 
         button_label.pack(side='left')
         button_combobox = ttk.Combobox(button_frame, state='normal')
@@ -80,7 +80,7 @@ class EditPage:
         # Hotkey
         hotkey_frame = ttk.Frame(root)
         hotkey_frame.pack(side='top', fill='x')
-        hotkey_label = ttk.Label(hotkey_frame, text=f'{i18n.t('Hotkey')}: ')
+        hotkey_label = ttk.Label(hotkey_frame, text=f'{i18n('Hotkey')}: ')
 
         hotkey_label.pack(side='left')
         hotkey_button = ttk.Button(hotkey_frame, command=self.on_hotkey_click)
@@ -91,7 +91,7 @@ class EditPage:
         interval_pin = ttk.Frame(root)
         interval_pin.pack(side='top', fill='x')
         interval_frame = ttk.Frame(interval_pin)
-        interval_label1 = ttk.Label(interval_frame, text=f'{i18n.t('Interval')}: ')
+        interval_label1 = ttk.Label(interval_frame, text=f'{i18n('Interval')}: ')
         interval_label1.pack(side='left')
         interval_entry = ttk.Entry(interval_frame)
         interval_entry.pack(side='left', fill='x', expand=True)
@@ -104,7 +104,7 @@ class EditPage:
         clicks_pin = ttk.Frame(root)
         clicks_pin.pack(side='top', fill='x')
         clicks_frame = ttk.Frame(clicks_pin)
-        clicks_label = ttk.Label(clicks_frame, text=f'{i18n.t('Clicks')}: ')
+        clicks_label = ttk.Label(clicks_frame, text=f'{i18n('Clicks')}: ')
 
         clicks_label.pack(side='left')
         clicks_entry = ttk.Entry(clicks_frame)
@@ -115,7 +115,7 @@ class EditPage:
         # Status
         status_frame = ttk.Frame(root)
         status_frame.pack(side='top', fill='x')
-        status_label = ttk.Label(status_frame, text=f'{i18n.t('Status')}: ')
+        status_label = ttk.Label(status_frame, text=f'{i18n('Status')}: ')
 
         status_label.pack(side='left')
         status_combobox = ttk.Combobox(status_frame, state='readonly')
@@ -124,7 +124,7 @@ class EditPage:
         self.status_combobox = status_combobox
 
         # Save
-        save = ttk.Button(root, text=i18n.t('Save'), command=self.on_save_click)
+        save = ttk.Button(root, text=i18n('Save'), command=self.on_save_click)
         save.pack(fill='x', expand=True)
         save_check_label = ttk.Label(root, text='')
         self.save_check_label = save_check_label
@@ -206,7 +206,7 @@ class EditPage:
 
             temp.range = self.range_entry.get()
             if temp.range == '':
-                raise Exception(f'{i18n.t('Range')} {i18n.t('IsEmpty')}')
+                raise Exception(f'{i18n('Range')} {i18n('IsEmpty')}')
 
             temp.position = (int(self.position_entry_x.get()), int(self.position_entry_y.get()))
 
@@ -216,7 +216,7 @@ class EditPage:
 
             temp.hotkey = self.hotkey_button.cget('text')
             if temp.hotkey == '' or temp.hotkey == '...':
-                raise Exception(f'{i18n.t('Hotkey')} {i18n.t('IsEmpty')}')
+                raise Exception(f'{i18n('Hotkey')} {i18n('IsEmpty')}')
 
             if temp.type == 'Multi':
                 temp.interval = int(self.interval_entry.get())

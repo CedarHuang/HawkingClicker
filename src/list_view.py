@@ -2,7 +2,7 @@ from tkinter import ttk
 
 import config
 import edit_page
-import i18n
+from i18n import i18n
 
 tree = None
 
@@ -13,7 +13,7 @@ def init(master):
     tree.pack(side='left')
 
     for col in columns:
-        tree.heading(col, text=i18n.t(col))
+        tree.heading(col, text=i18n(col))
 
     tree.configure(selectmode='browse')
 

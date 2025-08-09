@@ -1,9 +1,9 @@
 import tkinter as tk
 import webbrowser
 
-import i18n
 import settings_page
 import utils
+from i18n import i18n
 
 menu = None
 
@@ -14,19 +14,19 @@ def init(master):
     master.config(menu=menu)
 
     tools_menu = tk.Menu(menu, tearoff=0)
-    menu.add_cascade(label=i18n.t('Tools'), menu=tools_menu)
-    tools_menu.add_command(label=i18n.t('Settings'), command=on_settings_click)
+    menu.add_cascade(label=i18n('Tools'), menu=tools_menu)
+    tools_menu.add_command(label=i18n('Settings'), command=on_settings_click)
 
     help_menu = tk.Menu(menu, tearoff=0)
-    menu.add_cascade(label=i18n.t('Help'), menu=help_menu)
-    help_menu.add_command(label=i18n.t('About'), command=on_about_click)
+    menu.add_cascade(label=i18n('Help'), menu=help_menu)
+    help_menu.add_command(label=i18n('About'), command=on_about_click)
 
 def on_settings_click():
     settings_page.SettingsPage(menu.master).show()
 
 def on_about_click():
     about_window = tk.Toplevel(menu.master)
-    about_window.title(i18n.t('About'))
+    about_window.title(i18n('About'))
     about_window.iconbitmap(utils.assets_path('icon.ico'))
 
     label = tk.Label(about_window, text='GitHub: ')

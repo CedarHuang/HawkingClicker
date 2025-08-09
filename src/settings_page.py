@@ -2,8 +2,8 @@ import tkinter as tk
 from tkinter import ttk
 
 import config
-import i18n
 import utils
+from i18n import i18n
 
 CEHCK_SELECTED = ['!alternate', 'selected']
 CEHCK_UNSELECTED = ['!alternate', '!selected']
@@ -16,21 +16,21 @@ class SettingsPage:
         root = tk.Toplevel(self.master)
         self.root = root
 
-        root.title(i18n.t('Settings'))
+        root.title(i18n('Settings'))
         root.iconbitmap(utils.assets_path('icon.ico'))
 
         # Tray
-        tray_check = ttk.Checkbutton(root, text=i18n.t('EnableTray'))
+        tray_check = ttk.Checkbutton(root, text=i18n('EnableTray'))
         tray_check.pack(side='top', fill='x', expand=True)
         self.tray_check = tray_check
 
         # Startup
-        startup_check = ttk.Checkbutton(root, text=i18n.t('Startup'))
+        startup_check = ttk.Checkbutton(root, text=i18n('Startup'))
         startup_check.pack(side='top', fill='x', expand=True)
         self.startup_check = startup_check
 
         # Save
-        save = ttk.Button(root, text=i18n.t('Save'), command=self.on_save_click)
+        save = ttk.Button(root, text=i18n('Save'), command=self.on_save_click)
         save.pack(side='top', fill='x', expand=True)
 
         root.protocol('WM_DELETE_WINDOW', self.hide)
