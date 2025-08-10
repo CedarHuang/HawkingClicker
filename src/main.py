@@ -2,6 +2,7 @@ import sys
 
 import config
 import event_listener
+import foreground_listener
 import main_page
 import single_instance
 import tray
@@ -10,6 +11,8 @@ if __name__ == '__main__':
 
     if not single_instance.check():
         sys.exit()
+
+    foreground_listener.start()
 
     event_listener.start()
 

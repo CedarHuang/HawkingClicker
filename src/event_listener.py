@@ -1,12 +1,11 @@
 import fnmatch
 import keyboard
-import psutil
 import pyautogui
 import sys
 import threading
-from win32 import win32gui, win32process
 
 import config
+import foreground_listener
 import list_view
 
 def start():
@@ -20,6 +19,8 @@ def start():
 def stop():
     keyboard.unhook_all()
 
+special_range = ['CHECK_WINDOW']
+
 def callback_factory(event):
     parse_range(event)
     match event.type:
@@ -29,6 +30,8 @@ def callback_factory(event):
             return press_factory(event)
         case 'Multi':
             return multi_factory(event)
+        case 'CHECK_WINDOW':
+            return check_window(event)
         case _:
             return lambda: None
 
@@ -84,7 +87,19 @@ def multi_factory(event):
 
     return callback
 
+def check_window(event):
+    def callback():
+        with foreground_listener.active_window_info_lock:
+            process_name = foreground_listener.current_process_name
+            window_title = foreground_listener.current_window_title
+            event.position = (process_name, window_title)
+        list_view.refresh()
+
+    return callback
+
 def parse_range(event):
+    if event.range in special_range:
+        event.type = event.range
     _range = []
     for i in event.range.split(':', 1):
         i = i.strip()
@@ -93,27 +108,26 @@ def parse_range(event):
         _range.append(i)
     _range.extend(['*'] * (2 - len(_range)))
     event._range = _range
+    event._version = 0
+    event._passed = False
 
 def check_range(event):
+    with foreground_listener.active_window_info_lock:
+        data_version = foreground_listener.current_data_version
+        if event._version == data_version:
+            return event._passed
+        event._version = data_version
+
+        process_name = foreground_listener.current_process_name
+        window_title = foreground_listener.current_window_title
+
     e_p_name, e_w_title = event._range
-    if e_p_name == '*' and e_w_title == '*':
-        return True
+    process_name_passed = fnmatch.fnmatchcase(process_name, e_p_name)
+    window_title_passed = fnmatch.fnmatchcase(window_title, e_w_title)
+    passed = process_name_passed and window_title_passed
 
-    hwnd = win32gui.GetForegroundWindow()
-    _, pid = win32process.GetWindowThreadProcessId(hwnd)
-    process = psutil.Process(pid)
-    process_name = process.name()
-    title = win32gui.GetWindowText(hwnd)
-
-    if e_p_name == 'CHECK_WINDOW':
-        event.position = (process_name, title)
-        list_view.refresh()
-        return False
-
-    if fnmatch.fnmatchcase(process_name, e_p_name) and fnmatch.fnmatchcase(title, e_w_title):
-        return True
-
-    return False
+    event._passed = passed
+    return passed
 
 def get_mouse_position(event):
     x, y = event.position
