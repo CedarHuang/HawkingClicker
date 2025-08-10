@@ -1,7 +1,7 @@
 import sys
 
 import config
-import event_listen
+import event_listener
 import main_page
 import single_instance
 import tray
@@ -11,7 +11,7 @@ if __name__ == '__main__':
     if not single_instance.check():
         sys.exit()
 
-    event_listen.start()
+    event_listener.start()
 
     tray.start()
 

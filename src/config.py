@@ -2,7 +2,7 @@ import appdirs
 import json
 import os
 
-import event_listen
+import event_listener
 import tray
 import utils
 
@@ -59,8 +59,8 @@ class Events(list):
                 for event in self
             ]
             json.dump(dicts, file, indent=4)
-        event_listen.stop()
-        event_listen.start()
+        event_listener.stop()
+        event_listener.start()
 
     def append(self, event):
         super().append(event)

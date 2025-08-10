@@ -3,7 +3,7 @@ from tkinter import ttk
 import keyboard
 
 import config
-import event_listen
+import event_listener
 import utils
 from i18n import i18n
 
@@ -173,7 +173,7 @@ class EditPage:
     def on_hotkey_click(self):
         self.hotkey_button.config(text='...')
         self.record = True
-        event_listen.stop()
+        event_listener.stop()
 
         current_keys = set()
 
@@ -187,7 +187,7 @@ class EditPage:
             if len(current_keys) == 0:
                 self.record = False
                 keyboard.unhook_all()
-                event_listen.start()
+                event_listener.start()
 
         def hook(event):
             match event.event_type:
