@@ -134,16 +134,16 @@ def button_click(event):
         pyautogui.mouseDown(x, y, button=event.button)
         pyautogui.mouseUp(x, y, button=event.button)
     else:
-        pyautogui.press(event.button)
+        keyboard.press_and_release(event.button)
 
 def button_down(event):
     if event.button in MOUSE_BUTTON:
         pyautogui.mouseDown(button=event.button)
-    # else: # TODO: 不明原因导致所有event失效 暂不支持
-    #     pyautogui.keyDown(button)
+    else:
+        keyboard.press(event.button)
 
 def button_up(event):
     if event.button in MOUSE_BUTTON:
         pyautogui.mouseUp(button=event.button)
-    # else:
-    #     pyautogui.keyUp(button)
+    else:
+        keyboard.release(event.button)
