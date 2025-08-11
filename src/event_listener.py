@@ -18,6 +18,8 @@ def start():
 
 def stop():
     keyboard.unhook_all()
+    with foreground_listener.active_window_info_lock:
+        foreground_listener.event_callback_list.clear()
 
 special_range = ['CHECK_WINDOW']
 
@@ -76,14 +78,21 @@ def multi_factory(event):
         ing = False
         stop.clear()
 
-    def callback():
-        if not check_range(event):
-            return
+    def if_ing_then_stop():
         nonlocal ing, stop
         if ing:
             stop.set()
+        return ing
+
+    def callback():
+        if not check_range(event):
+            return
+        if if_ing_then_stop():
             return
         threading.Thread(target=callback_impl).start()
+
+    with foreground_listener.active_window_info_lock:
+        foreground_listener.event_callback_list.append(if_ing_then_stop)
 
     return callback
 

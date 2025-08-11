@@ -13,6 +13,7 @@ current_active_hwnd = 0
 current_process_name = ""
 current_window_title = ""
 current_data_version = 0
+event_callback_list = []
 
 # --- 事件钩子回调函数 ---
 def callback_impl(hWinEventHook, event, hwnd, idObject, idChild, dwEventThread, dwmsEventTime):
@@ -23,7 +24,7 @@ def callback_impl(hWinEventHook, event, hwnd, idObject, idChild, dwEventThread, 
     hwnd = win32gui.GetForegroundWindow()
 
     with active_window_info_lock:
-        global current_active_hwnd, current_process_name, current_window_title, current_data_version
+        global current_active_hwnd, current_process_name, current_window_title, current_data_version, event_callback_list
         try:
             if hwnd == current_active_hwnd:
                 return
@@ -42,6 +43,9 @@ def callback_impl(hWinEventHook, event, hwnd, idObject, idChild, dwEventThread, 
             current_process_name = ""
             current_window_title = ""
             current_data_version += 1
+        finally:
+            for event_callback in event_callback_list:
+                event_callback()
 
 # 定义回调函数的类型
 WINEVENTPROC = ctypes.WINFUNCTYPE(
