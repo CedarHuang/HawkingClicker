@@ -15,6 +15,11 @@ def assets_path(asset_file_name):
 def exe_path():
     return os.path.abspath(sys.argv[0])
 
+def root_path():
+    if hasattr(sys, '_MEIPASS'):
+        return os.path.abspath(os.path.join(sys._MEIPASS, '..'))
+    return os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+
 def create_startup_to_winreg():
     key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, r'Software\Microsoft\Windows\CurrentVersion\Run', 0, winreg.KEY_SET_VALUE)
     winreg.SetValueEx(key, 'HawkingClicker', 0, winreg.REG_SZ, f'{exe_path()} silent')

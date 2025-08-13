@@ -32,6 +32,8 @@ def callback_factory(event):
             return press_factory(event)
         case 'Multi':
             return multi_factory(event)
+        case 'Script':
+            return script_factory(event)
         case 'CHECK_WINDOW':
             return check_window(event)
         case _:
@@ -93,6 +95,15 @@ def multi_factory(event):
 
     with foreground_listener.active_window_info_lock:
         foreground_listener.event_callback_list.append(if_ing_then_stop)
+
+    return callback
+
+def script_factory(event):
+    script = config.scripts.load_as_function(event.button)
+    def callback():
+        if not check_range(event):
+            return
+        threading.Thread(target=script).start()
 
     return callback
 

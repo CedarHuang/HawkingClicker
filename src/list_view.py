@@ -8,7 +8,7 @@ tree = None
 
 def init(master):
     global tree
-    columns = ('Range', 'Position', 'Type', 'Button', 'Hotkey', 'Interval', 'Clicks', 'Status')
+    columns = ('Range', 'Position', 'Type', 'ButtonOrScript', 'Hotkey', 'Interval', 'Clicks', 'Status')
     tree = ttk.Treeview(master, columns=columns, show='headings')
     tree.pack(side='left')
 

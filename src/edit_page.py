@@ -61,7 +61,7 @@ class EditPage:
 
         type_label.pack(side='left')
         type_combobox = ttk.Combobox(type_frame, state='readonly')
-        type_combobox['values'] = ('Click', 'Press', 'Multi')
+        type_combobox['values'] = ('Click', 'Press', 'Multi', 'Script')
         type_combobox.pack(side='left', fill='x', expand=True)
         type_combobox.bind('<<ComboboxSelected>>', self.on_type_combobox_select)
         self.type_combobox = type_combobox
