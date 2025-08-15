@@ -2,9 +2,11 @@ import appdirs
 import builtins
 import importlib
 import importlib.util
+import inspect
 import json
 import os
 
+import api
 import event_listener
 import tray
 import utils
@@ -127,7 +129,6 @@ class ScriptContext(dict):
         super().__init__()
 
         self['__builtins__'] = self.create_restricted_builtins()
-        self.import_module('time', import_all=True)
 
     def create_restricted_builtins(self):
         restricted_builtins = builtins.__dict__.copy()
@@ -141,6 +142,10 @@ class ScriptContext(dict):
 
         restricted_builtins['__import__'] = self.custom_import
         restricted_builtins['print'] = self.custom_print
+        restricted_builtins['init'] = api.create_init()
+
+        self.import_module_to_target(restricted_builtins, 'time', import_all=True)
+        self.import_module_to_target(restricted_builtins, 'api', import_root=False, import_all=True, exclude_module=True)
 
         return restricted_builtins
 
@@ -185,6 +190,7 @@ class ScriptContext(dict):
 
             module = importlib.util.module_from_spec(spec)
             module.__builtins__ = self['__builtins__']
+            module.__builtins__['init'] = api.create_init()
             spec.loader.exec_module(module)
             return module
 
@@ -196,9 +202,12 @@ class ScriptContext(dict):
         message = sep.join(map(str, args)) + end.rstrip('\n')
         script_logger.info(message)
 
-    def import_module(self, module_name, import_all):
+    @staticmethod
+    def import_module_to_target(target, module_name, import_root=True, import_all=False, exclude_module=False):
         module = importlib.import_module(module_name)
-        self[module_name] = module
+
+        if import_root:
+            target[module_name] = module
 
         if not import_all:
             return
@@ -206,8 +215,12 @@ class ScriptContext(dict):
         for name in dir(module):
             if name.startswith('_'):
                 continue
+
             member = getattr(module, name)
-            self[name] = member
+            if exclude_module and inspect.ismodule(member):
+                continue
+
+            target[name] = member
 
 class Scripts:
     def __init__(self):
@@ -225,10 +238,10 @@ class Scripts:
         try:
             compiled_code = compile(script_code, f'<{script_name}>', 'exec')
         except SyntaxError as e:
-            script_logger.error(f'Syntax error in script {script_name} at {script_path}: {e}', exc_info=True)
+            script_logger.error(f'Syntax error in script <{script_name}> at "{script_path}": {e}', exc_info=True)
             return lambda: None
         except Exception as e:
-            script_logger.error(f'Unexpected error compiling script {script_name} at {script_path}: {e}', exc_info=True)
+            script_logger.error(f'Unexpected error compiling script <{script_name}> at "{script_path}": {e}', exc_info=True)
             return lambda: None
 
         script_context = ScriptContext()
@@ -237,7 +250,7 @@ class Scripts:
             try:
                 exec(compiled_code, script_context)
             except Exception as e:
-                script_logger.error(f'Runtime error in script {script_name}: {e}', exc_info=True)
+                script_logger.error(f'Runtime error in script <{script_name}>: {e}', exc_info=True)
 
         return wrapped_function
 

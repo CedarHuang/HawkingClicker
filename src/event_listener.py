@@ -4,6 +4,7 @@ import pyautogui
 import sys
 import threading
 
+import api
 import config
 import foreground_listener
 import list_view
@@ -109,10 +110,7 @@ def script_factory(event):
 
 def check_window(event):
     def callback():
-        with foreground_listener.active_window_info_lock:
-            process_name = foreground_listener.current_process_name
-            window_title = foreground_listener.current_window_title
-            event.position = (process_name, window_title)
+        event.position = api.foreground()
         list_view.refresh()
 
     return callback
@@ -150,34 +148,13 @@ def check_range(event):
     return passed
 
 def get_mouse_position(event):
-    x, y = event.position
-    if x >= 0 and y >= 0:
-        return x, y
-    nx, ny = pyautogui.position()
-    if x < 0:
-        x = nx
-    if y < 0:
-        y = ny
-    return x, y
-
-MOUSE_BUTTON = ('Left', 'Right')
+    return api.position(*event.position)
 
 def button_click(event):
-    if event.button in MOUSE_BUTTON:
-        x, y = get_mouse_position(event)
-        pyautogui.mouseDown(x, y, button=event.button)
-        pyautogui.mouseUp(x, y, button=event.button)
-    else:
-        keyboard.press_and_release(event.button)
+    return api.click(event.button, *event.position)
 
 def button_down(event):
-    if event.button in MOUSE_BUTTON:
-        pyautogui.mouseDown(button=event.button)
-    else:
-        keyboard.press(event.button)
+    return api.down(event.button, *event.position)
 
 def button_up(event):
-    if event.button in MOUSE_BUTTON:
-        pyautogui.mouseUp(button=event.button)
-    else:
-        keyboard.release(event.button)
+    return api.up(event.button, *event.position)
