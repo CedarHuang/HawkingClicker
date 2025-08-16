@@ -1,6 +1,5 @@
 import fnmatch
 import keyboard
-import pyautogui
 import sys
 import threading
 
@@ -100,11 +99,26 @@ def multi_factory(event):
     return callback
 
 def script_factory(event):
-    script = config.scripts.load_as_function(event.button)
+    script, context = config.scripts.load_as_function(event.button)
+    thread = None
+
+    def if_ing_then_stop():
+        if thread and thread.is_alive():
+            context.set_stop()
+            return True
+        return False
+
     def callback():
+        nonlocal thread
         if not check_range(event):
             return
-        threading.Thread(target=script).start()
+        if if_ing_then_stop():
+            return
+        thread = threading.Thread(target=script)
+        thread.start()
+
+    with foreground_listener.active_window_info_lock:
+        foreground_listener.event_callback_list.append(if_ing_then_stop)
 
     return callback
 

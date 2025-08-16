@@ -143,11 +143,17 @@ class ScriptContext(dict):
         restricted_builtins['__import__'] = self.custom_import
         restricted_builtins['print'] = self.custom_print
         restricted_builtins['init'] = api.create_init()
+        restricted_builtins.update(api.create_sleep())
 
-        self.import_module_to_target(restricted_builtins, 'time', import_all=True)
         self.import_module_to_target(restricted_builtins, 'api', import_root=False, import_all=True, exclude_module=True)
 
         return restricted_builtins
+
+    def set_stop(self):
+        self['__builtins__']['set_stop']()
+
+    def clear_stop(self):
+        self['__builtins__']['clear_stop']()
 
     def custom_import(self, name, globals=None, locals=None, fromlist=(), level=0):
         # 允许导入的内置模块
@@ -249,9 +255,13 @@ class Scripts:
         def wrapped_function():
             try:
                 exec(compiled_code, script_context)
+            except api.ScriptExit as e:
+                script_logger.info(f'Script <{script_name}> terminated: {e}')
             except Exception as e:
                 script_logger.error(f'Runtime error in script <{script_name}>: {e}', exc_info=True)
+            finally:
+                script_context.clear_stop()
 
-        return wrapped_function
+        return wrapped_function, script_context
 
 scripts = Scripts()

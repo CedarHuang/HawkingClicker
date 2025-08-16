@@ -1,5 +1,6 @@
 import keyboard
 import pyautogui
+import threading
 
 import foreground_listener
 
@@ -8,17 +9,17 @@ import foreground_listener
 MOUSE_BUTTON = ('Left', 'Right')
 
 # create_init()
-# 无需关注，为程序内部自动调用。
-# 而 Script 脚本环境中会自动生成一个 'init' 函数。
-#
-# init()
-# 这个函数设计为只在首次调用时返回 True，之后的所有调用都返回 False。
-# 适用于需要确保某个操作只执行一次的场景。
-#
-# 参数: 无
-# 返回: bool - 首次调用返回 True，后续调用返回 False。
+# 无需关注，程序内部使用。
+# 为 Script 脚本环境中生成一个 'init' 函数。
 def create_init():
     flag = False
+
+    # init()
+    # 这个函数设计为只在首次调用时返回 True，之后的所有调用都返回 False。
+    # 适用于需要确保某个操作只执行一次的场景。
+    #
+    # 参数: 无
+    # 返回: bool - 首次调用返回 True，后续调用返回 False。
     def init():
         nonlocal flag
         if not flag:
@@ -27,6 +28,67 @@ def create_init():
         return False
 
     return init
+
+# create_sleep()
+# 无需关注，程序内部使用。
+# 为 Script 脚本环境中生成一个 'sleep' 函数。
+def create_sleep():
+    stop_event = threading.Event()
+
+    # sleep(seconds)
+    # 暂停脚本执行指定的秒数。
+    #
+    # 参数:
+    #   seconds (float/int): 暂停的秒数。
+    # 返回: 无
+    def sleep(seconds):
+        stop_event.wait(seconds)
+        if stop_event.is_set():
+            exit()
+
+    # set_stop()
+    # 无需关注，程序内部使用。
+    def set_stop():
+        stop_event.set()
+
+    # clear_stop()
+    # 无需关注，程序内部使用。
+    def clear_stop():
+        stop_event.clear()
+
+    return {
+        'sleep': sleep,
+        'set_stop': set_stop,
+        'clear_stop': clear_stop,
+    }
+
+# ScriptExit
+# 类型: class
+# 自定义异常类，用于表示脚本的有意终止。
+# 当脚本通过 'exit()' 或 'quit()' 函数终止时，会抛出此异常。
+#
+# 属性:
+#   message (str): 异常消息，默认为 "Script terminated."。
+#   code (int): 退出代码，默认为 0。
+class ScriptExit(Exception):
+    def __init__(self, message="Script terminated.", code=0):
+        super().__init__(message)
+        self.code = code
+
+# exit(code=0)
+# 终止当前脚本的执行。
+# 此函数通过抛出 'ScriptExit' 异常来实现终止。
+#
+# 参数:
+#   code (int, optional): 脚本的退出代码。默认为 0。
+# 返回: 无 (此函数不会正常返回，而是抛出异常)
+def exit(code=0):
+    raise ScriptExit(f"Script exited with code {code}", code)
+
+# quit
+# 'exit' 函数的别名。
+# 类型: function
+quit = exit
 
 # foreground()
 # 获取当前处于前台（活动）窗口的进程名称和窗口标题。
