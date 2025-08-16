@@ -35,14 +35,14 @@ def create_init():
 def create_sleep():
     stop_event = threading.Event()
 
-    # sleep(seconds)
-    # 暂停脚本执行指定的秒数。
+    # sleep(ms)
+    # 暂停脚本执行指定的毫秒数。
     #
     # 参数:
-    #   seconds (float/int): 暂停的秒数。
+    #   ms (float/int): 暂停的毫秒数。
     # 返回: 无
-    def sleep(seconds):
-        stop_event.wait(seconds)
+    def sleep(ms):
+        stop_event.wait(ms / 1000)
         if stop_event.is_set():
             exit()
 
