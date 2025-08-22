@@ -3,6 +3,7 @@ import importlib
 import importlib.util
 import inspect
 import os
+import time
 import watchdog.events
 import watchdog.observers
 
@@ -53,14 +54,29 @@ class ScriptObserver(watchdog.events.FileSystemEventHandler):
         super().__init__()
         self.observer = watchdog.observers.Observer()
         self.observer.schedule(self, common.scripts_path(), recursive=True)
+        self.last_modified_times = {
+            # key: file path
+            # value: last modified time
+        }
 
     def on_modified(self, event):
         if event.is_directory or not event.src_path.endswith('.py'):
             return
+
         path = os.path.realpath(event.src_path)
+
+        current_time = time.time()
+        if path in self.last_modified_times:
+            time_since_last = current_time - self.last_modified_times[path]
+            if time_since_last < 0.5:
+                return
+
+        self.last_modified_times[path] = current_time
+
         instance = ScriptCode.instances.get(path)
         if not instance:
             return
+
         instance.reload()
         script_logger.info(f'File "{path}" has been modified, reload!')
 
