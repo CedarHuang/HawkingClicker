@@ -3,6 +3,7 @@ from tkinter import ttk
 
 import common
 import config
+import utils
 from i18n import i18n
 
 CEHCK_SELECTED = ['!alternate', 'selected']
