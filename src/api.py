@@ -157,6 +157,11 @@ def down(button, x=-1, y=-1):
     else:
         keyboard.press(button)
 
+# press
+# 'down' 函数的别名。
+# 类型: function
+press = down
+
 # up(button, x=-1, y=-1)
 # 模拟鼠标或键盘按键的释放操作。
 #
@@ -173,3 +178,28 @@ def up(button, x=-1, y=-1):
         pyautogui.mouseUp(x, y, button=button)
     else:
         keyboard.release(button)
+
+# release
+# 'up' 函数的别名。
+# 类型: function
+release = up
+
+# move(x_offset, y_offset)
+# 相对当前鼠标位置移动鼠标。
+#
+# 参数:
+#   x_offset (int): X轴方向的偏移量。正值向右，负值向左。
+#   y_offset (int): Y轴方向的偏移量。正值向下，负值向上。
+# 返回: 无
+def move(x_offset, y_offset):
+    pyautogui.move(x_offset, y_offset)
+
+# move_to(x, y)
+# 将鼠标移动到屏幕上的指定绝对坐标。
+#
+# 参数:
+#   x (int): 目标X坐标。
+#   y (int): 目标Y坐标。
+# 返回: 无
+def move_to(x, y):
+    pyautogui.moveTo(x, y)
