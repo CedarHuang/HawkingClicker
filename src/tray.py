@@ -2,9 +2,9 @@ import pystray
 import threading
 from PIL import Image
 
+import common
 import config
 import main_page
-import utils
 from i18n import i18n
 from __version__ import __version__
 
@@ -13,7 +13,7 @@ icon = None
 def start():
     global icon
 
-    image = Image.open(utils.assets_path('icon.ico'))
+    image = Image.open(common.assets_path('icon.ico'))
     menu = (
         pystray.MenuItem(i18n('Open'), on_open_click, default=True),
         pystray.MenuItem(i18n('Exit'), on_exit_click)

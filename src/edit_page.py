@@ -2,9 +2,9 @@ import tkinter as tk
 from tkinter import ttk
 import keyboard
 
+import common
 import config
 import event_listener
-import utils
 from i18n import i18n
 
 class EditPage:
@@ -25,7 +25,7 @@ class EditPage:
         self.root = root
 
         root.title('')
-        root.iconbitmap(utils.assets_path('icon.ico'))
+        root.iconbitmap(common.assets_path('icon.ico'))
         root.grab_set()
 
         # Range

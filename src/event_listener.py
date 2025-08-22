@@ -7,6 +7,7 @@ import api
 import config
 import foreground_listener
 import list_view
+from scripts import scripts
 
 def start():
     for event in config.events:
@@ -99,7 +100,7 @@ def multi_factory(event):
     return callback
 
 def script_factory(event):
-    script, context = config.scripts.load_as_function(event.button)
+    script, context = scripts.load_as_function(event.button)
     thread = None
 
     def if_ing_then_stop():

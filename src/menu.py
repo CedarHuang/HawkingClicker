@@ -1,8 +1,8 @@
 import tkinter as tk
 import webbrowser
 
+import common
 import settings_page
-import utils
 from i18n import i18n
 
 menu = None
@@ -27,7 +27,7 @@ def on_settings_click():
 def on_about_click():
     about_window = tk.Toplevel(menu.master)
     about_window.title(i18n('About'))
-    about_window.iconbitmap(utils.assets_path('icon.ico'))
+    about_window.iconbitmap(common.assets_path('icon.ico'))
 
     label = tk.Label(about_window, text='GitHub: ')
     label.pack(side='left')

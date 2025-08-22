@@ -1,8 +1,8 @@
 import tkinter as tk
 from tkinter import ttk
 
+import common
 import config
-import utils
 from i18n import i18n
 
 CEHCK_SELECTED = ['!alternate', 'selected']
@@ -17,7 +17,7 @@ class SettingsPage:
         self.root = root
 
         root.title(i18n('Settings'))
-        root.iconbitmap(utils.assets_path('icon.ico'))
+        root.iconbitmap(common.assets_path('icon.ico'))
 
         # Tray
         tray_check = ttk.Checkbutton(root, text=i18n('EnableTray'))

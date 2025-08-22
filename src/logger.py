@@ -2,10 +2,10 @@ import logging
 import os
 import sys
 
-import utils
+import common
 
 # 日志文件路径
-script_log_file_path = os.path.join(utils.root_path(), 'scripts.log')
+script_log_file_path = os.path.join(common.root_path(), 'scripts.log')
 
 def create_logger(name, path):
     logger = logging.getLogger(name)

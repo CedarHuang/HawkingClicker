@@ -2,12 +2,12 @@ import os
 import tkinter as tk
 from tkinter import ttk
 
+import common
 import config
 import edit_page
 import list_view
 import menu
 import tray
-import utils
 from __version__ import __version__
 
 root = None
@@ -16,7 +16,7 @@ def init():
     global root
     root = tk.Tk()
     root.title(f'HawkingClicker v{__version__}')
-    root.iconbitmap(utils.assets_path('icon.ico'))
+    root.iconbitmap(common.assets_path('icon.ico'))
 
     menu.init(root)
 
@@ -36,7 +36,7 @@ def init():
     root.protocol('WM_DELETE_WINDOW', on_close)
 
 def on_config_dir_click():
-    os.startfile(config.config_dir)
+    os.startfile(common.config_path())
 
 def on_create_click():
     edit_page.EditPage(root, -1).show(list_view.refresh)
