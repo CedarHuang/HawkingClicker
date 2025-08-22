@@ -3,12 +3,78 @@ import importlib
 import importlib.util
 import inspect
 import os
+import watchdog.events
+import watchdog.observers
 
 import api
 import common
 from logger import script_logger
 
 common.mkdir_if_not_exists(common.scripts_path())
+
+class ScriptCode:
+    instances = {
+        # key: script path
+        # value: ScriptCode instance
+    }
+
+    @classmethod
+    def get_by_name(cls, script_name):
+        script_path = os.path.join(common.scripts_path(), f'{script_name}.py')
+        script_path = os.path.realpath(script_path)
+        instance = cls.instances.get(script_path)
+        if not instance:
+            instance = cls(script_name, script_path)
+            cls.instances[script_path] = instance
+        return instance
+
+    def __init__(self, script_name, script_path):
+        self.path = script_path
+        self.code = ''
+        self.reload()
+
+        try:
+            # 仅初次加载尝试编译
+            self.code = compile(self.code, f'<{script_name}>', 'exec')
+        except SyntaxError as e:
+            script_logger.error(f'Syntax error in script <{script_name}> at "{script_path}": {e}', exc_info=True)
+        except Exception as e:
+            script_logger.error(f'Unexpected error compiling script <{script_name}> at "{script_path}": {e}', exc_info=True)
+
+    def reload(self):
+        try:
+            with open(self.path, 'r', encoding='utf-8') as f:
+                self.code = f.read()
+        except:
+            script_logger.error(f'Error reading script file: "{self.path}"', exc_info=True)
+
+class ScriptObserver(watchdog.events.FileSystemEventHandler):
+    def __init__(self):
+        super().__init__()
+        self.observer = watchdog.observers.Observer()
+        self.observer.schedule(self, common.scripts_path(), recursive=True)
+
+    def on_modified(self, event):
+        if event.is_directory or not event.src_path.endswith('.py'):
+            return
+        path = os.path.realpath(event.src_path)
+        instance = ScriptCode.instances.get(path)
+        if not instance:
+            return
+        instance.reload()
+        script_logger.info(f'File "{path}" has been modified, reload!')
+
+    def start(self):
+        self.observer.start()
+        script_logger.debug(f'Started observing scripts directory: {common.scripts_path()}')
+
+    def stop(self):
+        self.observer.stop()
+        self.observer.join()
+        script_logger.debug(f'Stopped observing scripts directory: {common.scripts_path()}')
+
+script_observer = ScriptObserver()
+script_observer.start()
 
 class ScriptContext(dict):
     # 用户脚本中import的查找路径
@@ -124,28 +190,12 @@ class Scripts:
         pass
 
     def load_as_function(self, script_name):
-        script_path = os.path.join(common.scripts_path(), f'{script_name}.py')
-        try:
-            with open(script_path, 'r', encoding='utf-8') as f:
-                script_code = f.read()
-        except:
-            return lambda: None
-
-        compiled_code = None
-        try:
-            compiled_code = compile(script_code, f'<{script_name}>', 'exec')
-        except SyntaxError as e:
-            script_logger.error(f'Syntax error in script <{script_name}> at "{script_path}": {e}', exc_info=True)
-            return lambda: None
-        except Exception as e:
-            script_logger.error(f'Unexpected error compiling script <{script_name}> at "{script_path}": {e}', exc_info=True)
-            return lambda: None
-
+        script_code = ScriptCode.get_by_name(script_name)
         script_context = ScriptContext()
 
         def wrapped_function():
             try:
-                exec(compiled_code, script_context)
+                exec(script_code.code, script_context)
             except api.ScriptExit as e:
                 script_logger.info(f'Script <{script_name}> terminated: {e}')
             except Exception as e:
