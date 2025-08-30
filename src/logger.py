@@ -33,4 +33,4 @@ def create_logger(name, path):
 
     return logger
 
-script_logger = create_logger('script', script_log_file_path)
+script = create_logger('script', script_log_file_path)
