@@ -98,10 +98,8 @@ quit = exit
 #               process_name (str): 当前前台应用程序的进程名称。
 #               window_title (str): 当前前台窗口的标题。
 def foreground():
-    with foreground_listener.active_window_info_lock:
-        process_name = foreground_listener.current_process_name
-        window_title = foreground_listener.current_window_title
-        return process_name, window_title
+    process_name, window_title, _ = foreground_listener.active_window_info()
+    return process_name, window_title
 
 # position(x=-1, y=-1)
 # 获取鼠标的当前位置。

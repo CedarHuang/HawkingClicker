@@ -19,8 +19,7 @@ def start():
 
 def stop():
     keyboard.unhook_all()
-    with foreground_listener.active_window_info_lock:
-        foreground_listener.event_callback_list.clear()
+    foreground_listener.clear_event_callback_list()
 
 special_range = ['CHECK_WINDOW']
 
@@ -94,8 +93,7 @@ def multi_factory(event):
             return
         threading.Thread(target=callback_impl).start()
 
-    with foreground_listener.active_window_info_lock:
-        foreground_listener.event_callback_list.append(if_ing_then_stop)
+    foreground_listener.add_event_callback_list(if_ing_then_stop)
 
     return callback
 
@@ -118,8 +116,7 @@ def script_factory(event):
         thread = threading.Thread(target=script)
         thread.start()
 
-    with foreground_listener.active_window_info_lock:
-        foreground_listener.event_callback_list.append(if_ing_then_stop)
+    foreground_listener.add_event_callback_list(if_ing_then_stop)
 
     return callback
 
@@ -145,21 +142,18 @@ def parse_range(event):
     event._passed = False
 
 def check_range(event):
-    with foreground_listener.active_window_info_lock:
-        data_version = foreground_listener.current_data_version
-        if event._version == data_version:
-            return event._passed
-        event._version = data_version
-
-        process_name = foreground_listener.current_process_name
-        window_title = foreground_listener.current_window_title
+    process_name, window_title, data_version = foreground_listener.active_window_info()
+    if event._version == data_version:
+        return event._passed
 
     e_p_name, e_w_title = event._range
     process_name_passed = fnmatch.fnmatchcase(process_name, e_p_name)
     window_title_passed = fnmatch.fnmatchcase(window_title, e_w_title)
     passed = process_name_passed and window_title_passed
 
+    event._version = data_version
     event._passed = passed
+
     return passed
 
 def get_mouse_position(event):

@@ -13,21 +13,14 @@ current_active_hwnd = 0
 current_process_name = ""
 current_window_title = ""
 current_data_version = 0
+callback_version = 0
 event_callback_list = []
 
-# --- 事件钩子回调函数 ---
-def callback_impl(hWinEventHook, event, hwnd, idObject, idChild, dwEventThread, dwmsEventTime):
-    if event != win32con.EVENT_SYSTEM_FOREGROUND:
-        return
-
-    # 重新获取当前活跃窗口的句柄，解决Alt+Tab切换窗口时，收到不在预期内的explorer.exe事件以致结果被干扰的问题
-    hwnd = win32gui.GetForegroundWindow()
-
-    with active_window_info_lock:
-        global current_active_hwnd, current_process_name, current_window_title, current_data_version, event_callback_list
+def active_window_info():
+    global current_active_hwnd, current_process_name, current_window_title, current_data_version, callback_version
+    if current_data_version != callback_version:
         try:
-            if hwnd == current_active_hwnd:
-                return
+            hwnd = win32gui.GetForegroundWindow()
 
             window_title = win32gui.GetWindowText(hwnd)
             _, pid = win32process.GetWindowThreadProcessId(hwnd)
@@ -37,15 +30,35 @@ def callback_impl(hWinEventHook, event, hwnd, idObject, idChild, dwEventThread, 
             current_active_hwnd = hwnd
             current_process_name = process_name
             current_window_title = window_title
-            current_data_version += 1
         except:
             current_active_hwnd = 0
             current_process_name = ""
             current_window_title = ""
-            current_data_version += 1
         finally:
-            for event_callback in event_callback_list:
-                event_callback()
+            current_data_version = callback_version
+
+    with active_window_info_lock:
+        return current_process_name, current_window_title, current_data_version
+
+def add_event_callback_list(callback):
+    with active_window_info_lock:
+        event_callback_list.append(callback)
+
+def clear_event_callback_list():
+    with active_window_info_lock:
+        event_callback_list.clear()
+
+# --- 事件钩子回调函数 ---
+def callback_impl(hWinEventHook, event, hwnd, idObject, idChild, dwEventThread, dwmsEventTime):
+    if event != win32con.EVENT_SYSTEM_FOREGROUND:
+        return
+
+    global callback_version, event_callback_list
+
+    callback_version += 1
+
+    for event_callback in event_callback_list:
+        event_callback()
 
 # 定义回调函数的类型
 WINEVENTPROC = ctypes.WINFUNCTYPE(
