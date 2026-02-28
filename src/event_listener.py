@@ -3,7 +3,7 @@ import keyboard
 import sys
 import threading
 
-import api
+import button_op
 import config
 import foreground_listener
 import list_view
@@ -98,7 +98,7 @@ def multi_factory(event):
     return callback
 
 def script_factory(event):
-    script, context = scripts.load_as_function(event.button)
+    script, context = scripts.load_as_function(event)
     thread = None
 
     def if_ing_then_stop():
@@ -122,7 +122,7 @@ def script_factory(event):
 
 def check_window(event):
     def callback():
-        event.position = api.foreground()
+        event.position = foreground_listener.active_window_info()[:2]
         list_view.refresh()
 
     return callback
@@ -157,13 +157,13 @@ def check_range(event):
     return passed
 
 def get_mouse_position(event):
-    return api.position(*event.position)
+    return button_op.position(*event.position)
 
 def button_click(event):
-    return api.click(event.button, *event.position)
+    return button_op.click(event.button, *event.position)
 
 def button_down(event):
-    return api.down(event.button, *event.position)
+    return button_op.down(event.button, *event.position)
 
 def button_up(event):
-    return api.up(event.button, *event.position)
+    return button_op.up(event.button, *event.position)

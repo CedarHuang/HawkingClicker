@@ -1,4 +1,5 @@
 import builtins
+import copy
 import importlib
 import importlib.util
 import inspect
@@ -98,9 +99,9 @@ class ScriptContext(dict):
         os.path.abspath(common.scripts_path()),
     ]
 
-    def __init__(self):
+    def __init__(self, event):
         super().__init__()
-
+        self.event = event
         self['__builtins__'] = self.create_restricted_builtins()
 
     def create_restricted_builtins(self):
@@ -115,8 +116,7 @@ class ScriptContext(dict):
 
         restricted_builtins['__import__'] = self.custom_import
         restricted_builtins['print'] = self.custom_print
-        restricted_builtins['init'] = api.create_init()
-        restricted_builtins.update(api.create_sleep())
+        restricted_builtins.update(api._create_context(self.event))
 
         self.import_module_to_target(restricted_builtins, 'api', import_root=False, import_all=True, exclude_module=True)
 
@@ -169,7 +169,7 @@ class ScriptContext(dict):
 
             module = importlib.util.module_from_spec(spec)
             module.__builtins__ = self['__builtins__']
-            module.__builtins__['init'] = api.create_init()
+            module.__builtins__['init'] = api._create_context(None)['init']
             spec.loader.exec_module(module)
             return module
 
@@ -205,9 +205,10 @@ class Scripts:
     def __init__(self):
         pass
 
-    def load_as_function(self, script_name):
+    def load_as_function(self, event):
+        script_name = event.button
         script_code = ScriptCode.get_by_name(script_name)
-        script_context = ScriptContext()
+        script_context = ScriptContext(copy.deepcopy(event))
 
         def wrapped_function():
             try:
