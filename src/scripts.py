@@ -55,18 +55,24 @@ class ScriptObserver(watchdog.events.FileSystemEventHandler):
         super().__init__()
         self.observer = watchdog.observers.Observer()
         self.observer.schedule(self, common.scripts_path(), recursive=True)
+        self.init_time = time.time()
         self.last_modified_times = {
             # key: file path
             # value: last modified time
         }
 
     def on_modified(self, event):
+        current_time = time.time()
+
+        # 忽略启动前 2 秒的 on_modified 事件
+        if current_time - self.init_time < 2.0:
+            return
+
         if event.is_directory or not event.src_path.endswith('.py'):
             return
 
         path = os.path.realpath(event.src_path)
 
-        current_time = time.time()
         if path in self.last_modified_times:
             time_since_last = current_time - self.last_modified_times[path]
             if time_since_last < 0.5:
