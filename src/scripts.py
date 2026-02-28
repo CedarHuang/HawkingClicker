@@ -174,8 +174,8 @@ class ScriptContext(dict):
                 continue
 
             module = importlib.util.module_from_spec(spec)
-            module.__builtins__ = self['__builtins__']
-            module.__builtins__['init'] = api._create_context(None)['init']
+            module.__builtins__ = self['__builtins__'].copy()
+            module.__builtins__['init'] = api._create_init()
             spec.loader.exec_module(module)
             return module
 

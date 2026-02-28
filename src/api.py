@@ -23,6 +23,30 @@ class ScriptExit(Exception):
 
 _context_id_inc = 0
 
+def _create_init(_=None):
+    """为 Script 脚本环境生成init。
+
+    :meta private: 内部使用。
+    """
+    init_flag = False
+
+    def init():
+        """检查是否为首次调用。
+
+        这个函数设计为只在首次调用时返回 True，之后的所有调用都返回 False。
+        适用于需要确保某个操作只执行一次的场景。
+
+        Returns:
+            bool: 首次调用返回 True，后续调用返回 False。
+        """
+        nonlocal init_flag
+        if not init_flag:
+            init_flag = True
+            return True
+        return False
+
+    return init
+
 def _create_context(event):
     """为 Script 脚本环境生成API。
 
@@ -121,25 +145,11 @@ def _create_context(event):
         delay_time = ms
 
     ############################################################################
-    init_flag = False
 
-    @register()
-    def init():
-        """检查是否为首次调用。
-
-        这个函数设计为只在首次调用时返回 True，之后的所有调用都返回 False。
-        适用于需要确保某个操作只执行一次的场景。
-
-        Returns:
-            bool: 首次调用返回 True，后续调用返回 False。
-        """
-        nonlocal init_flag
-        if not init_flag:
-            init_flag = True
-            return True
-        return False
-
-    ############################################################################
+    @register('init')
+    @_create_init
+    def _():
+        ...
 
     @register()
     def event_hotkey():
