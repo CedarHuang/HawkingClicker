@@ -134,6 +134,9 @@ class ScriptContext(dict):
     def clear_stop(self):
         self['__builtins__']['clear_stop']()
 
+    def clear_delay_flag(self):
+        self['__builtins__']['clear_delay_flag']()
+
     def custom_import(self, name, globals=None, locals=None, fromlist=(), level=0):
         # 允许导入的内置模块
         if name in ['math', 'time']:
@@ -225,6 +228,7 @@ class Scripts:
                 logger.script.error(f'Runtime error in script <{script_name}>: {e}', exc_info=True)
             finally:
                 script_context.clear_stop()
+                script_context.clear_delay_flag()
 
         return wrapped_function, script_context
 

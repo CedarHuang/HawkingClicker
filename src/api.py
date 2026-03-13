@@ -112,6 +112,7 @@ def _create_context(event):
 
     ############################################################################
     delay_time = 0
+    delay_flag = False
 
     def delay(func):
         """延迟装饰器，在函数调用后添加延迟。
@@ -120,10 +121,23 @@ def _create_context(event):
         """
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
+            nonlocal delay_flag
+            if delay_flag:
+                sleep(delay_time)
+            delay_flag = True
             result = func(*args, **kwargs)
             sleep(delay_time)
             return result
         return wrapper
+
+    @register()
+    def clear_delay_flag():
+        """清除延迟标记。
+
+        :meta private: 内部使用。
+        """
+        nonlocal delay_flag
+        delay_flag = False
 
     @register()
     def get_delay():
