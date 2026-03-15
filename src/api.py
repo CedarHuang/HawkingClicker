@@ -111,7 +111,7 @@ def _create_context(event):
         stop_event.clear()
 
     ############################################################################
-    delay_time = 0
+    delay_time = 100
     delay_flag = False
 
     def delay(func):
