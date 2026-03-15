@@ -139,6 +139,7 @@ def _create_context(event):
         nonlocal delay_flag
         delay_flag = False
 
+    @register('get_pause')
     @register()
     def get_delay():
         """获取鼠标操作调用之后的延迟时间。
@@ -148,6 +149,7 @@ def _create_context(event):
         """
         return delay_time
 
+    @register('set_pause')
     @register()
     def set_delay(ms):
         """设置鼠标操作调用之后的延迟时间。
@@ -272,7 +274,7 @@ def _create_context(event):
             x_offset (int): X轴方向的偏移量。正值向右，负值向左。
             y_offset (int): Y轴方向的偏移量。正值向下，负值向上。
         """
-        pyautogui.move(x_offset, y_offset)
+        pyautogui.move(x_offset, y_offset, _pause=False)
 
     @register()
     @delay
@@ -283,7 +285,7 @@ def _create_context(event):
             x (int): 目标X坐标。
             y (int): 目标Y坐标。
         """
-        pyautogui.moveTo(x, y)
+        pyautogui.moveTo(x, y, _pause=False)
 
     @register()
     def is_caps_lock_on():

@@ -16,21 +16,21 @@ def position(x=-1, y=-1):
 def click(button, x=-1, y=-1):
     if button in MOUSE_BUTTON:
         x, y = position(x, y)
-        pyautogui.mouseDown(x, y, button=button)
-        pyautogui.mouseUp(x, y, button=button)
+        pyautogui.mouseDown(x, y, button=button, _pause=False)
+        pyautogui.mouseUp(x, y, button=button, _pause=False)
     else:
         keyboard.press_and_release(button)
 
 def down(button, x=-1, y=-1):
     if button in MOUSE_BUTTON:
         x, y = position(x, y)
-        pyautogui.mouseDown(x, y, button=button)
+        pyautogui.mouseDown(x, y, button=button, _pause=False)
     else:
         keyboard.press(button)
 
 def up(button, x=-1, y=-1):
     if button in MOUSE_BUTTON:
         x, y = position(x, y)
-        pyautogui.mouseUp(x, y, button=button)
+        pyautogui.mouseUp(x, y, button=button, _pause=False)
     else:
         keyboard.release(button)
