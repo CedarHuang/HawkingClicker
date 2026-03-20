@@ -121,7 +121,6 @@ class ScriptContext(dict):
             del restricted_builtins['quit']
 
         restricted_builtins['__import__'] = self.custom_import
-        restricted_builtins['print'] = self.custom_print
         restricted_builtins.update(api._create_context(self.event))
 
         self.import_module_to_target(restricted_builtins, 'api', import_root=False, import_all=True, exclude_module=True)
@@ -183,12 +182,6 @@ class ScriptContext(dict):
             return module
 
         raise ImportError(f"Module '{name}' not found or not allowed to be imported from restricted paths.")
-
-    def custom_print(self, *args, **kwargs):
-        sep = kwargs.get('sep', ' ')
-        end = kwargs.get('end', '\n')
-        message = sep.join(map(str, args)) + end.rstrip('\n')
-        logger.script.info(message)
 
     @staticmethod
     def import_module_to_target(target, module_name, import_root=True, import_all=False, exclude_module=False):

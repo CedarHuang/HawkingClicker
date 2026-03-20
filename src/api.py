@@ -6,6 +6,7 @@ import win32con
 
 import button_op
 import foreground_listener
+import logger
 
 class ScriptExit(Exception):
     """自定义异常类，用于表示脚本的有意终止。
@@ -167,14 +168,12 @@ def _create_context(event):
     def _():
         ...
 
-    @register()
-    def event_hotkey():
-        """获取当前事件的热键。
-
-        Returns:
-            str: 当前事件的热键。
-        """
-        return event.hotkey
+    @register('print')
+    def _(*args, **kwargs):
+        sep = kwargs.get('sep', ' ')
+        end = kwargs.get('end', '\n')
+        message = sep.join(map(str, args)) + end.rstrip('\n')
+        logger.script.info(message)
 
     @register('quit')
     @register()
@@ -190,6 +189,15 @@ def _create_context(event):
             ScriptExit: 始终抛出此异常以终止脚本。
         """
         raise ScriptExit(f"Script exited with code {code}", code)
+
+    @register()
+    def event_hotkey():
+        """获取当前事件的热键。
+
+        Returns:
+            str: 当前事件的热键。
+        """
+        return event.hotkey
 
     @register()
     def foreground():
