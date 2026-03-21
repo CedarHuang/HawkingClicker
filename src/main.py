@@ -33,4 +33,4 @@ if __name__ == '__main__':
     try:
         main()
     except:
-        logger.app.error(f'An error occurred while the program was running', exc_info=True)
+        logger.app.error(f'An error occurred while the program was running:', exc_info=True)

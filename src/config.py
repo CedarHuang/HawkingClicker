@@ -36,7 +36,7 @@ class Events(list):
             with open(common.event_config_path(), 'r', encoding='utf-8') as file:
                 self.extend([Event().from_dict(i) for i in json.load(file)])
         except:
-            logger.app.error(f'Failed to load event configuration from {common.event_config_path()}', exc_info=True)
+            logger.app.error(f'Failed to load event configuration from {common.event_config_path()}:', exc_info=True)
 
     def save(self):
         with open(common.event_config_path(), 'w', encoding='utf-8') as file:
@@ -77,7 +77,7 @@ class Settings:
             with open(common.settings_config_path(), 'r', encoding='utf-8') as file:
                 self.__dict__.update(json.load(file))
         except:
-            logger.app.error(f'Failed to load settings configuration from {common.settings_config_path()}', exc_info=True)
+            logger.app.error(f'Failed to load settings configuration from {common.settings_config_path()}:', exc_info=True)
 
     def save(self, update_startup = False):
         with open(common.settings_config_path(), 'w', encoding='utf-8') as file:

@@ -16,7 +16,7 @@ def check():
         try:
             wakeup_existing_instance(port)
         except:
-            logger.app.error(f'Failed to wake up existing instance on port {port}', exc_info=True)
+            logger.app.error(f'Failed to wake up existing instance on port {port}:', exc_info=True)
         return False
 
     sock = create_socket()

@@ -38,17 +38,17 @@ class ScriptCode:
         try:
             # 仅初次加载尝试编译
             self.code = compile(self.code, f'<{script_name}>', 'exec')
-        except SyntaxError as e:
-            logger.script.error(f'Syntax error in script <{script_name}> at "{script_path}": {e}', exc_info=True)
-        except Exception as e:
-            logger.script.error(f'Unexpected error compiling script <{script_name}> at "{script_path}": {e}', exc_info=True)
+        except SyntaxError:
+            logger.script.error(f'Syntax error in script <{script_name}> at "{script_path}":', exc_info=True)
+        except:
+            logger.script.error(f'Unexpected error compiling script <{script_name}> at "{script_path}":', exc_info=True)
 
     def reload(self):
         try:
             with open(self.path, 'r', encoding='utf-8') as f:
                 self.code = f.read()
         except:
-            logger.script.error(f'Error reading script file: "{self.path}"', exc_info=True)
+            logger.script.error(f'Error reading script file: "{self.path}":', exc_info=True)
 
 class ScriptObserver(watchdog.events.FileSystemEventHandler):
     def __init__(self):
@@ -217,8 +217,8 @@ class Scripts:
                 exec(script_code.code, script_context)
             except api.ScriptExit as e:
                 logger.script.info(f'Script <{script_name}> terminated: {e}')
-            except Exception as e:
-                logger.script.error(f'Runtime error in script <{script_name}>: {e}', exc_info=True)
+            except Exception:
+                logger.script.error(f'Runtime error in script <{script_name}>:', exc_info=True)
             finally:
                 script_context.clear_stop()
                 script_context.clear_delay_flag()
