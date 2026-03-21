@@ -22,8 +22,6 @@ class ScriptExit(Exception):
         super().__init__(message)
         self.code = code
 
-_context_id_inc = 0
-
 def _create_init(_=None):
     """为 Script 脚本环境生成init。
 
@@ -47,6 +45,12 @@ def _create_init(_=None):
         return False
 
     return init
+
+_context_id_inc = 0
+_global_cache = {}
+_script_cache = {}
+_global_cache_lock = threading.Lock()
+_script_cache_lock = threading.Lock()
 
 def _create_context(event):
     """为 Script 脚本环境生成API。
@@ -160,6 +164,88 @@ def _create_context(event):
         """
         nonlocal delay_time
         delay_time = ms
+
+    ############################################################################
+
+    @register()
+    def get_global_cache(key, default=None):
+        """获取全局缓存中的值。
+
+        这个字典在所有脚本的不同上下文中共享，可以用于存储跨脚本的数据。
+
+        Args:
+            key: 要获取的值的键。
+            default: 如果键不存在时返回的默认值。默认为 None。
+
+        Returns:
+            any: 全局缓存字典中的值，如果键不存在则返回默认值。
+        """
+        with _global_cache_lock:
+            return _global_cache.get(key, default)
+
+    @register()
+    def set_global_cache(key, value):
+        """设置全局缓存中的值。
+
+        这个字典在所有脚本的不同上下文中共享，可以用于存储跨脚本的数据。
+
+        Args:
+            key: 要设置的值的键。
+            value: 要设置的值。
+
+        Returns:
+            any: 设置的值。
+        """
+        with _global_cache_lock:
+            _global_cache[key] = value
+            return value
+
+    def _script_cache():
+        """获取当前脚本的缓存字典。
+        
+        这个字典在同一脚本的不同上下文中共享，但在不同脚本之间不共享。
+        可以用于存储同一脚本的不同运行实例之间的数据。
+        
+        :meta private: 内部使用。
+        """
+        script_name = event.button
+        if script_name not in _script_cache:
+            _script_cache[script_name] = {}
+        return _script_cache[script_name]
+
+    @register()
+    def get_script_cache(key, default=None):
+        """获取脚本缓存中的值。
+
+        这个字典在同一脚本的不同上下文中共享，但在不同脚本之间不共享。
+        可以用于存储同一脚本的不同运行实例之间的数据。
+
+        Args:
+            key: 要获取的值的键。
+            default: 如果键不存在时返回的默认值。默认为 None。
+
+        Returns:
+            any: 脚本缓存字典中的值，如果键不存在则返回默认值。
+        """
+        with _script_cache_lock:
+            return _script_cache().get(key, default)
+
+    def set_script_cache(key, value):
+        """设置脚本缓存中的值。
+
+        这个字典在同一脚本的不同上下文中共享，但在不同脚本之间不共享。
+        可以用于存储同一脚本的不同运行实例之间的数据。
+
+        Args:
+            key: 要设置的值的键。
+            value: 要设置的值。
+
+        Returns:
+            any: 设置的值。
+        """
+        with _script_cache_lock:
+            _script_cache()[key] = value
+            return value
 
     ############################################################################
 
