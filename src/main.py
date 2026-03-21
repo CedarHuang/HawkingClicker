@@ -3,12 +3,12 @@ import sys
 import config
 import event_listener
 import foreground_listener
+import logger
 import main_page
 import single_instance
 import tray
 
-if __name__ == '__main__':
-
+def main():
     if not single_instance.check():
         sys.exit()
 
@@ -28,3 +28,9 @@ if __name__ == '__main__':
         main_page.root.withdraw()
 
     main_page.root.mainloop()
+
+if __name__ == '__main__':
+    try:
+        main()
+    except:
+        logger.app.error(f'An error occurred while the program was running', exc_info=True)

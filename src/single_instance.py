@@ -2,6 +2,7 @@ import psutil
 import socket
 import threading
 
+import logger
 import main_page
 
 PORT_START = 45252
@@ -15,7 +16,7 @@ def check():
         try:
             wakeup_existing_instance(port)
         except:
-            pass
+            logger.app.error(f'Failed to wake up existing instance on port {port}', exc_info=True)
         return False
 
     sock = create_socket()

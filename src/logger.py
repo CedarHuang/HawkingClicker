@@ -4,7 +4,9 @@ import sys
 
 import common
 
-# 日志文件路径
+# 应用日志文件路径
+app_log_file_path = os.path.join(common.root_path(), 'app.log')
+# 脚本日志文件路径
 script_log_file_path = os.path.join(common.config_path(), 'scripts.log')
 
 def log_level():
@@ -33,4 +35,5 @@ def create_logger(name, path):
 
     return logger
 
+app = create_logger('app', app_log_file_path)
 script = create_logger('script', script_log_file_path)

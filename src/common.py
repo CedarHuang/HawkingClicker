@@ -12,10 +12,7 @@ settings_config_name = 'settings.json'
 
 def mkdir_if_not_exists(path):
     if not os.path.exists(path):
-        try:
-            os.makedirs(path)
-        except:
-            pass
+        os.makedirs(path)
 
 def base_path():
     if hasattr(sys, '_MEIPASS'):
