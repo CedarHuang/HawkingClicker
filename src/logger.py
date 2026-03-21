@@ -5,7 +5,7 @@ import sys
 import common
 
 # 日志文件路径
-script_log_file_path = os.path.join(common.root_path(), 'scripts.log')
+script_log_file_path = os.path.join(common.config_path(), 'scripts.log')
 
 def log_level():
     if hasattr(sys, '_MEIPASS'):
