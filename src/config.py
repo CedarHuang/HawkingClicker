@@ -32,18 +32,18 @@ class Events(list):
     def __init__(self):
         super().__init__()
         try:
-            with open(common.event_config_path(), 'r') as file:
+            with open(common.event_config_path(), 'r', encoding='utf-8') as file:
                 self.extend([Event().from_dict(i) for i in json.load(file)])
         except:
             pass
 
     def save(self):
-        with open(common.event_config_path(), 'w') as file:
+        with open(common.event_config_path(), 'w', encoding='utf-8') as file:
             dicts = [
                 {k: v for k, v in event.to_dict().items() if not k.startswith('_')}
                 for event in self
             ]
-            json.dump(dicts, file, indent=4)
+            json.dump(dicts, file, indent=4, ensure_ascii=False)
         event_listener.stop()
         event_listener.start()
 
@@ -73,14 +73,14 @@ class Settings:
         self.startup = False
         self.startup_as_admin = False
         try:
-            with open(common.settings_config_path(), 'r') as file:
+            with open(common.settings_config_path(), 'r', encoding='utf-8') as file:
                 self.__dict__.update(json.load(file))
         except:
             pass
 
     def save(self, update_startup = False):
-        with open(common.settings_config_path(), 'w') as file:
-            json.dump(self.__dict__, file, indent=4)
+        with open(common.settings_config_path(), 'w', encoding='utf-8') as file:
+            json.dump(self.__dict__, file, indent=4, ensure_ascii=False)
         tray.update_visible()
         if update_startup:
             utils.update_startup(self.startup, self.startup_as_admin)
