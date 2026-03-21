@@ -128,13 +128,13 @@ class ScriptContext(dict):
         return restricted_builtins
 
     def set_stop(self):
-        self['__builtins__']['set_stop']()
+        self['__builtins__']['_set_stop']()
 
     def clear_stop(self):
-        self['__builtins__']['clear_stop']()
+        self['__builtins__']['_clear_stop']()
 
     def clear_delay_flag(self):
-        self['__builtins__']['clear_delay_flag']()
+        self['__builtins__']['_clear_delay_flag']()
 
     def custom_import(self, name, globals=None, locals=None, fromlist=(), level=0):
         # 允许导入的内置模块

@@ -102,7 +102,7 @@ def _create_context(event):
             exit()
 
     @register()
-    def set_stop():
+    def _set_stop():
         """设置停止事件标志。
 
         :meta private: 内部使用。
@@ -110,7 +110,7 @@ def _create_context(event):
         stop_event.set()
 
     @register()
-    def clear_stop():
+    def _clear_stop():
         """清除停止事件标志。
 
         :meta private: 内部使用。
@@ -138,7 +138,7 @@ def _create_context(event):
         return wrapper
 
     @register()
-    def clear_delay_flag():
+    def _clear_delay_flag():
         """清除延迟标记。
 
         :meta private: 内部使用。
