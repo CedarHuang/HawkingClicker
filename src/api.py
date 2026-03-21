@@ -259,6 +259,16 @@ def _create_context(event):
 
     @register('print')
     def _(*args, **kwargs):
+        """将消息记录到脚本日志中。
+
+        这个函数接受任意数量的位置参数和可选的 'sep' 和 'end' 关键字参数，类似于内置的 'print' 函数。
+        但它将输出重定向到脚本日志，而不是标准输出。
+
+        Args:
+            *args: 要打印的任意数量的位置参数。
+            sep (str, optional): 分隔符，用于分隔位置参数。默认为一个空格。
+            end (str, optional): 结尾字符串，添加到输出的末尾。默认为一个换行符。
+        """
         sep = kwargs.get('sep', ' ')
         end = kwargs.get('end', '\n')
         message = sep.join(map(str, args)) + end.rstrip('\n')
