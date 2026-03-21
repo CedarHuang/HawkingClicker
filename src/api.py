@@ -1,10 +1,12 @@
 import functools
+import inspect
 import pyautogui
 import threading
 import win32api
 import win32con
 
 import button_op
+import common
 import foreground_listener
 import logger
 
@@ -230,6 +232,7 @@ def _create_context(event):
         with _script_cache_lock:
             return _cur_script_cache().get(key, default)
 
+    @register()
     def set_script_cache(key, value):
         """设置脚本缓存中的值。
 
@@ -392,3 +395,31 @@ def _create_context(event):
 
     ############################################################################
     return functions
+
+def _generate_builtins():
+    lines = [
+    '"""',
+    '自动生成的 __builtins__.py 文件',
+    '为 IDE 提供代码补全和类型提示',
+    '"""',
+    '',
+    'from builtins import *',
+    '',
+    ]
+
+    context = _create_context(None)
+    for name, func in context.items():
+        if name.startswith('_'):
+            continue
+
+        sig = inspect.signature(func)
+        doc = inspect.getdoc(func)
+
+        lines.append(f'def {name}{sig}:')
+        lines.append(f'    """{doc}\n"""'.replace('\n', '\n    '))
+        lines.append('    ...\n')
+
+    with open(common.builtins_path(), 'w', encoding='utf-8') as f:
+        f.write('\n'.join(lines))
+
+_generate_builtins()

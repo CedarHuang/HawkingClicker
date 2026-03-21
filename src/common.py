@@ -6,6 +6,7 @@ app_name = 'HawkingClicker'
 app_author = 'CedarHuang'
 
 scripts_name = 'scripts'
+builtins_name = '__builtins__.py'
 event_config_name = 'event.json'
 settings_config_name = 'settings.json'
 
@@ -37,6 +38,9 @@ def config_path():
 
 def scripts_path():
     return os.path.join(config_path(), scripts_name)
+
+def builtins_path():
+    return os.path.join(scripts_path(), builtins_name)
 
 def event_config_path():
     return os.path.join(config_path(), event_config_name)
