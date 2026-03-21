@@ -200,7 +200,7 @@ def _create_context(event):
             _global_cache[key] = value
             return value
 
-    def _script_cache():
+    def _cur_script_cache():
         """获取当前脚本的缓存字典。
         
         这个字典在同一脚本的不同上下文中共享，但在不同脚本之间不共享。
@@ -228,7 +228,7 @@ def _create_context(event):
             any: 脚本缓存字典中的值，如果键不存在则返回默认值。
         """
         with _script_cache_lock:
-            return _script_cache().get(key, default)
+            return _cur_script_cache().get(key, default)
 
     def set_script_cache(key, value):
         """设置脚本缓存中的值。
@@ -244,7 +244,7 @@ def _create_context(event):
             any: 设置的值。
         """
         with _script_cache_lock:
-            _script_cache()[key] = value
+            _cur_script_cache()[key] = value
             return value
 
     ############################################################################
