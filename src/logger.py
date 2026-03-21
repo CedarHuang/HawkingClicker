@@ -9,6 +9,10 @@ app_log_file_path = os.path.join(common.root_path(), 'app.log')
 # 脚本日志文件路径
 script_log_file_path = os.path.join(common.config_path(), 'scripts.log')
 
+class IndentedFormatter(logging.Formatter):
+    def formatException(self, ei):
+        return f'{super().formatException(ei)}\n'
+
 def log_level():
     if hasattr(sys, '_MEIPASS'):
         return logging.INFO
@@ -20,17 +24,16 @@ def create_logger(name, path):
     logger = logging.getLogger(name)
     logger.setLevel(level)
 
+    formatter = IndentedFormatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
     file_handler = logging.FileHandler(path, encoding='utf-8')
     file_handler.setLevel(level)
+    file_handler.setFormatter(formatter)
+    logger.addHandler(file_handler)
 
     console_handler = logging.StreamHandler(sys.stdout)
     console_handler.setLevel(level)
-
-    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    file_handler.setFormatter(formatter)
     console_handler.setFormatter(formatter)
-
-    logger.addHandler(file_handler)
     logger.addHandler(console_handler)
 
     return logger
