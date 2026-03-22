@@ -4,6 +4,7 @@ from tkinter import ttk
 
 from core import common
 from core import config
+from core.callbacks import callbacks, CallbackEvent
 from views import edit_page
 from views import list_view
 from views import menu
@@ -55,3 +56,7 @@ def on_close():
     else:
         tray.stop()
         root.destroy()
+
+@callbacks.on(CallbackEvent.WAKEUP)
+def show():
+    root.deiconify()

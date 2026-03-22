@@ -1,6 +1,7 @@
 from tkinter import ttk
 
 from core import config
+from core.callbacks import callbacks, CallbackEvent
 from i18n import i18n
 from views import edit_page
 
@@ -26,6 +27,7 @@ def init(master):
     down = ttk.Button(master, text='↓', width=5, command=on_down_click)
     down.pack(side='top', fill='y', expand=True)
 
+@callbacks.on(CallbackEvent.LIST_REFRESH)
 def refresh():
     for item in tree.get_children():
         tree.delete(item)

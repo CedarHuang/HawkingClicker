@@ -3,7 +3,7 @@ import socket
 import threading
 
 from core import logger
-from views import main_page
+from core.callbacks import callbacks, CallbackEvent
 
 PORT_START = 45252
 PORT_CNT = 3
@@ -60,6 +60,6 @@ def im_single_instance(sock):
             conn, addr = sock.accept()
             data = conn.recv(1024)
             if data == b'open':
-                main_page.root.deiconify()
+                callbacks.trigger(CallbackEvent.WAKEUP)
             conn.close()
     threading.Thread(target=handle_connection, daemon=True).start()

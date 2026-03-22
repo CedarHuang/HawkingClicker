@@ -6,8 +6,8 @@ import threading
 from core import button_op
 from core import config
 from core import foreground_listener
+from core.callbacks import callbacks, CallbackEvent
 from core.scripts import scripts
-from views import list_view
 
 def start():
     for event in config.events:
@@ -123,7 +123,7 @@ def script_factory(event):
 def check_window(event):
     def callback():
         event.position = foreground_listener.active_window_info()[:2]
-        list_view.refresh()
+        callbacks.trigger(CallbackEvent.LIST_REFRESH)
 
     return callback
 

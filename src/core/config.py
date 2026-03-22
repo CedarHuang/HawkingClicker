@@ -4,7 +4,7 @@ from core import common
 from core import event_listener
 from core import logger
 from core import utils
-from views import tray
+from core.callbacks import callbacks, CallbackEvent
 
 common.mkdir_if_not_exists(common.config_path())
 
@@ -82,7 +82,7 @@ class Settings:
     def save(self, update_startup = False):
         with open(common.settings_config_path(), 'w', encoding='utf-8') as file:
             json.dump(self.__dict__, file, indent=4, ensure_ascii=False)
-        tray.update_visible()
+        callbacks.trigger(CallbackEvent.TRAY_UPDATE)
         if update_startup:
             utils.update_startup(self.startup, self.startup_as_admin)
 

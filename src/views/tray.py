@@ -4,6 +4,7 @@ from PIL import Image
 
 from core import common
 from core import config
+from core.callbacks import callbacks, CallbackEvent
 from i18n import i18n
 from views import main_page
 from __version__ import __version__
@@ -22,6 +23,7 @@ def start():
 
     threading.Thread(target=icon.run, args=(update_visible,), daemon=True).start()
 
+@callbacks.on(CallbackEvent.TRAY_UPDATE)
 def update_visible(_ = None):
     icon.visible = config.settings.enable_tray
 
