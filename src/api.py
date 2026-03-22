@@ -133,7 +133,6 @@ def _create_context(event):
                 sleep(delay_time)
             delay_flag = True
             result = func(*args, **kwargs)
-            sleep(delay_time)
             return result
         return wrapper
 
