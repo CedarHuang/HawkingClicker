@@ -170,6 +170,36 @@ def _create_context(event):
         delay_time = ms
         return delay_time
 
+    class DelayContext:
+        def __init__(self, ms):
+            self.temp_delay = ms
+            self.orig_delay = None
+
+        def __enter__(self):
+            self.orig_delay = get_delay()
+            set_delay(self.temp_delay)
+
+        def __exit__(self, exc_type, exc_val, exc_tb):
+            set_delay(self.orig_delay)
+
+    @register('tmp_pause')
+    @register()
+    def tmp_delay(ms):
+        """创建一个延迟上下文管理器实例，用于在代码块内临时设置延迟时间。
+
+        Examples:
+            with tmp_delay(200):
+                click('Left')  # 在这个代码块内，点击操作将使用200毫秒的延迟
+            click('Left')  # 在这个代码块外，点击操作将恢复之前的延迟设置
+
+        Args:
+            ms (float | int): 在上下文内使用的延迟时间（毫秒）。
+
+        Returns:
+            DelayContext: 延迟上下文管理器实例。
+        """
+        return DelayContext(ms)
+
     ############################################################################
 
     @register()
