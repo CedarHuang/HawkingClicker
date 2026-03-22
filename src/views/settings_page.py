@@ -1,9 +1,9 @@
 import tkinter as tk
 from tkinter import ttk
 
-import common
-import config
-import utils
+from core import common
+from core import config
+from core import utils
 from i18n import i18n
 
 CEHCK_SELECTED = ['!alternate', 'selected']

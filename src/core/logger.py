@@ -2,7 +2,7 @@ import logging
 import os
 import sys
 
-import common
+from core import common
 
 # 应用日志文件路径
 app_log_file_path = os.path.join(common.root_path(), 'app.log')

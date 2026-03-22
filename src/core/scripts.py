@@ -8,9 +8,9 @@ import time
 import watchdog.events
 import watchdog.observers
 
-import api
-import common
-import logger
+from core import api
+from core import common
+from core import logger
 
 common.mkdir_if_not_exists(common.scripts_path())
 
@@ -123,7 +123,7 @@ class ScriptContext(dict):
         restricted_builtins['__import__'] = self.custom_import
         restricted_builtins.update(api._create_context(self.event))
 
-        self.import_module_to_target(restricted_builtins, 'api', import_root=False, import_all=True, exclude_module=True)
+        self.import_module_to_target(restricted_builtins, 'core.api', import_root=False, import_all=True, exclude_module=True)
 
         return restricted_builtins
 

@@ -1,10 +1,10 @@
 import json
 
-import common
-import event_listener
-import logger
-import tray
-import utils
+from core import common
+from core import event_listener
+from core import logger
+from core import utils
+from views import tray
 
 common.mkdir_if_not_exists(common.config_path())
 

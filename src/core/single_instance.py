@@ -2,8 +2,8 @@ import psutil
 import socket
 import threading
 
-import logger
-import main_page
+from core import logger
+from views import main_page
 
 PORT_START = 45252
 PORT_CNT = 3

@@ -17,7 +17,7 @@ def mkdir_if_not_exists(path):
 def base_path():
     if hasattr(sys, '_MEIPASS'):
         return sys._MEIPASS
-    return os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+    return os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 
 def assets_path(asset_file_name):
     return os.path.join(base_path(), 'assets', asset_file_name)
@@ -28,7 +28,7 @@ def exe_path():
 def root_path():
     if hasattr(sys, '_MEIPASS'):
         return os.path.abspath(os.path.join(sys._MEIPASS, '..'))
-    return os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+    return os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 
 def config_path():
     return appdirs.user_config_dir(app_name, app_author, roaming=True)

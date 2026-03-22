@@ -1,8 +1,8 @@
 from tkinter import ttk
 
-import config
-import edit_page
+from core import config
 from i18n import i18n
+from views import edit_page
 
 tree = None
 

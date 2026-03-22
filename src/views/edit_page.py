@@ -2,9 +2,9 @@ import tkinter as tk
 from tkinter import ttk
 import keyboard
 
-import common
-import config
-import event_listener
+from core import common
+from core import config
+from core import event_listener
 from i18n import i18n
 
 class EditPage:

@@ -3,11 +3,11 @@ import keyboard
 import sys
 import threading
 
-import button_op
-import config
-import foreground_listener
-import list_view
-from scripts import scripts
+from core import button_op
+from core import config
+from core import foreground_listener
+from core.scripts import scripts
+from views import list_view
 
 def start():
     for event in config.events:

@@ -1,12 +1,12 @@
 import sys
 
-import config
-import event_listener
-import foreground_listener
-import logger
-import main_page
-import single_instance
-import tray
+from core import config
+from core import event_listener
+from core import foreground_listener
+from core import logger
+from core import single_instance
+from views import main_page
+from views import tray
 
 def main():
     if not single_instance.check():

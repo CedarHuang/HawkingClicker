@@ -5,10 +5,10 @@ import threading
 import win32api
 import win32con
 
-import button_op
-import common
-import foreground_listener
-import logger
+from core import button_op
+from core import common
+from core import foreground_listener
+from core import logger
 
 class ScriptExit(Exception):
     """自定义异常类，用于表示脚本的有意终止。

@@ -2,10 +2,10 @@ import pystray
 import threading
 from PIL import Image
 
-import common
-import config
-import main_page
+from core import common
+from core import config
 from i18n import i18n
+from views import main_page
 from __version__ import __version__
 
 icon = None

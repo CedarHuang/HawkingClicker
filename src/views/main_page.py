@@ -2,12 +2,12 @@ import os
 import tkinter as tk
 from tkinter import ttk
 
-import common
-import config
-import edit_page
-import list_view
-import menu
-import tray
+from core import common
+from core import config
+from views import edit_page
+from views import list_view
+from views import menu
+from views import tray
 from __version__ import __version__
 
 root = None

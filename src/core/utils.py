@@ -2,8 +2,8 @@ import ctypes
 import winreg
 import win32com.client
 
-import common
-import logger
+from core import common
+from core import logger
 
 def create_startup_to_winreg():
     key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, r'Software\Microsoft\Windows\CurrentVersion\Run', 0, winreg.KEY_SET_VALUE)

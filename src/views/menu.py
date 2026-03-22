@@ -1,9 +1,9 @@
 import tkinter as tk
 import webbrowser
 
-import common
-import settings_page
+from core import common
 from i18n import i18n
+from views import settings_page
 
 menu = None
 
