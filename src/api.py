@@ -163,9 +163,13 @@ def _create_context(event):
 
         Args:
             ms (float | int): 延迟的毫秒数。
+
+        Returns:
+            float | int: 设置后的延迟时间（毫秒）。
         """
         nonlocal delay_time
         delay_time = ms
+        return delay_time
 
     ############################################################################
 
