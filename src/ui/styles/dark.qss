@@ -1,0 +1,702 @@
+/* ============================================================
+ * HawkingClicker — 深色主题 (dark.qss)
+ * One Dark 风格配色方案
+ * 
+ * 主色调参考 Atom One Dark:
+ *   背景:       #282C34
+ *   浅背景:     #21252B
+ *   卡片背景:   #2C313A
+ *   前景:       #ABB2BF
+ *   亮前景:     #D7DAE0
+ *   强调色:     #61AFEF (蓝)
+ *   辅助色:     #5C6370 (灰)
+ *   成功/Click: #98C379 (绿)
+ *   信息/Press: #61AFEF (蓝)
+ *   警告/Multi: #E5C07B (橙)
+ *   特殊/Script:#C678DD (紫)
+ *   危险/删除:  #E06C75 (红)
+ *   边框:       #3E4451
+ *   悬停背景:   #353B45
+ * ============================================================ */
+
+/* ---- 全局 ---- */
+QWidget {
+    background-color: #282C34;
+    color: #ABB2BF;
+}
+
+/* QLabel 默认透明背景，避免文字带矩形色块 */
+QLabel {
+    background-color: transparent;
+}
+
+/* ============================================================
+ * 主窗口 — 标题栏
+ * ============================================================ */
+
+QFrame#titleBar {
+    background-color: #21252B;
+    border-bottom: 1px solid #181A1F;
+}
+
+QLabel#appTitle {
+    color: #D7DAE0;
+}
+
+QLabel#versionLabel {
+    color: #5C6370;
+}
+
+/* 最小化按钮 */
+QPushButton#btnMinimize {
+    background-color: transparent;
+    color: #ABB2BF;
+}
+QPushButton#btnMinimize:hover {
+    background-color: #3E4451;
+    color: #D7DAE0;
+}
+QPushButton#btnMinimize:pressed {
+    background-color: #4B5263;
+}
+
+/* 关闭按钮 */
+QPushButton#btnClose {
+    background-color: transparent;
+    color: #ABB2BF;
+}
+QPushButton#btnClose:hover {
+    background-color: #E06C75;
+    color: #FFFFFF;
+}
+QPushButton#btnClose:pressed {
+    background-color: #BE5046;
+    color: #FFFFFF;
+}
+
+/* ============================================================
+ * 导航栏
+ * ============================================================ */
+
+QFrame#navBar {
+    background-color: #21252B;
+    border-right: 1px solid #181A1F;
+}
+
+/* 导航按钮 — 默认 */
+QPushButton#navBtnEvents,
+QPushButton#navBtnSettings {
+    background-color: transparent;
+    color: #5C6370;
+}
+
+/* 导航按钮 — 悬停 */
+QPushButton#navBtnEvents:hover,
+QPushButton#navBtnSettings:hover {
+    background-color: #2C313A;
+    color: #ABB2BF;
+}
+
+/* 导航按钮 — 选中态 */
+QPushButton#navBtnEvents:checked,
+QPushButton#navBtnSettings:checked {
+    background-color: #2C313A;
+    color: #61AFEF;
+    border-left: 3px solid #61AFEF;
+    border-radius: 0px 6px 6px 0px;
+    margin-left: 0px;
+    padding-left: 1px;
+}
+
+/* 展开/折叠按钮 */
+QPushButton#navBtnToggle {
+    background-color: transparent;
+    color: #5C6370;
+}
+QPushButton#navBtnToggle:hover {
+    background-color: #2C313A;
+    color: #ABB2BF;
+}
+
+/* ============================================================
+ * 内容区背景
+ * ============================================================ */
+
+QStackedWidget#contentStack {
+    background-color: #282C34;
+}
+
+/* ============================================================
+ * 事件列表页
+ * ============================================================ */
+
+QFrame#headerFrame {
+    background-color: transparent;
+}
+
+QLabel#pageTitle {
+    color: #D7DAE0;
+}
+
+/* 添加按钮 */
+QPushButton#btnAddEvent {
+    background-color: #61AFEF;
+    color: #282C34;
+}
+QPushButton#btnAddEvent:hover {
+    background-color: #74BAF2;
+}
+QPushButton#btnAddEvent:pressed {
+    background-color: #4EA1E3;
+}
+
+/* 滚动区域 */
+QScrollArea#scrollArea {
+    background-color: transparent;
+}
+
+QWidget#scrollContent {
+    background-color: transparent;
+}
+
+/* 空状态 */
+QFrame#emptyState {
+    background-color: transparent;
+}
+
+QLabel#emptyText {
+    color: #5C6370;
+}
+
+QPushButton#btnAddFirstEvent {
+    background-color: #61AFEF;
+    color: #282C34;
+}
+QPushButton#btnAddFirstEvent:hover {
+    background-color: #74BAF2;
+}
+QPushButton#btnAddFirstEvent:pressed {
+    background-color: #4EA1E3;
+}
+
+/* ============================================================
+ * 事件卡片
+ * ============================================================ */
+
+QFrame#EventCard {
+    background-color: #2C313A;
+    border: 1px solid #3E4451;
+}
+QFrame#EventCard:hover {
+    border: 1px solid #4B5263;
+    background-color: #313640;
+}
+
+/* 类型颜色条 — 由代码动态设置 */
+QFrame#typeColorBar {
+    background-color: #5C6370;
+}
+
+/* 类型标签 — 默认 */
+QLabel#typeLabel {
+    color: #282C34;
+    background-color: #5C6370;
+}
+
+/* 类型标签颜色 — 通过 setProperty("eventType", "xxx") + polish 实现 */
+QLabel#typeLabel[eventType="Click"] {
+    background-color: #98C379;
+}
+QLabel#typeLabel[eventType="Press"] {
+    background-color: #61AFEF;
+}
+QLabel#typeLabel[eventType="Multi"] {
+    background-color: #E5C07B;
+}
+QLabel#typeLabel[eventType="Script"] {
+    background-color: #C678DD;
+}
+
+/* 类型颜色条动态颜色 */
+QFrame#typeColorBar[eventType="Click"] {
+    background-color: #98C379;
+}
+QFrame#typeColorBar[eventType="Press"] {
+    background-color: #61AFEF;
+}
+QFrame#typeColorBar[eventType="Multi"] {
+    background-color: #E5C07B;
+}
+QFrame#typeColorBar[eventType="Script"] {
+    background-color: #C678DD;
+}
+
+/* 热键标签 */
+QLabel#hotkeyLabel {
+    color: #D7DAE0;
+}
+
+/* 箭头 */
+QLabel#arrowLabel {
+    color: #5C6370;
+}
+
+/* 按键/脚本名 */
+QLabel#buttonLabel {
+    color: #ABB2BF;
+}
+
+/* 范围 & 额外信息 */
+QLabel#rangeLabel,
+QLabel#extraInfoLabel {
+    color: #5C6370;
+}
+
+/* 启用/禁用开关 */
+QPushButton#btnToggleStatus {
+    background-color: transparent;
+    color: #5C6370;
+}
+QPushButton#btnToggleStatus:hover {
+    background-color: #353B45;
+}
+QPushButton#btnToggleStatus:checked {
+    color: #98C379;
+}
+
+/* 更多操作按钮 */
+QPushButton#btnMore {
+    background-color: transparent;
+    color: #5C6370;
+}
+QPushButton#btnMore:hover {
+    background-color: #353B45;
+    color: #ABB2BF;
+}
+
+/* ============================================================
+ * 事件编辑页
+ * ============================================================ */
+
+/* 返回按钮 */
+QPushButton#btnBack {
+    background-color: transparent;
+    color: #ABB2BF;
+}
+QPushButton#btnBack:hover {
+    background-color: #3E4451;
+    color: #D7DAE0;
+}
+
+/* 表单分组卡片 */
+QFrame#basicGroup,
+QFrame#conditionGroup,
+QFrame#multiGroup {
+    background-color: #2C313A;
+    border: 1px solid #3E4451;
+}
+
+/* 分组标题 */
+QLabel#basicGroupTitle,
+QLabel#conditionGroupTitle,
+QLabel#multiGroupTitle {
+    color: #D7DAE0;
+    border-bottom: 1px solid #3E4451;
+    margin-bottom: 4px;
+}
+
+/* 字段标签 */
+QLabel#typeFieldLabel,
+QLabel#hotkeyFieldLabel,
+QLabel#buttonFieldLabel,
+QLabel#scriptFieldLabel,
+QLabel#rangeFieldLabel,
+QLabel#positionFieldLabel,
+QLabel#intervalFieldLabel,
+QLabel#clicksFieldLabel {
+    color: #ABB2BF;
+}
+
+/* 提示文字 */
+QLabel#positionHint,
+QLabel#clicksHint {
+    color: #5C6370;
+}
+
+QLabel#xLabel,
+QLabel#yLabel {
+    color: #ABB2BF;
+}
+
+/* 类型分段控件容器 */
+QFrame#typeSegmentFrame {
+    background-color: #21252B;
+    border: none;
+}
+
+/* 类型分段按钮 — 默认 */
+QPushButton#typeBtnClick,
+QPushButton#typeBtnPress,
+QPushButton#typeBtnMulti,
+QPushButton#typeBtnScript {
+    background-color: transparent;
+    color: #5C6370;
+}
+
+/* 类型分段按钮 — 悬停 */
+QPushButton#typeBtnClick:hover,
+QPushButton#typeBtnPress:hover,
+QPushButton#typeBtnMulti:hover,
+QPushButton#typeBtnScript:hover {
+    background-color: #353B45;
+    color: #ABB2BF;
+}
+
+/* 类型分段按钮 — 选中 */
+QPushButton#typeBtnClick:checked {
+    background-color: #2C313A;
+    color: #98C379;
+    font-weight: bold;
+}
+QPushButton#typeBtnPress:checked {
+    background-color: #2C313A;
+    color: #61AFEF;
+    font-weight: bold;
+}
+QPushButton#typeBtnMulti:checked {
+    background-color: #2C313A;
+    color: #E5C07B;
+    font-weight: bold;
+}
+QPushButton#typeBtnScript:checked {
+    background-color: #2C313A;
+    color: #C678DD;
+    font-weight: bold;
+}
+
+/* 文本输入框 */
+QLineEdit#hotkeyInput,
+QLineEdit#rangeInput {
+    background-color: #1B1D23;
+    color: #ABB2BF;
+    border: 1px solid #3E4451;
+    selection-background-color: #3E4451;
+    selection-color: #D7DAE0;
+}
+QLineEdit#hotkeyInput:focus,
+QLineEdit#rangeInput:focus {
+    border: 1px solid #61AFEF;
+}
+QLineEdit#hotkeyInput:read-only {
+    background-color: #21252B;
+    color: #5C6370;
+}
+
+/* 下拉选择框 */
+QComboBox#buttonCombo,
+QComboBox#scriptCombo {
+    background-color: #1B1D23;
+    color: #ABB2BF;
+    border: 1px solid #3E4451;
+}
+QComboBox#buttonCombo:hover,
+QComboBox#scriptCombo:hover {
+    border: 1px solid #4B5263;
+}
+QComboBox#buttonCombo:focus,
+QComboBox#scriptCombo:focus {
+    border: 1px solid #61AFEF;
+}
+QComboBox#buttonCombo:on,
+QComboBox#scriptCombo:on {
+    border: 1px solid #61AFEF;
+}
+
+QComboBox QAbstractItemView {
+    background-color: #2C313A;
+    color: #ABB2BF;
+    border: 1px solid #3E4451;
+    selection-background-color: #3E4451;
+    selection-color: #61AFEF;
+}
+
+/* 数值输入框 */
+QSpinBox#positionX,
+QSpinBox#positionY,
+QSpinBox#intervalInput,
+QSpinBox#clicksInput {
+    background-color: #1B1D23;
+    color: #ABB2BF;
+    border: 1px solid #3E4451;
+    selection-background-color: #3E4451;
+    selection-color: #D7DAE0;
+}
+QSpinBox#positionX:focus,
+QSpinBox#positionY:focus,
+QSpinBox#intervalInput:focus,
+QSpinBox#clicksInput:focus {
+    border: 1px solid #61AFEF;
+}
+
+QSpinBox::up-button {
+    background-color: #2C313A;
+}
+QSpinBox::up-button:hover {
+    background-color: #3E4451;
+}
+QSpinBox::down-button {
+    background-color: #2C313A;
+}
+QSpinBox::down-button:hover {
+    background-color: #3E4451;
+}
+
+QSpinBox::up-arrow {
+    image: none;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-bottom: 5px solid #ABB2BF;
+    width: 0px;
+    height: 0px;
+}
+QSpinBox::down-arrow {
+    image: none;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 5px solid #ABB2BF;
+    width: 0px;
+    height: 0px;
+}
+
+/* 打开脚本目录按钮 */
+QPushButton#btnOpenScriptsDir {
+    background-color: transparent;
+    color: #ABB2BF;
+}
+QPushButton#btnOpenScriptsDir:hover {
+    background-color: #353B45;
+}
+
+/* 取消按钮 */
+QPushButton#btnCancel {
+    background-color: #3E4451;
+    color: #ABB2BF;
+    border: 1px solid #4B5263;
+}
+QPushButton#btnCancel:hover {
+    background-color: #4B5263;
+    color: #D7DAE0;
+}
+QPushButton#btnCancel:pressed {
+    background-color: #5C6370;
+}
+
+/* 保存按钮 */
+QPushButton#btnSave {
+    background-color: #61AFEF;
+    color: #282C34;
+}
+QPushButton#btnSave:hover {
+    background-color: #74BAF2;
+}
+QPushButton#btnSave:pressed {
+    background-color: #4EA1E3;
+}
+QPushButton#btnSave:disabled {
+    background-color: #3B5F7F;
+    color: #5C6370;
+}
+
+/* ============================================================
+ * 设置页
+ * ============================================================ */
+
+/* 设置分组卡片 */
+QFrame#generalGroup,
+QFrame#shortcutsGroup,
+QFrame#aboutGroup {
+    background-color: #2C313A;
+    border: 1px solid #3E4451;
+}
+
+/* 分组标题 */
+QLabel#generalGroupTitle,
+QLabel#shortcutsGroupTitle,
+QLabel#aboutGroupTitle {
+    color: #D7DAE0;
+    border-bottom: 1px solid #3E4451;
+    margin-bottom: 4px;
+}
+
+/* 设置项标题 */
+QLabel#trayTitle,
+QLabel#startupTitle,
+QLabel#adminTitle {
+    color: #D7DAE0;
+}
+
+/* 设置项描述 */
+QLabel#trayDesc,
+QLabel#startupDesc,
+QLabel#adminDesc {
+    color: #5C6370;
+}
+
+/* 锁定图标 */
+QLabel#adminLockIcon {
+    color: #E5C07B;
+}
+
+/* 复选框（开关样式） */
+QCheckBox#chkEnableTray::indicator,
+QCheckBox#chkStartup::indicator,
+QCheckBox#chkStartupAsAdmin::indicator {
+    background-color: #3E4451;
+    border: none;
+}
+
+QCheckBox#chkEnableTray::indicator:checked,
+QCheckBox#chkStartup::indicator:checked,
+QCheckBox#chkStartupAsAdmin::indicator:checked {
+    background-color: #61AFEF;
+}
+
+QCheckBox#chkEnableTray::indicator:hover,
+QCheckBox#chkStartup::indicator:hover,
+QCheckBox#chkStartupAsAdmin::indicator:hover {
+    background-color: #4B5263;
+}
+
+QCheckBox#chkEnableTray::indicator:checked:hover,
+QCheckBox#chkStartup::indicator:checked:hover,
+QCheckBox#chkStartupAsAdmin::indicator:checked:hover {
+    background-color: #74BAF2;
+}
+
+QCheckBox#chkEnableTray::indicator:disabled,
+QCheckBox#chkStartup::indicator:disabled,
+QCheckBox#chkStartupAsAdmin::indicator:disabled {
+    background-color: #353B45;
+}
+
+/* 快捷操作按钮 */
+QPushButton#btnOpenConfigDir,
+QPushButton#btnOpenScriptsDir {
+    background-color: transparent;
+    color: #ABB2BF;
+}
+QPushButton#btnOpenConfigDir:hover,
+QPushButton#btnOpenScriptsDir:hover {
+    background-color: #353B45;
+    color: #D7DAE0;
+}
+
+/* 关于信息 */
+QLabel#aboutAppName {
+    color: #D7DAE0;
+}
+
+QLabel#aboutCopyright {
+    color: #5C6370;
+}
+
+QLabel#aboutGithub a {
+    color: #61AFEF;
+    text-decoration: none;
+}
+QLabel#aboutGithub a:hover {
+    color: #74BAF2;
+    text-decoration: underline;
+}
+
+/* ============================================================
+ * 滚动条
+ * ============================================================ */
+
+QScrollBar:vertical {
+    background-color: transparent;
+}
+
+QScrollBar::handle:vertical {
+    background-color: #3E4451;
+}
+QScrollBar::handle:vertical:hover {
+    background-color: #4B5263;
+}
+QScrollBar::handle:vertical:pressed {
+    background-color: #5C6370;
+}
+
+QScrollBar:horizontal {
+    background-color: transparent;
+}
+
+QScrollBar::handle:horizontal {
+    background-color: #3E4451;
+}
+QScrollBar::handle:horizontal:hover {
+    background-color: #4B5263;
+}
+QScrollBar::handle:horizontal:pressed {
+    background-color: #5C6370;
+}
+
+/* ============================================================
+ * 工具提示
+ * ============================================================ */
+
+QToolTip {
+    background-color: #21252B;
+    color: #ABB2BF;
+    border: 1px solid #3E4451;
+}
+
+/* ============================================================
+ * 右键菜单
+ * ============================================================ */
+
+QMenu {
+    background-color: #2C313A;
+    color: #ABB2BF;
+    border: 1px solid #3E4451;
+}
+
+QMenu::item:selected {
+    background-color: #3E4451;
+    color: #61AFEF;
+}
+
+QMenu::item:disabled {
+    color: #4B5263;
+}
+
+QMenu::separator {
+    background-color: #3E4451;
+}
+
+/* ============================================================
+ * 对话框
+ * ============================================================ */
+
+QMessageBox {
+    background-color: #282C34;
+    color: #ABB2BF;
+}
+
+QMessageBox QPushButton {
+    background-color: #3E4451;
+    color: #ABB2BF;
+    border: 1px solid #4B5263;
+}
+QMessageBox QPushButton:hover {
+    background-color: #4B5263;
+    color: #D7DAE0;
+}
+QMessageBox QPushButton:default {
+    background-color: #61AFEF;
+    color: #282C34;
+    border: none;
+}
+QMessageBox QPushButton:default:hover {
+    background-color: #74BAF2;
+}

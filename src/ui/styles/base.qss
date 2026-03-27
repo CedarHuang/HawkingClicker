@@ -1,0 +1,540 @@
+/* ============================================================
+ * HawkingClicker — 公共基础样式 (base.qss)
+ * 包含与主题无关的布局、字体、间距、圆角等样式
+ * ============================================================ */
+
+/* ---- 全局字体 ---- */
+* {
+    font-family: "Segoe UI", "Microsoft YaHei UI", sans-serif;
+    font-size: 13px;
+    outline: none;
+}
+
+/* ============================================================
+ * 主窗口 (MainWindow)
+ * ============================================================ */
+
+/* 顶部标题栏 */
+QFrame#titleBar {
+    border: none;
+}
+
+QLabel#appIcon {
+    margin-left: 2px;
+}
+
+QLabel#appTitle {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+QLabel#versionLabel {
+    font-size: 11px;
+    padding-right: 8px;
+}
+
+/* 标题栏窗口控制按钮 */
+QPushButton#btnMinimize,
+QPushButton#btnClose {
+    border: none;
+    border-radius: 0px;
+    font-size: 14px;
+}
+
+/* 下方主体区域 */
+QFrame#bodyFrame {
+    border: none;
+}
+
+/* ---- 左侧导航栏 ---- */
+QFrame#navBar {
+    border: none;
+}
+
+QPushButton#navBtnEvents,
+QPushButton#navBtnSettings {
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    padding: 4px 0px;
+    margin: 2px 4px;
+    text-align: center;
+}
+
+QPushButton#navBtnToggle {
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    padding: 4px 0px;
+    margin: 2px 4px;
+    text-align: center;
+}
+
+/* ---- 右侧内容区 ---- */
+QStackedWidget#contentStack {
+    border: none;
+}
+
+/* ============================================================
+ * 事件列表页 (EventListPage)
+ * ============================================================ */
+
+/* 页面标题行 */
+QFrame#headerFrame {
+    border: none;
+}
+
+QLabel#pageTitle {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+/* 添加事件按钮 */
+QPushButton#btnAddEvent {
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 6px 16px;
+}
+
+/* 滚动区域 */
+QScrollArea#scrollArea {
+    border: none;
+}
+
+QScrollArea#scrollArea > QWidget > QWidget {
+    border: none;
+}
+
+/* 空状态 */
+QFrame#emptyState {
+    border: none;
+}
+
+QLabel#emptyIcon {
+    font-size: 48px;
+}
+
+QLabel#emptyText {
+    font-size: 14px;
+}
+
+QPushButton#btnAddFirstEvent {
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 20px;
+}
+
+/* ============================================================
+ * 事件卡片 (EventCard)
+ * ============================================================ */
+
+QFrame#EventCard {
+    border-radius: 10px;
+    border: 1px solid transparent;
+}
+
+/* 左侧类型颜色条 */
+QFrame#typeColorBar {
+    border-radius: 2px;
+}
+
+/* 中间信息区 */
+QFrame#infoFrame {
+    border: none;
+    background: transparent;
+}
+
+/* 类型标签 */
+QLabel#typeLabel {
+    font-size: 11px;
+    font-weight: bold;
+    border-radius: 4px;
+    padding: 2px 8px;
+}
+
+/* 热键标签 */
+QLabel#hotkeyLabel {
+    font-size: 13px;
+    font-weight: bold;
+}
+
+/* 箭头标签 */
+QLabel#arrowLabel {
+    font-size: 12px;
+}
+
+/* 按键/脚本名标签 */
+QLabel#buttonLabel {
+    font-size: 13px;
+}
+
+/* 范围标签 */
+QLabel#rangeLabel {
+    font-size: 11px;
+}
+
+/* 额外信息标签 */
+QLabel#extraInfoLabel {
+    font-size: 11px;
+}
+
+/* 启用/禁用开关按钮 */
+QPushButton#btnToggleStatus {
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+/* 更多操作按钮 */
+QPushButton#btnMore {
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+}
+
+/* ============================================================
+ * 事件编辑页 (EventEditPage)
+ * ============================================================ */
+
+/* 返回按钮 */
+QPushButton#btnBack {
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+}
+
+/* 表单分组卡片 */
+QFrame#basicGroup,
+QFrame#conditionGroup,
+QFrame#multiGroup {
+    border-radius: 10px;
+    border: 1px solid transparent;
+}
+
+/* 分组标题 */
+QLabel#basicGroupTitle,
+QLabel#conditionGroupTitle,
+QLabel#multiGroupTitle {
+    font-size: 14px;
+    font-weight: bold;
+    padding-bottom: 4px;
+}
+
+/* 字段标签 */
+QLabel#typeFieldLabel,
+QLabel#hotkeyFieldLabel,
+QLabel#buttonFieldLabel,
+QLabel#scriptFieldLabel,
+QLabel#rangeFieldLabel,
+QLabel#positionFieldLabel,
+QLabel#intervalFieldLabel,
+QLabel#clicksFieldLabel {
+    font-size: 13px;
+    min-width: 60px;
+}
+
+/* 提示文字 */
+QLabel#positionHint,
+QLabel#clicksHint {
+    font-size: 11px;
+}
+
+QLabel#xLabel,
+QLabel#yLabel {
+    font-size: 13px;
+    font-weight: bold;
+    min-width: 12px;
+}
+
+/* 类型分段控件容器 */
+QFrame#typeSegmentFrame {
+    border-radius: 8px;
+}
+
+/* 类型分段按钮 */
+QPushButton#typeBtnClick,
+QPushButton#typeBtnPress,
+QPushButton#typeBtnMulti,
+QPushButton#typeBtnScript {
+    border: none;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 4px 14px;
+    min-width: 50px;
+}
+
+/* 文本输入框 */
+QLineEdit#hotkeyInput,
+QLineEdit#rangeInput {
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-size: 13px;
+}
+
+/* 下拉选择框 */
+QComboBox#buttonCombo,
+QComboBox#scriptCombo {
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-size: 13px;
+    min-height: 24px;
+}
+
+QComboBox#buttonCombo::drop-down,
+QComboBox#scriptCombo::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 24px;
+    border: none;
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
+}
+
+QComboBox#buttonCombo::down-arrow,
+QComboBox#scriptCombo::down-arrow {
+    width: 10px;
+    height: 10px;
+}
+
+QComboBox QAbstractItemView {
+    border-radius: 6px;
+    padding: 4px;
+    outline: none;
+}
+
+/* 数值输入框 */
+QSpinBox#positionX,
+QSpinBox#positionY,
+QSpinBox#intervalInput,
+QSpinBox#clicksInput {
+    border-radius: 6px;
+    padding: 4px 8px;
+    font-size: 13px;
+    min-height: 24px;
+}
+
+QSpinBox::up-button,
+QSpinBox::down-button {
+    width: 18px;
+    border: none;
+}
+
+QSpinBox::up-button {
+    border-top-right-radius: 6px;
+}
+
+QSpinBox::down-button {
+    border-bottom-right-radius: 6px;
+}
+
+/* 脚本行 */
+QFrame#scriptRow {
+    border: none;
+    background: transparent;
+}
+
+/* 打开脚本目录按钮 */
+QPushButton#btnOpenScriptsDir {
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+/* 底部操作按钮 */
+QPushButton#btnCancel {
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 6px 20px;
+}
+
+QPushButton#btnSave {
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 6px 20px;
+}
+
+/* ============================================================
+ * 设置页 (SettingsPage)
+ * ============================================================ */
+
+/* 设置分组卡片 */
+QFrame#generalGroup,
+QFrame#shortcutsGroup,
+QFrame#aboutGroup {
+    border-radius: 10px;
+    border: 1px solid transparent;
+}
+
+/* 分组标题 */
+QLabel#generalGroupTitle,
+QLabel#shortcutsGroupTitle,
+QLabel#aboutGroupTitle {
+    font-size: 14px;
+    font-weight: bold;
+    padding-bottom: 4px;
+}
+
+/* 设置项容器 */
+QFrame#traySettingItem,
+QFrame#startupSettingItem,
+QFrame#adminSettingItem {
+    border: none;
+    background: transparent;
+}
+
+/* 设置项标题 */
+QLabel#trayTitle,
+QLabel#startupTitle,
+QLabel#adminTitle {
+    font-size: 13px;
+    font-weight: 500;
+}
+
+/* 设置项描述 */
+QLabel#trayDesc,
+QLabel#startupDesc,
+QLabel#adminDesc {
+    font-size: 11px;
+}
+
+/* 锁定图标 */
+QLabel#adminLockIcon {
+    font-size: 12px;
+}
+
+/* 复选框（开关样式） */
+QCheckBox#chkEnableTray,
+QCheckBox#chkStartup,
+QCheckBox#chkStartupAsAdmin {
+    spacing: 0px;
+    background-color: transparent;
+}
+
+QCheckBox#chkEnableTray::indicator,
+QCheckBox#chkStartup::indicator,
+QCheckBox#chkStartupAsAdmin::indicator {
+    width: 40px;
+    height: 22px;
+    border-radius: 11px;
+}
+
+/* 快捷操作按钮 */
+QPushButton#btnOpenConfigDir,
+QPushButton#btnOpenScriptsDir {
+    border: none;
+    border-radius: 6px;
+    font-size: 13px;
+    padding: 8px 12px;
+    text-align: left;
+}
+
+/* 关于信息 */
+QLabel#aboutAppName {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+QLabel#aboutCopyright {
+    font-size: 11px;
+}
+
+QLabel#aboutGithub {
+    font-size: 12px;
+}
+
+/* ============================================================
+ * 滚动条全局样式
+ * ============================================================ */
+
+QScrollBar:vertical {
+    width: 8px;
+    border: none;
+    border-radius: 4px;
+    margin: 2px 0px;
+}
+
+QScrollBar::handle:vertical {
+    min-height: 30px;
+    border-radius: 4px;
+}
+
+QScrollBar::add-line:vertical,
+QScrollBar::sub-line:vertical {
+    height: 0px;
+}
+
+QScrollBar::add-page:vertical,
+QScrollBar::sub-page:vertical {
+    background: transparent;
+}
+
+QScrollBar:horizontal {
+    height: 8px;
+    border: none;
+    border-radius: 4px;
+    margin: 0px 2px;
+}
+
+QScrollBar::handle:horizontal {
+    min-width: 30px;
+    border-radius: 4px;
+}
+
+QScrollBar::add-line:horizontal,
+QScrollBar::sub-line:horizontal {
+    width: 0px;
+}
+
+QScrollBar::add-page:horizontal,
+QScrollBar::sub-page:horizontal {
+    background: transparent;
+}
+
+/* ============================================================
+ * 工具提示
+ * ============================================================ */
+
+QToolTip {
+    font-size: 12px;
+    border-radius: 4px;
+    padding: 4px 8px;
+}
+
+/* ============================================================
+ * 右键菜单
+ * ============================================================ */
+
+QMenu {
+    border-radius: 8px;
+    padding: 4px;
+}
+
+QMenu::item {
+    border-radius: 4px;
+    padding: 6px 24px 6px 12px;
+    margin: 1px 4px;
+}
+
+QMenu::separator {
+    height: 1px;
+    margin: 4px 8px;
+}
+
+/* ============================================================
+ * 对话框按钮
+ * ============================================================ */
+
+QMessageBox QPushButton {
+    border-radius: 6px;
+    padding: 6px 20px;
+    font-size: 13px;
+    min-width: 60px;
+}
