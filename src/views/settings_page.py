@@ -114,6 +114,6 @@ class SettingsPage(QWidget):
         if self.ui.chkStartupAsAdmin:
             self.ui.chkStartupAsAdmin.setEnabled(self._isAdmin)
             if not self._isAdmin:
-                self.ui.chkStartupAsAdmin.setToolTip("必须以管理员身份运行时才能设置")
+                self.ui.chkStartupAsAdmin.setToolTip(self.tr("Requires running as administrator"))
             else:
                 self.ui.chkStartupAsAdmin.setToolTip("")

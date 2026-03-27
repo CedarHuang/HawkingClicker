@@ -8,10 +8,11 @@
 from PySide6.QtWidgets import (
     QWidget, QButtonGroup, QMessageBox,
 )
-from PySide6.QtCore import Signal, Qt, QEvent, QObject
+from PySide6.QtCore import Signal, Qt, QEvent, QObject, QCoreApplication
 from PySide6.QtGui import QKeyEvent
 
 from ui.generated.ui_event_edit_page import Ui_EventEditPage
+from views import _polishWidget
 
 
 class HotkeyRecorder(QObject):
@@ -60,14 +61,14 @@ class HotkeyRecorder(QObject):
     def _startRecording(self):
         """开始录入状态"""
         self._recording = True
-        self._lineEdit.setPlaceholderText("请按下快捷键组合...")
+        self._lineEdit.setPlaceholderText(QCoreApplication.translate("EventEditPage", "Press a key combination..."))
         self._lineEdit.setProperty("recording", True)
         _polishWidget(self._lineEdit)
 
     def _stopRecording(self):
         """停止录入状态"""
         self._recording = False
-        self._lineEdit.setPlaceholderText("点击此处，然后按下快捷键组合...")
+        self._lineEdit.setPlaceholderText(QCoreApplication.translate("EventEditPage", "Click here, then press a key combination..."))
         self._lineEdit.setProperty("recording", False)
         _polishWidget(self._lineEdit)
 
@@ -205,7 +206,9 @@ class EventEditPage(QWidget):
         self._isDirty = False
 
         # 更新标题
-        self.ui.pageTitle.setText("编辑事件" if isEditing else "新建事件")
+        self.ui.pageTitle.setText(
+            self.tr("Edit Event") if isEditing else self.tr("New Event")
+        )
 
         # 重置所有字段
         self.ui.typeBtnClick.setChecked(True)
@@ -230,7 +233,7 @@ class EventEditPage(QWidget):
             data: 包含 type, hotkey, button, range, posX, posY, interval, clicks 的字典
         """
         self._isEditing = True
-        self.ui.pageTitle.setText("编辑事件")
+        self.ui.pageTitle.setText(self.tr("Edit Event"))
 
         eventType = data.get("type", "Click")
 
@@ -296,8 +299,8 @@ class EventEditPage(QWidget):
         if self._isDirty:
             reply = QMessageBox.question(
                 self,
-                "放弃修改",
-                "是否放弃未保存的修改？",
+                self.tr("Discard Changes"),
+                self.tr("Discard unsaved changes?"),
                 QMessageBox.Yes | QMessageBox.No,
                 QMessageBox.No,
             )
@@ -341,7 +344,7 @@ class EventEditPage(QWidget):
         if not self.ui.hotkeyInput.text().strip():
             self.ui.hotkeyInput.setProperty("hasError", True)
             _polishWidget(self.ui.hotkeyInput)
-            self.ui.hotkeyInput.setPlaceholderText("⚠ 热键不能为空")
+            self.ui.hotkeyInput.setPlaceholderText(self.tr("⚠ Hotkey is required"))
             valid = False
 
         # 按键/脚本不能为空
@@ -363,7 +366,7 @@ class EventEditPage(QWidget):
         """清除所有字段的错误提示样式"""
         self.ui.hotkeyInput.setProperty("hasError", False)
         _polishWidget(self.ui.hotkeyInput)
-        self.ui.hotkeyInput.setPlaceholderText("点击此处，然后按下快捷键组合...")
+        self.ui.hotkeyInput.setPlaceholderText(self.tr("Click here, then press a key combination..."))
 
         self.ui.buttonCombo.setProperty("hasError", False)
         _polishWidget(self.ui.buttonCombo)
@@ -373,8 +376,3 @@ class EventEditPage(QWidget):
         self._isDirty = True
 
 
-def _polishWidget(widget: QWidget):
-    """刷新控件样式"""
-    widget.style().unpolish(widget)
-    widget.style().polish(widget)
-    widget.update()

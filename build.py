@@ -1,0 +1,434 @@
+"""
+项目构建脚本
+============
+提供以下构建功能：
+  1. UI 编译：将 src/ui/*.ui 通过 pyside6-uic 编译为 Python 模块，输出到 src/ui/generated/
+  2. 翻译提取：从 .py 和 .ui 源文件中提取可翻译字符串，生成 .ts 文件到 src/translations/
+  3. 翻译编译：将 .ts 文件通过 pyside6-lrelease 编译为 .qm 文件，输出到 src/translations/generated/
+
+用法:
+    python build.py                 # 构建全部（UI + 翻译编译）
+    python build.py ui              # 仅编译 .ui 文件
+    python build.py tr              # 提取翻译字符串并编译 .qm
+    python build.py tr --extract    # 仅提取/更新 .ts 文件
+    python build.py tr --compile    # 仅编译 .ts → .qm
+    python build.py clean           # 清空产物目录后全量重新构建
+    python build.py check           # 仅检查哪些文件需要重新构建
+"""
+
+import sys
+import shutil
+import subprocess
+import argparse
+from pathlib import Path
+
+# ---- 路径常量 ----
+_PROJECT_ROOT = Path(__file__).resolve().parent
+_SRC_DIR = _PROJECT_ROOT / "src"
+
+# UI 相关路径
+_UI_DIR = _SRC_DIR / "ui"
+_UI_OUTPUT_DIR = _UI_DIR / "generated"
+_UI_OUTPUT_PREFIX = "ui_"
+
+# 翻译相关路径
+_TR_DIR = _SRC_DIR / "translations"
+_TR_OUTPUT_DIR = _TR_DIR / "generated"
+_TR_PREFIX = "hawkingclicker_"
+
+# 需要提取翻译的语言列表
+_TR_LANGUAGES = ["zh_CN", "en_US"]
+
+# 需要扫描翻译字符串的源文件目录/文件模式
+_TR_SOURCE_PATTERNS = [
+    (_SRC_DIR / "views", "*.py"),
+    (_SRC_DIR / "core", "*.py"),
+    (_UI_DIR, "*.ui"),
+    (_SRC_DIR, "main.py"),
+]
+
+
+# ============================================================
+# 工具查找
+# ============================================================
+
+def _find_pyside6_tool(tool_name: str) -> str:
+    """查找 PySide6 工具的可执行文件路径
+
+    Args:
+        tool_name: 工具名称，如 "uic", "lupdate", "lrelease"
+
+    Returns:
+        工具的完整路径，未找到则返回空字符串
+    """
+    # 优先使用 PySide6 包目录下的工具
+    try:
+        import PySide6
+        suffix = ".exe" if sys.platform == "win32" else ""
+        tool_path = Path(PySide6.__file__).parent / f"{tool_name}{suffix}"
+        if tool_path.exists():
+            return str(tool_path)
+    except ImportError:
+        pass
+
+    # 回退：尝试 PATH 中的 pyside6-<tool_name>
+    result = shutil.which(f"pyside6-{tool_name}")
+    if result:
+        return result
+
+    return ""
+
+
+# ============================================================
+# UI 编译
+# ============================================================
+
+def _find_ui_files() -> list[Path]:
+    """扫描 src/ui/ 下所有 .ui 文件（不递归子目录）"""
+    return sorted(_UI_DIR.glob("*.ui"))
+
+
+def _ui_output_path(ui_file: Path) -> Path:
+    """根据 .ui 文件路径计算对应的输出 .py 路径
+
+    例如: main_window.ui → generated/ui_main_window.py
+    """
+    return _UI_OUTPUT_DIR / f"{_UI_OUTPUT_PREFIX}{ui_file.stem}.py"
+
+
+def _needs_compile(src_file: Path, out_file: Path) -> bool:
+    """判断是否需要重新编译（源文件比产物更新，或产物不存在）"""
+    if not out_file.exists():
+        return True
+    return src_file.stat().st_mtime > out_file.stat().st_mtime
+
+
+def _ensure_dir(directory: Path, with_init: bool = False):
+    """确保目录存在，可选创建 __init__.py"""
+    directory.mkdir(parents=True, exist_ok=True)
+    if with_init:
+        init_file = directory / "__init__.py"
+        if not init_file.exists():
+            init_file.write_text("", encoding="utf-8")
+
+
+def _compile_single_ui(ui_file: Path, py_file: Path, uic_path: str) -> bool:
+    """调用 pyside6-uic 编译单个 .ui 文件，返回是否成功"""
+    cmd = [uic_path, str(ui_file), "-o", str(py_file), "-g", "python"]
+    try:
+        subprocess.run(cmd, capture_output=True, text=True, check=True)
+        return True
+    except subprocess.CalledProcessError as e:
+        print(f"  ✗ 编译失败: {ui_file.name}")
+        if e.stderr:
+            print(f"    错误信息: {e.stderr.strip()}")
+        return False
+
+
+def cmd_ui(force: bool = False):
+    """编译所有 .ui 文件"""
+    ui_files = _find_ui_files()
+    if not ui_files:
+        print("未找到任何 .ui 文件。")
+        return True
+
+    uic_path = _find_pyside6_tool("uic")
+    if not uic_path:
+        print("✗ 未找到 pyside6-uic，请确认已安装 PySide6:")
+        print("  pip install PySide6")
+        return False
+
+    _ensure_dir(_UI_OUTPUT_DIR, with_init=True)
+
+    compiled = 0
+    skipped = 0
+    failed = 0
+
+    print(f"[UI] 扫描到 {len(ui_files)} 个 .ui 文件\n")
+
+    for ui_file in ui_files:
+        py_file = _ui_output_path(ui_file)
+
+        if not force and not _needs_compile(ui_file, py_file):
+            skipped += 1
+            print(f"  ⊘ 跳过（未变更）: {ui_file.name}")
+            continue
+
+        print(f"  ▸ 编译: {ui_file.name} → generated/{py_file.name}")
+        if _compile_single_ui(ui_file, py_file, uic_path):
+            compiled += 1
+        else:
+            failed += 1
+
+    print(f"\n[UI] 完成: {compiled} 个编译, {skipped} 个跳过, {failed} 个失败")
+    return failed == 0
+
+
+# ============================================================
+# 翻译提取与编译
+# ============================================================
+
+def _collect_source_files() -> list[Path]:
+    """收集所有需要提取翻译字符串的源文件"""
+    sources = []
+    for base_path, pattern in _TR_SOURCE_PATTERNS:
+        if base_path.is_file():
+            # 直接指定的单个文件
+            if base_path.exists():
+                sources.append(base_path)
+        elif base_path.is_dir():
+            sources.extend(sorted(base_path.glob(pattern)))
+    return sources
+
+
+def _ts_path(lang: str) -> Path:
+    """获取 .ts 文件路径"""
+    return _TR_DIR / f"{_TR_PREFIX}{lang}.ts"
+
+
+def _qm_path(lang: str) -> Path:
+    """获取 .qm 文件路径"""
+    return _TR_OUTPUT_DIR / f"{_TR_PREFIX}{lang}.qm"
+
+
+def cmd_tr_extract() -> bool:
+    """从源文件中提取可翻译字符串，更新 .ts 文件"""
+    lupdate_path = _find_pyside6_tool("lupdate")
+    if not lupdate_path:
+        print("✗ 未找到 pyside6-lupdate，请确认已安装 PySide6:")
+        print("  pip install PySide6")
+        return False
+
+    sources = _collect_source_files()
+    if not sources:
+        print("[翻译] 未找到任何源文件。")
+        return True
+
+    _ensure_dir(_TR_DIR)
+
+    print(f"[翻译] 从 {len(sources)} 个源文件中提取翻译字符串\n")
+
+    success = True
+    for lang in _TR_LANGUAGES:
+        ts_file = _ts_path(lang)
+        # pyside6-lupdate <源文件...> -ts <输出.ts>
+        cmd = [lupdate_path] + [str(f) for f in sources] + ["-ts", str(ts_file)]
+        print(f"  ▸ 提取: {lang}.ts")
+        try:
+            subprocess.run(cmd, capture_output=True, text=True, check=True)
+        except subprocess.CalledProcessError as e:
+            print(f"  ✗ 提取失败: {lang}.ts")
+            if e.stderr:
+                print(f"    错误信息: {e.stderr.strip()}")
+            success = False
+
+    status = "完成" if success else "部分失败"
+    print(f"\n[翻译] 提取{status}，.ts 文件位于: {_TR_DIR.relative_to(_PROJECT_ROOT)}/")
+    return success
+
+
+def cmd_tr_compile(force: bool = False) -> bool:
+    """将 .ts 文件编译为 .qm 文件"""
+    lrelease_path = _find_pyside6_tool("lrelease")
+    if not lrelease_path:
+        print("✗ 未找到 pyside6-lrelease，请确认已安装 PySide6:")
+        print("  pip install PySide6")
+        return False
+
+    # 查找已有的 .ts 文件
+    ts_files = sorted(_TR_DIR.glob("*.ts"))
+    if not ts_files:
+        print("[翻译] 未找到任何 .ts 文件，请先运行提取: python build.py tr --extract")
+        return True
+
+    _ensure_dir(_TR_OUTPUT_DIR)
+
+    compiled = 0
+    skipped = 0
+    failed = 0
+
+    print(f"[翻译] 扫描到 {len(ts_files)} 个 .ts 文件\n")
+
+    for ts_file in ts_files:
+        qm_file = _TR_OUTPUT_DIR / f"{ts_file.stem}.qm"
+
+        if not force and not _needs_compile(ts_file, qm_file):
+            skipped += 1
+            print(f"  ⊘ 跳过（未变更）: {ts_file.name}")
+            continue
+
+        print(f"  ▸ 编译: {ts_file.name} → generated/{qm_file.name}")
+        cmd = [lrelease_path, str(ts_file), "-qm", str(qm_file)]
+        try:
+            subprocess.run(cmd, capture_output=True, text=True, check=True)
+            compiled += 1
+        except subprocess.CalledProcessError as e:
+            print(f"  ✗ 编译失败: {ts_file.name}")
+            if e.stderr:
+                print(f"    错误信息: {e.stderr.strip()}")
+            failed += 1
+
+    print(f"\n[翻译] 完成: {compiled} 个编译, {skipped} 个跳过, {failed} 个失败")
+    return failed == 0
+
+
+def cmd_tr(extract: bool = False, compile_only: bool = False, force: bool = False) -> bool:
+    """翻译工作流：提取 + 编译"""
+    if extract and not compile_only:
+        # 仅提取
+        return cmd_tr_extract()
+    elif compile_only and not extract:
+        # 仅编译
+        return cmd_tr_compile(force=force)
+    else:
+        # 默认：提取 + 编译
+        ok1 = cmd_tr_extract()
+        print()
+        ok2 = cmd_tr_compile(force=True)  # 提取后强制重新编译
+        return ok1 and ok2
+
+
+# ============================================================
+# 综合命令
+# ============================================================
+
+def cmd_all(force: bool = False):
+    """构建全部：UI 编译 + 翻译编译"""
+    print("=" * 50)
+    print("  构建全部")
+    print("=" * 50 + "\n")
+
+    ok1 = cmd_ui(force=force)
+    print()
+    ok2 = cmd_tr(force=force)
+
+    print("\n" + "=" * 50)
+    if ok1 and ok2:
+        print("  ✓ 全部构建成功")
+    else:
+        print("  ✗ 构建过程中存在错误")
+    print("=" * 50)
+
+    if not (ok1 and ok2):
+        sys.exit(1)
+
+
+def cmd_clean():
+    """清空所有产物目录后全量重新构建"""
+    for label, directory in [("UI", _UI_OUTPUT_DIR), ("翻译", _TR_OUTPUT_DIR)]:
+        if directory.exists():
+            shutil.rmtree(directory)
+            print(f"已清空 [{label}]: {directory.relative_to(_PROJECT_ROOT)}")
+
+    print()
+    cmd_all(force=True)
+
+
+def cmd_check():
+    """检查哪些文件需要重新构建"""
+    # 检查 UI 文件
+    ui_files = _find_ui_files()
+    ui_needs = []
+    ui_ok = []
+    for f in ui_files:
+        if _needs_compile(f, _ui_output_path(f)):
+            ui_needs.append(f)
+        else:
+            ui_ok.append(f)
+
+    print("[UI 文件]")
+    if ui_needs:
+        print(f"  需要编译 ({len(ui_needs)}):")
+        for f in ui_needs:
+            print(f"    ▸ {f.name}")
+    else:
+        print("  所有文件均为最新。")
+    if ui_ok:
+        print(f"  已是最新 ({len(ui_ok)}):")
+        for f in ui_ok:
+            print(f"    ✓ {f.name}")
+
+    # 检查翻译文件
+    ts_files = sorted(_TR_DIR.glob("*.ts"))
+    tr_needs = []
+    tr_ok = []
+    for f in ts_files:
+        qm_file = _TR_OUTPUT_DIR / f"{f.stem}.qm"
+        if _needs_compile(f, qm_file):
+            tr_needs.append(f)
+        else:
+            tr_ok.append(f)
+
+    print("\n[翻译文件]")
+    if not ts_files:
+        print("  未找到 .ts 文件，请先运行: python build.py tr --extract")
+    elif tr_needs:
+        print(f"  需要编译 ({len(tr_needs)}):")
+        for f in tr_needs:
+            print(f"    ▸ {f.name}")
+    else:
+        print("  所有文件均为最新。")
+    if tr_ok:
+        print(f"  已是最新 ({len(tr_ok)}):")
+        for f in tr_ok:
+            print(f"    ✓ {f.name}")
+
+
+# ============================================================
+# 入口
+# ============================================================
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="HawkingClicker 项目构建脚本",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+示例:
+  python build.py                 构建全部（UI + 翻译编译）
+  python build.py ui              仅编译 .ui 文件
+  python build.py tr              提取翻译字符串并编译 .qm
+  python build.py tr --extract    仅提取/更新 .ts 文件
+  python build.py tr --compile    仅编译 .ts → .qm 文件
+  python build.py clean           清空产物目录后全量重新构建
+  python build.py check           仅检查，不执行构建
+        """,
+    )
+
+    subparsers = parser.add_subparsers(dest="command")
+
+    # 子命令: ui
+    ui_parser = subparsers.add_parser("ui", help="编译 .ui 文件为 Python 模块")
+    ui_parser.add_argument("--force", action="store_true", help="强制重新编译所有文件")
+
+    # 子命令: tr
+    tr_parser = subparsers.add_parser("tr", help="翻译提取与编译")
+    tr_group = tr_parser.add_mutually_exclusive_group()
+    tr_group.add_argument("--extract", action="store_true", help="仅提取/更新 .ts 文件")
+    tr_group.add_argument("--compile", action="store_true", help="仅编译 .ts → .qm 文件")
+    tr_parser.add_argument("--force", action="store_true", help="强制重新编译")
+
+    # 子命令: clean
+    subparsers.add_parser("clean", help="清空产物目录后全量重新构建")
+
+    # 子命令: check
+    subparsers.add_parser("check", help="仅检查哪些文件需要重新构建")
+
+    args = parser.parse_args()
+
+    if args.command == "ui":
+        if not cmd_ui(force=args.force):
+            sys.exit(1)
+    elif args.command == "tr":
+        if not cmd_tr(extract=args.extract, compile_only=args.compile, force=args.force):
+            sys.exit(1)
+    elif args.command == "clean":
+        cmd_clean()
+    elif args.command == "check":
+        cmd_check()
+    else:
+        # 无子命令：构建全部
+        cmd_all()
+
+
+if __name__ == "__main__":
+    main()

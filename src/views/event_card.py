@@ -9,6 +9,7 @@ from PySide6.QtWidgets import QFrame, QMenu, QWidget
 from PySide6.QtCore import Signal, Qt
 
 from ui.generated.ui_event_card import Ui_EventCard
+from views import _polishWidget
 
 
 class EventCard(QFrame):
@@ -60,7 +61,7 @@ class EventCard(QFrame):
         # 填充文字
         self.ui.hotkeyLabel.setText(hotkey)
         self.ui.buttonLabel.setText(button)
-        self.ui.rangeLabel.setText(f"范围: {scope}")
+        self.ui.rangeLabel.setText(self.tr("Scope: {scope}").format(scope=scope))
         self.ui.extraInfoLabel.setText(extra)
 
         # 启用状态（阻断信号避免触发回调）
@@ -100,13 +101,13 @@ class EventCard(QFrame):
         """在指定全局坐标显示上下文菜单"""
         menu = QMenu(self)
 
-        actionEdit = menu.addAction("✏️  编辑")
-        actionCopy = menu.addAction("📋  复制")
+        actionEdit = menu.addAction(self.tr("✏️  Edit"))
+        actionCopy = menu.addAction(self.tr("📋  Copy"))
         menu.addSeparator()
-        actionMoveUp = menu.addAction("⬆  上移")
-        actionMoveDown = menu.addAction("⬇  下移")
+        actionMoveUp = menu.addAction(self.tr("⬆  Move Up"))
+        actionMoveDown = menu.addAction(self.tr("⬇  Move Down"))
         menu.addSeparator()
-        actionDelete = menu.addAction("🗑️  删除")
+        actionDelete = menu.addAction(self.tr("🗑️  Delete"))
 
         # 连接信号
         actionEdit.triggered.connect(self.editRequested.emit)
@@ -118,8 +119,3 @@ class EventCard(QFrame):
         menu.exec(globalPos)
 
 
-def _polishWidget(widget: QWidget):
-    """刷新控件样式，使 setProperty 设置的动态属性在 QSS 中生效"""
-    widget.style().unpolish(widget)
-    widget.style().polish(widget)
-    widget.update()

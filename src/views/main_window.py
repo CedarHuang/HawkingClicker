@@ -12,7 +12,7 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtCore import (
     Qt, QPropertyAnimation, QEasingCurve, QPoint,
-    QObject, QEvent,
+    QObject, QEvent, QCoreApplication,
 )
 
 from ui.generated.ui_main_window import Ui_MainWindow
@@ -122,11 +122,13 @@ class _DoubleClickFilter(QObject):
 class _NavBarController:
     """控制导航栏的折叠/展开动画和按钮文字切换"""
 
-    # 导航项配置：(objectName, 图标, 展开文字)
+    # 导航项配置：(objectName, 图标, 展开文字翻译键)
+    # NOTE: QCoreApplication.translate 调用让 lupdate 能正确提取翻译条目到 MainWindow 上下文
+    # 模块加载时翻译器尚未安装，translate 返回原始英文字符串，作为翻译键使用
     NAV_ITEMS = {
-        "navBtnEvents": ("📋", "📋 事件"),
-        "navBtnSettings": ("⚙", "⚙ 设置"),
-        "navBtnToggle": ("☰", "« 收起"),
+        "navBtnEvents": ("📋", QCoreApplication.translate("MainWindow", "Events")),
+        "navBtnSettings": ("⚙", QCoreApplication.translate("MainWindow", "Settings")),
+        "navBtnToggle": ("☰", QCoreApplication.translate("MainWindow", "Collapse")),
     }
 
     def __init__(self, navBar: QWidget, mainWin: QWidget):
@@ -208,10 +210,12 @@ class _NavBarController:
 
     def _updateButtonTexts(self):
         """根据当前状态更新所有导航按钮的文字"""
-        for name, (icon, expandedText) in self.NAV_ITEMS.items():
+        _tr = QCoreApplication.translate
+        for name, (icon, textKey) in self.NAV_ITEMS.items():
             btn = self._buttons.get(name)
             if btn:
-                btn.setText(expandedText if self._expanded else icon)
+                translated = _tr("MainWindow", textKey)
+                btn.setText(f"{icon} {translated}" if self._expanded else icon)
 
 
 # ============================================================
@@ -258,7 +262,7 @@ class MainWindow(QWidget):
 
         # ---- 导航栏展开/折叠按钮 ----
         self.ui.navBtnToggle.clicked.connect(self._navController.toggle)
-        self.ui.navBtnToggle.setToolTip("展开/折叠导航栏")
+        self.ui.navBtnToggle.setToolTip(self.tr("Toggle navigation bar"))
 
         # ---- 标题栏按钮 ----
         self.ui.btnMinimize.clicked.connect(self.showMinimized)
@@ -277,7 +281,7 @@ class MainWindow(QWidget):
         # ---- 主题切换（隐藏功能：双击版本号） ----
         self._currentTheme = "dark"
         if self.ui.versionLabel:
-            self.ui.versionLabel.setToolTip("双击切换主题")
+            self.ui.versionLabel.setToolTip(self.tr("Double-click to switch theme"))
             self._themeFilter = _DoubleClickFilter(
                 self.ui.versionLabel, self._toggleTheme
             )

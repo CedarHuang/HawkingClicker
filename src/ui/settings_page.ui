@@ -56,7 +56,7 @@
       <item>
        <widget class="QLabel" name="pageTitle">
         <property name="text">
-         <string>设置</string>
+         <string>Settings</string>
         </property>
        </widget>
       </item>
@@ -119,7 +119,7 @@
           <item>
            <widget class="QLabel" name="generalGroupTitle">
             <property name="text">
-             <string>通用</string>
+             <string>General</string>
             </property>
            </widget>
           </item>
@@ -146,14 +146,14 @@
                <item>
                 <widget class="QLabel" name="trayTitle">
                  <property name="text">
-                  <string>启用系统托盘</string>
+                 <string>Enable system tray</string>
                  </property>
                 </widget>
                </item>
                <item>
                 <widget class="QLabel" name="trayDesc">
                  <property name="text">
-                  <string>关闭窗口时最小化到托盘</string>
+                 <string>Minimize to tray when closing window</string>
                  </property>
                 </widget>
                </item>
@@ -205,14 +205,14 @@
                <item>
                 <widget class="QLabel" name="startupTitle">
                  <property name="text">
-                  <string>开机自启</string>
+                 <string>Launch at startup</string>
                  </property>
                 </widget>
                </item>
                <item>
                 <widget class="QLabel" name="startupDesc">
                  <property name="text">
-                  <string>登录 Windows 时自动启动应用</string>
+                 <string>Automatically start when logging into Windows</string>
                  </property>
                 </widget>
                </item>
@@ -269,14 +269,14 @@
                  <item>
                   <widget class="QLabel" name="adminTitle">
                    <property name="text">
-                    <string>以管理员身份启动</string>
+                    <string>Run as administrator</string>
                    </property>
                   </widget>
                  </item>
                  <item>
-                  <widget class="QLabel" name="adminLockIcon">
+       <widget class="QLabel" name="adminLockIcon">
                    <property name="text">
-                    <string>🔒</string>
+                    <string notr="true">🔒</string>
                    </property>
                    <property name="visible">
                     <bool>false</bool>
@@ -301,7 +301,7 @@
                <item>
                 <widget class="QLabel" name="adminDesc">
                  <property name="text">
-                  <string>需要管理员权限才能控制管理员窗口</string>
+                 <string>Administrator privileges required to control admin windows</string>
                  </property>
                 </widget>
                </item>
@@ -354,7 +354,7 @@
           <item>
            <widget class="QLabel" name="shortcutsGroupTitle">
             <property name="text">
-             <string>快捷操作</string>
+             <string>Quick Actions</string>
             </property>
            </widget>
           </item>
@@ -367,7 +367,7 @@
              </size>
             </property>
             <property name="text">
-             <string>📂  打开配置目录</string>
+             <string>📂  Open config directory</string>
             </property>
             <property name="flat">
              <bool>true</bool>
@@ -383,7 +383,7 @@
              </size>
             </property>
             <property name="text">
-             <string>📂  打开脚本目录</string>
+             <string>📂  Open scripts directory</string>
             </property>
             <property name="flat">
              <bool>true</bool>
@@ -414,28 +414,28 @@
           <item>
            <widget class="QLabel" name="aboutGroupTitle">
             <property name="text">
-             <string>关于</string>
+             <string>About</string>
             </property>
            </widget>
           </item>
           <item>
            <widget class="QLabel" name="aboutAppName">
             <property name="text">
-             <string>HawkingClicker</string>
+             <string notr="true">HawkingClicker</string>
             </property>
            </widget>
           </item>
           <item>
            <widget class="QLabel" name="aboutCopyright">
             <property name="text">
-             <string>© CedarHuang · MIT License</string>
+             <string notr="true">© CedarHuang · MIT License</string>
             </property>
            </widget>
           </item>
           <item>
            <widget class="QLabel" name="aboutGithub">
             <property name="text">
-             <string>&lt;a href=&quot;https://github.com/CedarHuang/HawkingClicker&quot;&gt;🔗 GitHub&lt;/a&gt;</string>
+             <string notr="true">&lt;a href=&quot;https://github.com/CedarHuang/HawkingClicker&quot;&gt;🔗 GitHub&lt;/a&gt;</string>
             </property>
             <property name="openExternalLinks">
              <bool>true</bool>

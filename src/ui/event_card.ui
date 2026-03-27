@@ -89,7 +89,7 @@
            </size>
           </property>
           <property name="text">
-           <string>Click</string>
+           <string notr="true">Click</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -99,21 +99,21 @@
         <item>
          <widget class="QLabel" name="hotkeyLabel">
           <property name="text">
-           <string>Ctrl+F1</string>
+           <string notr="true">Ctrl+F1</string>
           </property>
          </widget>
         </item>
         <item>
          <widget class="QLabel" name="arrowLabel">
-          <property name="text">
-           <string>→</string>
+        <property name="text">
+           <string notr="true">→</string>
           </property>
          </widget>
         </item>
         <item>
          <widget class="QLabel" name="buttonLabel">
           <property name="text">
-           <string>Left</string>
+           <string notr="true">Left</string>
           </property>
          </widget>
         </item>
@@ -140,14 +140,14 @@
         <item>
          <widget class="QLabel" name="rangeLabel">
           <property name="text">
-           <string>范围: *</string>
+           <string notr="true">Scope: *</string>
           </property>
          </widget>
         </item>
         <item>
          <widget class="QLabel" name="extraInfoLabel">
           <property name="text">
-           <string/>
+           <string notr="true"/>
           </property>
          </widget>
         </item>
@@ -183,8 +183,8 @@
        <height>32</height>
       </size>
      </property>
-     <property name="text">
-      <string>⏻</string>
+        <property name="text">
+      <string notr="true">⏻</string>
      </property>
      <property name="checkable">
       <bool>true</bool>
@@ -196,7 +196,7 @@
       <bool>true</bool>
      </property>
      <property name="toolTip">
-      <string>启用/禁用</string>
+      <string>Enable/Disable</string>
      </property>
     </widget>
    </item>
@@ -214,14 +214,14 @@
        <height>32</height>
       </size>
      </property>
-     <property name="text">
-      <string>⋯</string>
+        <property name="text">
+      <string notr="true">⋯</string>
      </property>
      <property name="flat">
       <bool>true</bool>
      </property>
      <property name="toolTip">
-      <string>更多操作</string>
+      <string>More actions</string>
      </property>
     </widget>
    </item>

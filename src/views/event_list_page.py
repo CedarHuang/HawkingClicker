@@ -112,8 +112,8 @@ class EventListPage(QWidget):
         """弹出删除确认对话框"""
         reply = QMessageBox.question(
             self,
-            "确认删除",
-            "确定要删除这个事件配置吗？\n此操作不可撤销。",
+            self.tr("Confirm Delete"),
+            self.tr("Are you sure you want to delete this event?\nThis action cannot be undone."),
             QMessageBox.Yes | QMessageBox.No,
             QMessageBox.No,
         )

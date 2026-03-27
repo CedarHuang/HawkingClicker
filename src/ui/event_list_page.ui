@@ -56,7 +56,7 @@
       <item>
        <widget class="QLabel" name="pageTitle">
         <property name="text">
-         <string>事件列表</string>
+         <string>Event List</string>
         </property>
        </widget>
       </item>
@@ -82,7 +82,7 @@
          </size>
         </property>
         <property name="text">
-         <string>+ 添加</string>
+         <string>+ Add</string>
         </property>
        </widget>
       </item>
@@ -140,7 +140,7 @@
       <item alignment="Qt::AlignHCenter">
        <widget class="QLabel" name="emptyIcon">
         <property name="text">
-         <string>📋</string>
+         <string notr="true">📋</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
@@ -150,7 +150,7 @@
       <item alignment="Qt::AlignHCenter">
        <widget class="QLabel" name="emptyText">
         <property name="text">
-         <string>还没有任何事件配置</string>
+         <string>No events configured yet</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
@@ -166,7 +166,7 @@
          </size>
         </property>
         <property name="text">
-         <string>+ 添加第一个事件</string>
+         <string>+ Add your first event</string>
         </property>
        </widget>
       </item>

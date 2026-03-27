@@ -68,7 +68,7 @@
          </size>
         </property>
         <property name="text">
-         <string>←</string>
+         <string notr="true">←</string>
         </property>
         <property name="flat">
          <bool>true</bool>
@@ -78,7 +78,7 @@
       <item>
        <widget class="QLabel" name="pageTitle">
         <property name="text">
-         <string>编辑事件</string>
+         <string>Edit Event</string>
         </property>
        </widget>
       </item>
@@ -141,7 +141,7 @@
           <item>
            <widget class="QLabel" name="basicGroupTitle">
             <property name="text">
-             <string>基础配置</string>
+             <string>Basic Settings</string>
             </property>
            </widget>
           </item>
@@ -159,7 +159,7 @@
                </size>
               </property>
               <property name="text">
-               <string>类型</string>
+               <string>Type</string>
               </property>
              </widget>
             </item>
@@ -292,7 +292,7 @@
                </size>
               </property>
               <property name="text">
-               <string>热键</string>
+               <string>Hotkey</string>
               </property>
              </widget>
             </item>
@@ -305,7 +305,7 @@
                </size>
               </property>
               <property name="placeholderText">
-               <string>点击此处，然后按下快捷键组合...</string>
+               <string>Click here, then press a key combination...</string>
               </property>
               <property name="readOnly">
                <bool>true</bool>
@@ -328,7 +328,7 @@
                </size>
               </property>
               <property name="text">
-               <string>按键</string>
+               <string>Button</string>
               </property>
              </widget>
             </item>
@@ -387,7 +387,7 @@
                 </size>
                </property>
                <property name="text">
-                <string>脚本</string>
+               <string>Script</string>
                </property>
               </widget>
              </item>
@@ -416,13 +416,13 @@
                 </size>
                </property>
                <property name="text">
-                <string>📂</string>
+                <string notr="true">📂</string>
                </property>
                <property name="flat">
                 <bool>true</bool>
                </property>
                <property name="toolTip">
-                <string>打开脚本目录</string>
+               <string>Open scripts directory</string>
                </property>
               </widget>
              </item>
@@ -453,7 +453,7 @@
           <item>
            <widget class="QLabel" name="conditionGroupTitle">
             <property name="text">
-             <string>触发条件</string>
+             <string>Trigger Conditions</string>
             </property>
            </widget>
           </item>
@@ -471,7 +471,7 @@
                </size>
               </property>
               <property name="text">
-               <string>范围</string>
+               <string>Scope</string>
               </property>
              </widget>
             </item>
@@ -484,7 +484,7 @@
                </size>
               </property>
               <property name="placeholderText">
-               <string>进程名:窗口名（如 chrome.exe:*）</string>
+               <string>process:window (e.g. chrome.exe:*)</string>
               </property>
              </widget>
             </item>
@@ -504,14 +504,14 @@
                </size>
               </property>
               <property name="text">
-               <string>位置</string>
+               <string>Position</string>
               </property>
              </widget>
             </item>
             <item>
              <widget class="QLabel" name="xLabel">
               <property name="text">
-               <string>X</string>
+               <string notr="true">X</string>
               </property>
              </widget>
             </item>
@@ -537,7 +537,7 @@
             <item>
              <widget class="QLabel" name="yLabel">
               <property name="text">
-               <string>Y</string>
+               <string notr="true">Y</string>
               </property>
              </widget>
             </item>
@@ -563,7 +563,7 @@
             <item>
              <widget class="QLabel" name="positionHint">
               <property name="text">
-               <string>（-1 = 当前位置）</string>
+               <string>(-1 = current position)</string>
               </property>
              </widget>
             </item>
@@ -609,7 +609,7 @@
           <item>
            <widget class="QLabel" name="multiGroupTitle">
             <property name="text">
-             <string>连点配置</string>
+             <string>Repeat Click</string>
             </property>
            </widget>
           </item>
@@ -627,7 +627,7 @@
                </size>
               </property>
               <property name="text">
-               <string>频率</string>
+               <string>Interval</string>
               </property>
              </widget>
             </item>
@@ -682,7 +682,7 @@
                </size>
               </property>
               <property name="text">
-               <string>次数</string>
+               <string>Count</string>
               </property>
              </widget>
             </item>
@@ -708,7 +708,7 @@
             <item>
              <widget class="QLabel" name="clicksHint">
               <property name="text">
-               <string>（-1 = 无限）</string>
+               <string>(-1 = infinite)</string>
               </property>
              </widget>
             </item>
@@ -770,7 +770,7 @@
             </size>
            </property>
            <property name="text">
-            <string>取消</string>
+            <string>Cancel</string>
            </property>
           </widget>
          </item>
@@ -783,7 +783,7 @@
             </size>
            </property>
            <property name="text">
-            <string>💾 保存</string>
+            <string>💾 Save</string>
            </property>
           </widget>
          </item>

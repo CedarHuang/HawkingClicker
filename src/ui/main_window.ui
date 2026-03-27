@@ -17,7 +17,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>HawkingClicker</string>
+   <string notr="true">HawkingClicker</string>
   </property>
   <layout class="QVBoxLayout" name="rootLayout">
    <property name="spacing">
@@ -108,7 +108,7 @@
       <item>
        <widget class="QLabel" name="appTitle">
         <property name="text">
-         <string>HawkingClicker</string>
+         <string notr="true">HawkingClicker</string>
         </property>
        </widget>
       </item>
@@ -147,7 +147,7 @@
          </size>
         </property>
         <property name="text">
-         <string>─</string>
+         <string notr="true">─</string>
         </property>
         <property name="flat">
          <bool>true</bool>
@@ -169,7 +169,7 @@
          </size>
         </property>
         <property name="text">
-         <string>✕</string>
+         <string notr="true">✕</string>
         </property>
         <property name="flat">
          <bool>true</bool>
@@ -236,7 +236,7 @@
             </size>
            </property>
            <property name="text">
-            <string>📋</string>
+            <string notr="true">📋</string>
            </property>
            <property name="checkable">
             <bool>true</bool>
@@ -258,7 +258,7 @@
             </size>
            </property>
            <property name="text">
-            <string>⚙</string>
+            <string notr="true">⚙</string>
            </property>
            <property name="checkable">
             <bool>true</bool>
@@ -290,7 +290,7 @@
             </size>
            </property>
            <property name="text">
-            <string>☰</string>
+            <string notr="true">☰</string>
            </property>
            <property name="flat">
             <bool>true</bool>
