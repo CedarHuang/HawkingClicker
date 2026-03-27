@@ -1,89 +1,119 @@
-import tkinter as tk
-from tkinter import ttk
+"""
+设置页
+======
+管理应用全局设置（系统托盘、开机自启、管理员启动），
+提供快捷操作按钮和关于信息展示。
+"""
 
-from core import common
-from core import config
-from core import utils
-from i18n import i18n
+from PySide6.QtWidgets import QWidget
+from PySide6.QtCore import Signal
 
-CEHCK_SELECTED = ['!alternate', 'selected']
-CEHCK_UNSELECTED = ['!alternate', '!selected']
+from ui.generated.ui_settings_page import Ui_SettingsPage
 
-class SettingsPage:
-    def __init__(self, master):
-        self.master = master
 
-    def show(self):
-        root = tk.Toplevel(self.master)
-        self.root = root
+class SettingsPage(QWidget):
+    """设置页面"""
 
-        root.title(i18n('Settings'))
-        root.iconbitmap(common.assets_path('icon.ico'))
+    # 信号定义
+    trayToggled = Signal(bool)            # 系统托盘开关切换
+    startupToggled = Signal(bool)         # 开机自启开关切换
+    adminToggled = Signal(bool)           # 管理员启动开关切换
+    openConfigDirRequested = Signal()     # 请求打开配置目录
+    openScriptsDirRequested = Signal()    # 请求打开脚本目录
 
-        # Tray
-        tray_check = ttk.Checkbutton(root, text=i18n('EnableTray'))
-        tray_check.pack(side='top', fill='x', expand=True)
-        self.tray_check = tray_check
+    def __init__(self, parent: QWidget = None):
+        super().__init__(parent)
+        self.ui = Ui_SettingsPage()
+        self.ui.setupUi(self)
 
-        # Startup
-        startup_frame = ttk.Frame(root)
-        startup_frame.pack(side='top', fill='x')
+        # 是否以管理员身份运行（UI 演示默认为 False）
+        self._isAdmin = False
 
-        startup_check = ttk.Checkbutton(startup_frame, text=i18n('Startup'), command=self.update_startup_state)
-        startup_check.pack(side='left', fill='x', expand=True)
-        self.startup_check = startup_check
+        # ---- 连接信号 ----
+        self.ui.chkEnableTray.toggled.connect(self._onTrayToggled)
+        self.ui.chkStartup.toggled.connect(self._onStartupToggled)
+        self.ui.chkStartupAsAdmin.toggled.connect(self._onAdminToggled)
+        self.ui.btnOpenConfigDir.clicked.connect(self.openConfigDirRequested.emit)
+        self.ui.btnOpenScriptsDir.clicked.connect(self.openScriptsDirRequested.emit)
 
-        # StartupAsAdmin
-        startup_as_admin_check = ttk.Checkbutton(startup_frame, text=i18n('StartupAsAdmin'), command=self.update_startup_as_admin_state)
-        startup_as_admin_check.pack(side='left', fill='x', expand=True)
-        self.startup_as_admin_check = startup_as_admin_check
+        # ---- 初始化联动状态 ----
+        self._applyAdminState()
+        self._onStartupToggled(self.ui.chkStartup.isChecked())
 
-        # Save
-        save = ttk.Button(root, text=i18n('Save'), command=self.on_save_click)
-        save.pack(side='top', fill='x', expand=True)
-        save_check_label = ttk.Label(root, text='')
-        self.save_check_label = save_check_label
+    # ---- 公共方法 ----
 
-        root.protocol('WM_DELETE_WINDOW', self.hide)
+    def setAdminMode(self, isAdmin: bool):
+        """设置当前是否以管理员身份运行
 
-        self.fill_data()
+        Args:
+            isAdmin: True=管理员, False=普通用户
+        """
+        self._isAdmin = isAdmin
+        self._applyAdminState()
+        self._onStartupToggled(self.ui.chkStartup.isChecked())
 
-    def fill_data(self):
-        self.tray_check.state(CEHCK_SELECTED if config.settings.enable_tray else CEHCK_UNSELECTED)
-        self.startup_check.state(CEHCK_SELECTED if config.settings.startup else CEHCK_UNSELECTED)
-        self.startup_as_admin_check.state(CEHCK_SELECTED if config.settings.startup_as_admin else CEHCK_UNSELECTED)
+    def setVersionText(self, version: str):
+        """设置关于区域的版本号显示
 
-    def hide(self):
-        self.root.destroy()
+        Args:
+            version: 版本号文本 (如 "v0.7.2")
+        """
+        self.ui.aboutAppName.setText(f"HawkingClicker  {version}")
 
-    def update_startup_state(self):
-        if self.startup_check.instate(CEHCK_UNSELECTED):
-            self.startup_as_admin_check.state(CEHCK_UNSELECTED)
+    def setSettings(self, tray: bool, startup: bool, admin: bool):
+        """批量设置开关状态（阻断信号避免触发回调）
 
-    def update_startup_as_admin_state(self):
-        if self.startup_as_admin_check.instate(CEHCK_SELECTED):
-            self.startup_check.state(CEHCK_SELECTED)
+        Args:
+            tray: 系统托盘开关
+            startup: 开机自启开关
+            admin: 管理员启动开关
+        """
+        self.ui.chkEnableTray.blockSignals(True)
+        self.ui.chkStartup.blockSignals(True)
+        self.ui.chkStartupAsAdmin.blockSignals(True)
 
-    def on_save_click(self):
-        def value_check():
-            temp = config.Settings()
+        self.ui.chkEnableTray.setChecked(tray)
+        self.ui.chkStartup.setChecked(startup)
+        self.ui.chkStartupAsAdmin.setChecked(admin)
 
-            temp.enable_tray = self.tray_check.instate(CEHCK_SELECTED)
-            temp.startup  = self.startup_check.instate(CEHCK_SELECTED)
-            temp.startup_as_admin = self.startup_as_admin_check.instate(CEHCK_SELECTED)
+        self.ui.chkEnableTray.blockSignals(False)
+        self.ui.chkStartup.blockSignals(False)
+        self.ui.chkStartupAsAdmin.blockSignals(False)
 
-            if not utils.is_running_as_admin():
-                if config.settings.startup_as_admin == True or temp.startup_as_admin == True:
-                    raise Exception(f'{i18n('RunningAsAdminIsRequiredToSet')} "{i18n('StartupAsAdmin')}"')
+        # 更新联动状态
+        self._onStartupToggled(startup)
 
-            return temp
+    # ---- 内部方法 ----
 
-        try:
-            temp = value_check()
-        except Exception as e:
-            self.save_check_label.config(text=f'{e}')
-            self.save_check_label.pack()
-            return
+    def _onTrayToggled(self, checked: bool):
+        """系统托盘开关切换"""
+        self.trayToggled.emit(checked)
 
-        config.settings.update(temp)
-        self.hide()
+    def _onStartupToggled(self, checked: bool):
+        """开机自启切换时，联动管理员启动开关"""
+        if self.ui.chkStartupAsAdmin:
+            # 开机自启未启用时，管理员启动置灰禁用
+            self.ui.chkStartupAsAdmin.setEnabled(checked and self._isAdmin)
+            if not checked:
+                self.ui.chkStartupAsAdmin.blockSignals(True)
+                self.ui.chkStartupAsAdmin.setChecked(False)
+                self.ui.chkStartupAsAdmin.blockSignals(False)
+        self.startupToggled.emit(checked)
+
+    def _onAdminToggled(self, checked: bool):
+        """管理员启动开关切换"""
+        self.adminToggled.emit(checked)
+
+    def _applyAdminState(self):
+        """根据是否以管理员身份运行，设置管理员开关状态"""
+        # 锁定图标：非管理员时显示
+        if self.ui.adminLockIcon:
+            self.ui.adminLockIcon.setVisible(not self._isAdmin)
+
+        # 管理员开关：非管理员时禁用
+        if self.ui.chkStartupAsAdmin:
+            self.ui.chkStartupAsAdmin.setEnabled(self._isAdmin)
+            if not self._isAdmin:
+                self.ui.chkStartupAsAdmin.setToolTip("必须以管理员身份运行时才能设置")
+            else:
+                self.ui.chkStartupAsAdmin.setToolTip("")
