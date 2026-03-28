@@ -1,7 +1,7 @@
 """
 HawkingClicker — 主入口
 ========================
-启动应用主窗口，加载主题样式，填充示例数据用于 UI 展示。
+启动应用主窗口。
 
 运行方式:
     cd src
@@ -11,30 +11,17 @@ HawkingClicker — 主入口
 import sys
 from pathlib import Path
 
-from PySide6.QtWidgets import QApplication
 from PySide6.QtCore import QTranslator, QLocale
+from PySide6.QtWidgets import QApplication
 
 from __version__ import __version__
+from core import event_listener
+from core import foreground_listener
+from core import single_instance
 from views.main_window import MainWindow, applyTheme
 
 
-def _populateSampleEvents(window: MainWindow):
-    """向事件列表中填充示例卡片数据，用于 UI 效果展示"""
-    sampleEvents = [
-        ("Click",  "Ctrl+F1",   "Left",          "*",               "位置: 当前"),
-        ("Press",  "Ctrl+F2",   "Right",         "chrome.exe:*",    "位置: (100, 200)"),
-        ("Multi",  "Ctrl+F3",   "Left",          "notepad.exe:*",   "频率: 50ms · 次数: 100"),
-        ("Script", "Ctrl+F4",   "auto_farm.py",  "*",               ""),
-        ("Click",  "Alt+1",     "Middle",        "game.exe:*",      "位置: (500, 300)"),
-        ("Multi",  "Shift+F5",  "Right",         "*",               "频率: 200ms · 次数: ∞"),
-    ]
-
-    for eventType, hotkey, button, scope, extra in sampleEvents:
-        window.eventListPage.addCard(eventType, hotkey, button, scope, extra)
-
-
 def _installTranslator(app: QApplication):
-    """加载并安装翻译文件"""
     translator = QTranslator()
     trDir = str(Path(__file__).parent / "translations" / "generated")
     if translator.load(QLocale(), "hawkingclicker", "_", trDir, ".qm"):
@@ -44,6 +31,10 @@ def _installTranslator(app: QApplication):
 
 def main():
     app = QApplication(sys.argv)
+
+    # 单实例检查：若已有实例运行则唤醒并退出
+    if not single_instance.check():
+        sys.exit(0)
 
     # 加载翻译
     _translator = _installTranslator(app)
@@ -55,16 +46,28 @@ def main():
     window = MainWindow()
     window.setVersion(f"v{__version__}")
 
-    # 设置页：勾选系统托盘以便预览
-    window.settingsPage.setSettings(tray=True, startup=False, admin=False)
+    # 注册 core 层回调
+    window.registerCallbacks()
 
-    # 填充示例事件数据
-    _populateSampleEvents(window)
+    # 加载数据到 UI
+    window.refreshEventList()
+    window.initSettings()
+
+    # 启动后台监听
+    foreground_listener.start()
+    event_listener.start()
 
     # 显示窗口
     window.show()
 
-    sys.exit(app.exec())
+    # 进入事件循环
+    exitCode = app.exec()
+
+    # 退出时清理后台监听
+    event_listener.stop()
+    foreground_listener.stop()
+
+    sys.exit(exitCode)
 
 
 if __name__ == "__main__":

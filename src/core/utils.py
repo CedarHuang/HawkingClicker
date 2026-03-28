@@ -1,6 +1,7 @@
 import ctypes
 import winreg
 import win32com.client
+import pywintypes
 
 from core import common
 from core import logger
@@ -15,8 +16,10 @@ def delete_startup_from_winreg():
         key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, r'Software\Microsoft\Windows\CurrentVersion\Run', 0, winreg.KEY_WRITE)
         winreg.DeleteValue(key, 'HawkingClicker')
         winreg.CloseKey(key)
-    except:
-        logger.app.error(f'Failed to delete startup from Windows Registry:', exc_info=True)
+    except FileNotFoundError:
+        pass  # 注册表项不存在，无需处理
+    except Exception:
+        logger.app.error('Failed to delete startup from Windows Registry:', exc_info=True)
 
 def create_startup_to_scheduled_task():
     scheduler = win32com.client.Dispatch('Schedule.Service')
@@ -50,8 +53,14 @@ def delete_startup_from_scheduled_task():
     root_folder = scheduler.GetFolder('\\')
     try:
         root_folder.DeleteTask('HawkingClicker', 0)
-    except:
-        logger.app.error(f'Failed to delete startup from Scheduled Task:', exc_info=True)
+    except pywintypes.com_error as e:
+        # HRESULT 0x80070002 = ERROR_FILE_NOT_FOUND，计划任务不存在，无需处理
+        if len(e.args) >= 4 and isinstance(e.args[2], tuple) and e.args[2][-1] == -2147024894:
+            pass
+        else:
+            logger.app.error('Failed to delete startup from Scheduled Task:', exc_info=True)
+    except Exception:
+        logger.app.error('Failed to delete startup from Scheduled Task:', exc_info=True)
 
 def is_running_as_admin():
     try:

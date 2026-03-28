@@ -5,12 +5,15 @@
 热键录入、字段动态显示/隐藏、表单验证等 UI 交互。
 """
 
+import os
+
+from PySide6.QtCore import Signal, Qt, QEvent, QObject, QCoreApplication
+from PySide6.QtGui import QKeyEvent
 from PySide6.QtWidgets import (
     QWidget, QButtonGroup, QMessageBox,
 )
-from PySide6.QtCore import Signal, Qt, QEvent, QObject, QCoreApplication
-from PySide6.QtGui import QKeyEvent
 
+from core import common
 from ui.generated.ui_event_edit_page import Ui_EventEditPage
 from views import _polishWidget
 
@@ -174,6 +177,14 @@ class EventEditPage(QWidget):
         self._typeGroup.addButton(self.ui.typeBtnScript)
         self._typeGroup.buttonClicked.connect(self._onTypeChanged)
 
+        # 按钮 → 类型名称映射
+        self._btnTypeMap = {
+            self.ui.typeBtnClick: "Click",
+            self.ui.typeBtnPress: "Press",
+            self.ui.typeBtnMulti: "Multi",
+            self.ui.typeBtnScript: "Script",
+        }
+
         # ---- 热键录入 ----
         self._hotkeyRecorder = HotkeyRecorder(self.ui.hotkeyInput)
 
@@ -181,11 +192,13 @@ class EventEditPage(QWidget):
         self.ui.btnBack.clicked.connect(self._onBackClicked)
         self.ui.btnCancel.clicked.connect(self._onBackClicked)
         self.ui.btnSave.clicked.connect(self._onSaveClicked)
+        self.ui.btnOpenScriptsDir.clicked.connect(self._onOpenScriptsDir)
 
         # ---- 表单变更追踪 ----
         self.ui.hotkeyInput.textChanged.connect(self._markDirty)
         self.ui.rangeInput.textChanged.connect(self._markDirty)
         self.ui.buttonCombo.currentTextChanged.connect(self._markDirty)
+        self.ui.scriptCombo.currentTextChanged.connect(self._markDirty)
         self.ui.positionX.valueChanged.connect(self._markDirty)
         self.ui.positionY.valueChanged.connect(self._markDirty)
         self.ui.intervalInput.valueChanged.connect(self._markDirty)
@@ -252,7 +265,11 @@ class EventEditPage(QWidget):
         # 填充字段
         self.ui.hotkeyInput.setText(data.get("hotkey", ""))
         self.ui.buttonCombo.setCurrentText(data.get("button", "Left"))
-        self.ui.rangeInput.setText(data.get("range", ""))
+
+        # range 为 "*" 或空时显示为空，让 placeholder 提示用户格式
+        rangeVal = data.get("range", "")
+        self.ui.rangeInput.setText("" if rangeVal in ("", "*") else rangeVal)
+
         self.ui.positionX.setValue(data.get("posX", -1))
         self.ui.positionY.setValue(data.get("posY", -1))
         self.ui.intervalInput.setValue(data.get("interval", 100))
@@ -280,7 +297,7 @@ class EventEditPage(QWidget):
 
     def _onTypeChanged(self, button):
         """类型分段按钮切换回调"""
-        typeName = button.text()
+        typeName = self._btnTypeMap.get(button, "Click")
         self._applyType(typeName)
         self._markDirty()
 
@@ -316,7 +333,7 @@ class EventEditPage(QWidget):
 
         # 收集表单数据
         checkedBtn = self._typeGroup.checkedButton()
-        typeName = checkedBtn.text() if checkedBtn else "Click"
+        typeName = self._btnTypeMap.get(checkedBtn, "Click")
 
         data = {
             "type": typeName,
@@ -349,7 +366,7 @@ class EventEditPage(QWidget):
 
         # 按键/脚本不能为空
         checkedBtn = self._typeGroup.checkedButton()
-        typeName = checkedBtn.text() if checkedBtn else "Click"
+        typeName = self._btnTypeMap.get(checkedBtn, "Click")
 
         if typeName == "Script":
             if not self.ui.scriptCombo.currentText().strip():
@@ -375,4 +392,9 @@ class EventEditPage(QWidget):
         """标记表单已修改"""
         self._isDirty = True
 
-
+    @staticmethod
+    def _onOpenScriptsDir():
+        """打开脚本目录"""
+        scriptsDir = common.scripts_path()
+        common.mkdir_if_not_exists(scriptsDir)
+        os.startfile(scriptsDir)

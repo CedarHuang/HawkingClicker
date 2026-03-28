@@ -11,7 +11,7 @@ from core.scripts import scripts
 
 def start():
     for event in config.events:
-        if event.status != 'Enable':
+        if event.status != 1:
             continue
         if event.hotkey == None or event.hotkey == '':
             continue

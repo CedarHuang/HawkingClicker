@@ -38,7 +38,7 @@ class SettingsPage(QWidget):
 
         # ---- 初始化联动状态 ----
         self._applyAdminState()
-        self._onStartupToggled(self.ui.chkStartup.isChecked())
+        self._updateStartupUI(self.ui.chkStartup.isChecked())
 
     # ---- 公共方法 ----
 
@@ -50,7 +50,7 @@ class SettingsPage(QWidget):
         """
         self._isAdmin = isAdmin
         self._applyAdminState()
-        self._onStartupToggled(self.ui.chkStartup.isChecked())
+        self._updateStartupUI(self.ui.chkStartup.isChecked())
 
     def setVersionText(self, version: str):
         """设置关于区域的版本号显示
@@ -81,7 +81,7 @@ class SettingsPage(QWidget):
         self.ui.chkStartupAsAdmin.blockSignals(False)
 
         # 更新联动状态
-        self._onStartupToggled(startup)
+        self._updateStartupUI(startup)
 
     # ---- 内部方法 ----
 
@@ -89,8 +89,8 @@ class SettingsPage(QWidget):
         """系统托盘开关切换"""
         self.trayToggled.emit(checked)
 
-    def _onStartupToggled(self, checked: bool):
-        """开机自启切换时，联动管理员启动开关"""
+    def _updateStartupUI(self, checked: bool):
+        """根据开机自启状态更新管理员启动开关的联动 UI"""
         if self.ui.chkStartupAsAdmin:
             # 开机自启未启用时，管理员启动置灰禁用
             self.ui.chkStartupAsAdmin.setEnabled(checked and self._isAdmin)
@@ -98,6 +98,10 @@ class SettingsPage(QWidget):
                 self.ui.chkStartupAsAdmin.blockSignals(True)
                 self.ui.chkStartupAsAdmin.setChecked(False)
                 self.ui.chkStartupAsAdmin.blockSignals(False)
+
+    def _onStartupToggled(self, checked: bool):
+        """开机自启切换时，联动管理员启动开关并发射信号"""
+        self._updateStartupUI(checked)
         self.startupToggled.emit(checked)
 
     def _onAdminToggled(self, checked: bool):
