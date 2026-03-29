@@ -2,4 +2,15 @@
     <qresource prefix="/icons">
         <file alias="app.svg">icons/app.svg</file>
     </qresource>
+
+    <qresource prefix="/styles">
+        <file alias="base.qss">../ui/styles/base.qss</file>
+        <file alias="dark.qss">../ui/styles/dark.qss</file>
+        <file alias="light.qss">../ui/styles/light.qss</file>
+    </qresource>
+
+    <qresource prefix="/translations">
+        <file alias="hawkingclicker_zh_CN.qm">../translations/generated/hawkingclicker_zh_CN.qm</file>
+        <file alias="hawkingclicker_en_US.qm">../translations/generated/hawkingclicker_en_US.qm</file>
+    </qresource>
 </RCC>

@@ -2,18 +2,19 @@
 项目构建脚本
 ============
 提供以下构建功能：
-  1. 资源编译：将 src/resources/resources.qrc 通过 pyside6-rcc 编译为 Python 模块
-  2. UI 编译：将 src/ui/*.ui 通过 pyside6-uic 编译为 Python 模块，输出到 src/ui/generated/
-  3. 翻译提取：从 .py 和 .ui 源文件中提取可翻译字符串，生成 .ts 文件到 src/translations/
-  4. 翻译编译：将 .ts 文件通过 pyside6-lrelease 编译为 .qm 文件，输出到 src/translations/generated/
+  1. UI 编译：将 src/ui/*.ui 通过 pyside6-uic 编译为 Python 模块，输出到 src/ui/generated/
+  2. 翻译提取：从 .py 和 .ui 源文件中提取可翻译字符串，生成 .ts 文件到 src/translations/
+  3. 翻译编译：将 .ts 文件通过 pyside6-lrelease 编译为 .qm 文件，输出到 src/translations/generated/
+  4. 资源编译：将 src/resources/resources.qrc 通过 pyside6-rcc 编译为 Python 模块
+     qrc 中统一管理图标(icons)、样式(qss)和翻译(qm)等所有资源
 
 用法:
-    python build.py                 # 构建全部（资源 + UI + 翻译编译）
+    python build.py                 # 构建全部（UI + 翻译 + 资源编译）
     python build.py rcc             # 仅编译 .qrc 资源文件
     python build.py ui              # 仅编译 .ui 文件
-    python build.py tr              # 提取翻译字符串并编译 .qm
+    python build.py tr              # 提取翻译字符串并编译 .qm（自动触发 rcc）
     python build.py tr --extract    # 仅提取/更新 .ts 文件
-    python build.py tr --compile    # 仅编译 .ts → .qm
+    python build.py tr --compile    # 仅编译 .ts → .qm（自动触发 rcc）
     python build.py clean           # 清空产物目录后全量重新构建
     python build.py check           # 仅检查哪些文件需要重新构建
 """
@@ -109,12 +110,22 @@ def cmd_rcc(force: bool = False) -> bool:
         needs_recompile = False
         if _RES_OUTPUT_FILE.exists():
             out_mtime = _RES_OUTPUT_FILE.stat().st_mtime
-            # 扫描 resources 目录下所有非 .py 非 .qrc 文件
-            for res_file in _RES_DIR.rglob("*"):
-                if res_file.is_file() and res_file.suffix not in (".py", ".qrc", ".pyc"):
-                    if res_file.stat().st_mtime > out_mtime:
-                        needs_recompile = True
-                        break
+            # 扫描 qrc 引用的所有资源目录
+            _res_scan_dirs = [
+                _RES_DIR,                   # icons/ 等直属资源
+                _SRC_DIR / "ui" / "styles", # QSS 样式文件
+                _TR_OUTPUT_DIR,             # QM 翻译编译产物
+            ]
+            for scan_dir in _res_scan_dirs:
+                if not scan_dir.exists():
+                    continue
+                for res_file in scan_dir.rglob("*"):
+                    if res_file.is_file() and res_file.suffix not in (".py", ".qrc", ".pyc"):
+                        if res_file.stat().st_mtime > out_mtime:
+                            needs_recompile = True
+                            break
+                if needs_recompile:
+                    break
         if not needs_recompile:
             print(f"  ⊘ 跳过（未变更）: {_RES_QRC_FILE.name}")
             print(f"\n[资源] 完成: 0 个编译, 1 个跳过, 0 个失败")
@@ -327,19 +338,35 @@ def cmd_tr_compile(force: bool = False) -> bool:
     return failed == 0
 
 
-def cmd_tr(extract: bool = False, compile_only: bool = False, force: bool = False) -> bool:
-    """翻译工作流：提取 + 编译"""
+def cmd_tr(extract: bool = False, compile_only: bool = False,
+           force: bool = False, auto_rcc: bool = True) -> bool:
+    """翻译工作流：提取 + 编译
+
+    当翻译编译完成后，默认会自动触发 rcc 重新编译，
+    因为 qrc 引用了 qm 翻译文件。
+
+    Args:
+        auto_rcc: 编译完成后是否自动触发 rcc 重新编译（默认 True）。
+                  在 cmd_all 中由外部统一管理 rcc，此参数设为 False。
+    """
     if extract and not compile_only:
         # 仅提取
         return cmd_tr_extract()
     elif compile_only and not extract:
         # 仅编译
-        return cmd_tr_compile(force=force)
+        ok = cmd_tr_compile(force=force)
+        if ok and auto_rcc:
+            print()
+            cmd_rcc()  # qm 变更后重新编译资源
+        return ok
     else:
         # 默认：提取 + 编译
         ok1 = cmd_tr_extract()
         print()
         ok2 = cmd_tr_compile(force=True)  # 提取后强制重新编译
+        if ok2 and auto_rcc:
+            print()
+            cmd_rcc()  # qm 变更后重新编译资源
         return ok1 and ok2
 
 
@@ -348,16 +375,22 @@ def cmd_tr(extract: bool = False, compile_only: bool = False, force: bool = Fals
 # ============================================================
 
 def cmd_all(force: bool = False):
-    """构建全部：资源编译 + UI 编译 + 翻译编译"""
+    """构建全部：UI 编译 + 翻译编译 + 资源编译
+
+    注意执行顺序：先编译 UI 和翻译，最后编译资源。
+    因为 qrc 引用了 QSS 样式和 QM 翻译文件，
+    需要确保这些文件就绪后再编译资源。
+    """
     print("=" * 50)
     print("  构建全部")
     print("=" * 50 + "\n")
 
-    ok0 = cmd_rcc(force=force)
-    print()
     ok1 = cmd_ui(force=force)
     print()
-    ok2 = cmd_tr(force=force)
+    ok2 = cmd_tr(force=force, auto_rcc=False)
+    print()
+    # 资源编译放在最后，因为 qrc 引用了 qss 和 qm 文件
+    ok0 = cmd_rcc(force=force)
 
     print("\n" + "=" * 50)
     if ok0 and ok1 and ok2:
@@ -456,13 +489,13 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 示例:
-  python build.py                 构建全部（资源 + UI + 翻译编译）
+  python build.py                 构建全部（UI + 翻译 + 资源编译）
   python build.py rcc             仅编译 .qrc 资源文件
   python build.py rcc --force     强制重新编译资源
   python build.py ui              仅编译 .ui 文件
-  python build.py tr              提取翻译字符串并编译 .qm
+  python build.py tr              提取翻译字符串并编译 .qm（自动触发 rcc）
   python build.py tr --extract    仅提取/更新 .ts 文件
-  python build.py tr --compile    仅编译 .ts → .qm 文件
+  python build.py tr --compile    仅编译 .ts → .qm 文件（自动触发 rcc）
   python build.py clean           清空产物目录后全量重新构建
   python build.py check           仅检查，不执行构建
         """,

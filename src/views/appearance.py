@@ -2,25 +2,23 @@
 外观管理器
 =========
 管理应用的外观呈现，包括主题样式加载和国际化翻译安装。
+
+所有资源通过 Qt Resource System（qrc）加载，
+使用 :/ 前缀路径引用编译到 resources_rc.py 中的资源。
 """
 
-import os
-from pathlib import Path
-
-from PySide6.QtCore import QTranslator, QLocale
+from PySide6.QtCore import QFile, QIODevice, QTranslator, QLocale
 from PySide6.QtWidgets import QApplication
 
-# 路径常量
-_SRC_DIR = os.path.dirname(os.path.abspath(__file__)) + os.sep + ".."
-_UI_DIR = os.path.join(_SRC_DIR, "ui")
-_STYLES_DIR = os.path.join(_UI_DIR, "styles")
 
-
-def _loadQss(filename: str) -> str:
-    """读取 .qss 文件内容"""
-    filepath = os.path.join(_STYLES_DIR, filename)
-    with open(filepath, "r", encoding="utf-8") as f:
-        return f.read()
+def _loadQss(name: str) -> str:
+    """从 Qt 资源系统读取 .qss 文件内容"""
+    f = QFile(f":/styles/{name}")
+    if f.open(QIODevice.OpenModeFlag.ReadOnly | QIODevice.OpenModeFlag.Text):
+        data = f.readAll().data().decode("utf-8")
+        f.close()
+        return data
+    return ""
 
 
 def applyTheme(app: QApplication, theme: str):
@@ -36,7 +34,7 @@ def applyTheme(app: QApplication, theme: str):
 
 
 def installTranslator(app: QApplication):
-    """加载并安装 Qt 翻译文件
+    """从 Qt 资源系统加载并安装翻译文件
 
     Args:
         app: QApplication 实例
@@ -45,7 +43,6 @@ def installTranslator(app: QApplication):
         QTranslator: 翻译器实例（需保持引用以防被回收）
     """
     translator = QTranslator()
-    trDir = str(Path(__file__).parent.parent / "translations" / "generated")
-    if translator.load(QLocale(), "hawkingclicker", "_", trDir, ".qm"):
+    if translator.load(QLocale(), "hawkingclicker", "_", ":/translations", ".qm"):
         app.installTranslator(translator)
     return translator
