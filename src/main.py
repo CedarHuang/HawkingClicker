@@ -18,7 +18,8 @@ from __version__ import __version__
 from core import event_listener
 from core import foreground_listener
 from core import single_instance
-from views.main_window import MainWindow, applyTheme
+from views.main_window import MainWindow
+from views.theme import applyTheme
 
 
 def _installTranslator(app: QApplication):
