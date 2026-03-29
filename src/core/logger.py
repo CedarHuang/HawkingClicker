@@ -14,7 +14,7 @@ class IndentedFormatter(logging.Formatter):
         return f'{super().formatException(ei)}\n'
 
 def log_level():
-    if hasattr(sys, '_MEIPASS'):
+    if getattr(sys, 'frozen', False):
         return logging.INFO
     return logging.DEBUG
 
