@@ -137,6 +137,17 @@ QFrame#EventCard {
     border: 1px solid transparent;
 }
 
+/* 拖拽中的卡片 */
+QFrame#EventCard[dragging="true"] {
+    opacity: 0.3;
+}
+
+/* 拖拽插入指示线 */
+QFrame#dropIndicator {
+    border: none;
+    border-radius: 1px;
+}
+
 /* 左侧类型颜色条 */
 QFrame#typeColorBar {
     border-radius: 2px;

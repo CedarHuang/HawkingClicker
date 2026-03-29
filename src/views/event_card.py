@@ -5,8 +5,8 @@
 启用/禁用开关、右键上下文菜单等交互逻辑。
 """
 
-from PySide6.QtWidgets import QFrame, QMenu, QWidget
 from PySide6.QtCore import Signal, Qt
+from PySide6.QtWidgets import QFrame, QMenu, QWidget
 
 from ui.generated.ui_event_card import Ui_EventCard
 from views import _polishWidget
@@ -72,13 +72,19 @@ class EventCard(QFrame):
     # ---- 鼠标事件 ----
 
     def mousePressEvent(self, event):
-        """点击卡片区域（非按钮区域）时发出 clicked 信号"""
+        """记录左键按下状态（clicked 信号延迟到 mouseReleaseEvent 发射，以兼容拖拽）"""
         if event.button() == Qt.LeftButton:
-            # 检查点击位置是否在按钮上，如果不是则视为卡片点击
             child = self.childAt(event.position().toPoint())
             if child not in (self.ui.btnToggleStatus, self.ui.btnMore):
-                self.clicked.emit()
+                self._clickPending = True
         super().mousePressEvent(event)
+
+    def mouseReleaseEvent(self, event):
+        """左键释放时，如果没有发生拖拽则发射 clicked 信号"""
+        if event.button() == Qt.LeftButton and getattr(self, "_clickPending", False):
+            self._clickPending = False
+            self.clicked.emit()
+        super().mouseReleaseEvent(event)
 
     def contextMenuEvent(self, event):
         """右键点击卡片时显示上下文菜单"""

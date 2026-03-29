@@ -209,10 +209,11 @@ class EventController:
             self.refreshEventList()
 
     def onMoveEvent(self, fromIndex: int, toIndex: int):
-        """移动事件（交换位置）"""
+        """移动事件到目标位置"""
         if (0 <= fromIndex < len(configEvents) and
-                0 <= toIndex < len(configEvents)):
-            configEvents.swap(fromIndex, toIndex)
+                0 <= toIndex < len(configEvents) and
+                fromIndex != toIndex):
+            configEvents.move(fromIndex, toIndex)
             self.refreshEventList()
 
     @staticmethod

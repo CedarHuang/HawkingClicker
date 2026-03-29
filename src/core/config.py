@@ -60,6 +60,13 @@ class Events(list):
         self[a], self[b] = self[b], self[a]
         self.save()
 
+    def move(self, fromIndex, toIndex):
+        if fromIndex == toIndex:
+            return
+        item = super().pop(fromIndex)
+        super().insert(toIndex, item)
+        self.save()
+
     def update(self, index, event):
         if index < 0 or index >= len(self):
             return self.append(event)

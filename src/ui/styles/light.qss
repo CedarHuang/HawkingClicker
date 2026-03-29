@@ -190,6 +190,11 @@ QFrame#EventCard:hover {
     background-color: #FDFDFE;
 }
 
+/* 拖拽插入指示线 */
+QFrame#dropIndicator {
+    background-color: #4078F2;
+}
+
 /* 类型颜色条 — 由代码动态设置 background-color */
 QFrame#typeColorBar {
     background-color: #A0A1A7;
