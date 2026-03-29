@@ -12,6 +12,7 @@ from PySide6.QtWidgets import (
 
 from core.callbacks import callbacks, CallbackEvent
 from ui.generated.ui_main_window import Ui_MainWindow
+from views.appearance import applyTheme
 from views.event_controller import EventController
 from views.event_edit_page import EventEditPage
 from views.event_list_page import EventListPage
@@ -20,7 +21,6 @@ from views.main_window_helpers import (
 )
 from views.settings_page import SettingsPage
 from views.settings_controller import SettingsController
-from views.theme import applyTheme
 from views.tray import TrayManager
 
 

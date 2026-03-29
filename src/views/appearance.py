@@ -1,11 +1,13 @@
 """
-主题与样式
+外观管理器
 =========
-加载 QSS 样式文件并应用主题到 QApplication。
+管理应用的外观呈现，包括主题样式加载和国际化翻译安装。
 """
 
 import os
+from pathlib import Path
 
+from PySide6.QtCore import QTranslator, QLocale
 from PySide6.QtWidgets import QApplication
 
 # 路径常量
@@ -31,3 +33,19 @@ def applyTheme(app: QApplication, theme: str):
     base = _loadQss("base.qss")
     themeQss = _loadQss(f"{theme}.qss")
     app.setStyleSheet(base + "\n\n" + themeQss)
+
+
+def installTranslator(app: QApplication):
+    """加载并安装 Qt 翻译文件
+
+    Args:
+        app: QApplication 实例
+
+    Returns:
+        QTranslator: 翻译器实例（需保持引用以防被回收）
+    """
+    translator = QTranslator()
+    trDir = str(Path(__file__).parent.parent / "translations" / "generated")
+    if translator.load(QLocale(), "hawkingclicker", "_", trDir, ".qm"):
+        app.installTranslator(translator)
+    return translator

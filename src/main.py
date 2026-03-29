@@ -9,25 +9,15 @@ HawkingClicker — 主入口
 """
 
 import sys
-from pathlib import Path
 
-from PySide6.QtCore import QTranslator, QLocale
 from PySide6.QtWidgets import QApplication
 
 from __version__ import __version__
 from core import event_listener
 from core import foreground_listener
 from core import single_instance
+from views.appearance import applyTheme, installTranslator
 from views.main_window import MainWindow
-from views.theme import applyTheme
-
-
-def _installTranslator(app: QApplication):
-    translator = QTranslator()
-    trDir = str(Path(__file__).parent / "translations" / "generated")
-    if translator.load(QLocale(), "hawkingclicker", "_", trDir, ".qm"):
-        app.installTranslator(translator)
-    return translator
 
 
 def main():
@@ -38,7 +28,7 @@ def main():
         sys.exit(0)
 
     # 加载翻译
-    _translator = _installTranslator(app)
+    _translator = installTranslator(app)
 
     # 应用深色主题
     applyTheme(app, "dark")
