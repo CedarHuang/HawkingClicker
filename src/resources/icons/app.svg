@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <!-- 鼠标指针 -->
+    <path id="cursor" d="M 256 256 L 256 420 L 295 380 L 330 450 L 360 435 L 325 365 L 365 365 Z" stroke-linejoin="round" />
+  </defs>
+
+  <!-- 背景：圆角矩形 -->
+  <rect width="512" height="512" fill="#ffffff" rx="112" />
+  
+  <!-- 吸积盘 (后半部分：被黑洞遮挡的部分) -->
+  <g transform="rotate(-20 256 256)">
+    <path d="M 26 256 A 230 30 0 0 1 486 256" fill="none" stroke="#000000" stroke-width="32" stroke-linecap="round" />
+  </g>
+  
+  <!-- 黑洞本体 -->
+  <circle cx="256" cy="256" r="145" fill="#000000" stroke="#ffffff" stroke-width="16" />
+  
+  <!-- 吸积盘 (前半部分：环绕在黑洞前方的部分) -->
+  <g transform="rotate(-20 256 256)">
+    <!-- 粗白色描边：用于切断黑洞本体，产生 3D 环绕的空间隔离感 -->
+    <path d="M 486 256 A 230 30 0 0 1 26 256" fill="none" stroke="#ffffff" stroke-width="64" stroke-linecap="round" />
+    <!-- 黑色实体轨道 -->
+    <path d="M 486 256 A 230 30 0 0 1 26 256" fill="none" stroke="#000000" stroke-width="32" stroke-linecap="round" />
+  </g>
+
+  <!-- 鼠标指针 (点击在黑洞奇点上) -->
+  <!-- 极粗白色外发光/描边：提供绝对的对比度隔离层 (在16x16下约1px宽) -->
+  <use href="#cursor" fill="#ffffff" stroke="#ffffff" stroke-width="80" />
+  <!-- 黑色主描边与填充：纯黑指针，在白色描边和黑洞背景中脱颖而出 -->
+  <use href="#cursor" fill="#000000" stroke="#000000" stroke-width="16" />
+</svg>

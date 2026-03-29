@@ -16,6 +16,7 @@ from __version__ import __version__
 from core import event_listener
 from core import foreground_listener
 from core import single_instance
+from resources import resources_rc  # noqa: F401  注册 Qt 资源
 from views.appearance import applyTheme, installTranslator
 from views.main_window import MainWindow
 

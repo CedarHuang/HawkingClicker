@@ -6,6 +6,7 @@
 """
 
 from PySide6.QtCore import Qt, Signal
+from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QButtonGroup, QApplication,
 )
@@ -42,6 +43,7 @@ class MainWindow(QWidget):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.setWindowTitle("HawkingClicker")
+        self.setWindowIcon(QIcon(":/icons/app.svg"))
 
         # ---- 无边框窗口 ----
         self.setWindowFlags(Qt.FramelessWindowHint | Qt.Window)

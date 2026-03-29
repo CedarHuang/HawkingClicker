@@ -4,17 +4,10 @@
 管理系统托盘图标、右键菜单及托盘相关事件。
 """
 
-import os
-
 from PySide6.QtGui import QIcon, QAction
 from PySide6.QtWidgets import QWidget, QApplication, QSystemTrayIcon, QMenu
 
 from core.config import settings as configSettings
-
-# 路径常量
-_ASSETS_DIR = os.path.normpath(
-    os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "assets")
-)
 
 
 class TrayManager:
@@ -61,14 +54,8 @@ class TrayManager:
         """创建系统托盘图标及右键菜单"""
         tray = QSystemTrayIcon(self._window)
 
-        # 设置图标
-        iconPath = os.path.join(_ASSETS_DIR, "icon.png")
-        if os.path.exists(iconPath):
-            tray.setIcon(QIcon(iconPath))
-        else:
-            tray.setIcon(self._window.style().standardIcon(
-                self._window.style().StandardPixmap.SP_ComputerIcon
-            ))
+        # 设置图标（使用 Qt 资源系统）
+        tray.setIcon(QIcon(":/icons/app.svg"))
         tray.setToolTip("HawkingClicker")
 
         # 右键菜单

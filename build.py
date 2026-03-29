@@ -2,12 +2,14 @@
 项目构建脚本
 ============
 提供以下构建功能：
-  1. UI 编译：将 src/ui/*.ui 通过 pyside6-uic 编译为 Python 模块，输出到 src/ui/generated/
-  2. 翻译提取：从 .py 和 .ui 源文件中提取可翻译字符串，生成 .ts 文件到 src/translations/
-  3. 翻译编译：将 .ts 文件通过 pyside6-lrelease 编译为 .qm 文件，输出到 src/translations/generated/
+  1. 资源编译：将 src/resources/resources.qrc 通过 pyside6-rcc 编译为 Python 模块
+  2. UI 编译：将 src/ui/*.ui 通过 pyside6-uic 编译为 Python 模块，输出到 src/ui/generated/
+  3. 翻译提取：从 .py 和 .ui 源文件中提取可翻译字符串，生成 .ts 文件到 src/translations/
+  4. 翻译编译：将 .ts 文件通过 pyside6-lrelease 编译为 .qm 文件，输出到 src/translations/generated/
 
 用法:
-    python build.py                 # 构建全部（UI + 翻译编译）
+    python build.py                 # 构建全部（资源 + UI + 翻译编译）
+    python build.py rcc             # 仅编译 .qrc 资源文件
     python build.py ui              # 仅编译 .ui 文件
     python build.py tr              # 提取翻译字符串并编译 .qm
     python build.py tr --extract    # 仅提取/更新 .ts 文件
@@ -30,6 +32,11 @@ _SRC_DIR = _PROJECT_ROOT / "src"
 _UI_DIR = _SRC_DIR / "ui"
 _UI_OUTPUT_DIR = _UI_DIR / "generated"
 _UI_OUTPUT_PREFIX = "ui_"
+
+# 资源相关路径
+_RES_DIR = _SRC_DIR / "resources"
+_RES_QRC_FILE = _RES_DIR / "resources.qrc"
+_RES_OUTPUT_FILE = _RES_DIR / "resources_rc.py"
 
 # 翻译相关路径
 _TR_DIR = _SRC_DIR / "translations"
@@ -77,6 +84,54 @@ def _find_pyside6_tool(tool_name: str) -> str:
         return result
 
     return ""
+
+
+# ============================================================
+# 资源编译
+# ============================================================
+
+def cmd_rcc(force: bool = False) -> bool:
+    """编译 .qrc 资源文件为 Python 模块"""
+    if not _RES_QRC_FILE.exists():
+        print("未找到 .qrc 资源文件。")
+        return True
+
+    rcc_path = _find_pyside6_tool("rcc")
+    if not rcc_path:
+        print("✗ 未找到 pyside6-rcc，请确认已安装 PySide6:")
+        print("  pip install PySide6")
+        return False
+
+    print(f"[资源] 扫描到 {_RES_QRC_FILE.name}\n")
+
+    if not force and not _needs_compile(_RES_QRC_FILE, _RES_OUTPUT_FILE):
+        # 还需要检查 qrc 引用的所有资源文件是否有变更
+        needs_recompile = False
+        if _RES_OUTPUT_FILE.exists():
+            out_mtime = _RES_OUTPUT_FILE.stat().st_mtime
+            # 扫描 resources 目录下所有非 .py 非 .qrc 文件
+            for res_file in _RES_DIR.rglob("*"):
+                if res_file.is_file() and res_file.suffix not in (".py", ".qrc", ".pyc"):
+                    if res_file.stat().st_mtime > out_mtime:
+                        needs_recompile = True
+                        break
+        if not needs_recompile:
+            print(f"  ⊘ 跳过（未变更）: {_RES_QRC_FILE.name}")
+            print(f"\n[资源] 完成: 0 个编译, 1 个跳过, 0 个失败")
+            return True
+
+    print(f"  ▸ 编译: {_RES_QRC_FILE.name} → {_RES_OUTPUT_FILE.name}")
+    cmd = [rcc_path, str(_RES_QRC_FILE), "-o", str(_RES_OUTPUT_FILE), "-g", "python"]
+    try:
+        subprocess.run(cmd, capture_output=True, text=True, check=True)
+        print(f"\n[资源] 完成: 1 个编译, 0 个跳过, 0 个失败")
+        return True
+    except subprocess.CalledProcessError as e:
+        print(f"  ✗ 编译失败: {_RES_QRC_FILE.name}")
+        if e.stderr:
+            print(f"    错误信息: {e.stderr.strip()}")
+        print(f"\n[资源] 完成: 0 个编译, 0 个跳过, 1 个失败")
+        return False
 
 
 # ============================================================
@@ -293,28 +348,35 @@ def cmd_tr(extract: bool = False, compile_only: bool = False, force: bool = Fals
 # ============================================================
 
 def cmd_all(force: bool = False):
-    """构建全部：UI 编译 + 翻译编译"""
+    """构建全部：资源编译 + UI 编译 + 翻译编译"""
     print("=" * 50)
     print("  构建全部")
     print("=" * 50 + "\n")
 
+    ok0 = cmd_rcc(force=force)
+    print()
     ok1 = cmd_ui(force=force)
     print()
     ok2 = cmd_tr(force=force)
 
     print("\n" + "=" * 50)
-    if ok1 and ok2:
+    if ok0 and ok1 and ok2:
         print("  ✓ 全部构建成功")
     else:
         print("  ✗ 构建过程中存在错误")
     print("=" * 50)
 
-    if not (ok1 and ok2):
+    if not (ok0 and ok1 and ok2):
         sys.exit(1)
 
 
 def cmd_clean():
     """清空所有产物目录后全量重新构建"""
+    # 清理资源编译产物
+    if _RES_OUTPUT_FILE.exists():
+        _RES_OUTPUT_FILE.unlink()
+        print(f"已删除 [资源]: {_RES_OUTPUT_FILE.relative_to(_PROJECT_ROOT)}")
+
     for label, directory in [("UI", _UI_OUTPUT_DIR), ("翻译", _TR_OUTPUT_DIR)]:
         if directory.exists():
             shutil.rmtree(directory)
@@ -347,6 +409,16 @@ def cmd_check():
         print(f"  已是最新 ({len(ui_ok)}):")
         for f in ui_ok:
             print(f"    ✓ {f.name}")
+
+    # 检查资源文件
+    print("\n[资源文件]")
+    if _RES_QRC_FILE.exists():
+        if _needs_compile(_RES_QRC_FILE, _RES_OUTPUT_FILE):
+            print(f"  需要编译: {_RES_QRC_FILE.name}")
+        else:
+            print(f"  已是最新: {_RES_QRC_FILE.name}")
+    else:
+        print("  未找到 .qrc 文件。")
 
     # 检查翻译文件
     ts_files = sorted(_TR_DIR.glob("*.ts"))
@@ -384,7 +456,9 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 示例:
-  python build.py                 构建全部（UI + 翻译编译）
+  python build.py                 构建全部（资源 + UI + 翻译编译）
+  python build.py rcc             仅编译 .qrc 资源文件
+  python build.py rcc --force     强制重新编译资源
   python build.py ui              仅编译 .ui 文件
   python build.py tr              提取翻译字符串并编译 .qm
   python build.py tr --extract    仅提取/更新 .ts 文件
@@ -395,6 +469,10 @@ def main():
     )
 
     subparsers = parser.add_subparsers(dest="command")
+
+    # 子命令: rcc
+    rcc_parser = subparsers.add_parser("rcc", help="编译 .qrc 资源文件为 Python 模块")
+    rcc_parser.add_argument("--force", action="store_true", help="强制重新编译")
 
     # 子命令: ui
     ui_parser = subparsers.add_parser("ui", help="编译 .ui 文件为 Python 模块")
@@ -415,7 +493,10 @@ def main():
 
     args = parser.parse_args()
 
-    if args.command == "ui":
+    if args.command == "rcc":
+        if not cmd_rcc(force=args.force):
+            sys.exit(1)
+    elif args.command == "ui":
         if not cmd_ui(force=args.force):
             sys.exit(1)
     elif args.command == "tr":
