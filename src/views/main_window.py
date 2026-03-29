@@ -5,7 +5,7 @@
 左侧可折叠导航栏、右侧内容区页面切换等 UI 交互。
 """
 
-from PySide6.QtCore import Qt, Signal
+from PySide6.QtCore import Qt, QSize, Signal
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QButtonGroup, QApplication,
@@ -44,6 +44,11 @@ class MainWindow(QWidget):
         self.ui.setupUi(self)
         self.setWindowTitle("HawkingClicker")
         self.setWindowIcon(QIcon(":/icons/app.svg"))
+
+        # ---- 标题栏应用图标 ----
+        pixmap = QIcon(":/icons/app.svg").pixmap(QSize(20, 20))
+        self.ui.appIcon.setPixmap(pixmap)
+        self.ui.appIcon.setAlignment(Qt.AlignCenter)
 
         # ---- 无边框窗口 ----
         self.setWindowFlags(Qt.FramelessWindowHint | Qt.Window)
