@@ -255,12 +255,12 @@ This action cannot be undone.</source>
         <translation>收起</translation>
     </message>
     <message>
-        <location filename="../views/main_window.py" line="82"/>
+        <location filename="../views/main_window.py" line="85"/>
         <source>Toggle navigation bar</source>
         <translation>展开/折叠导航栏</translation>
     </message>
     <message>
-        <location filename="../views/main_window.py" line="98"/>
+        <location filename="../views/main_window.py" line="101"/>
         <source>Double-click to switch theme</source>
         <translation>双击切换主题</translation>
     </message>

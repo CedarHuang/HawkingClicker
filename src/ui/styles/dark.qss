@@ -34,6 +34,11 @@ QLabel {
  * 主窗口 — 标题栏
  * ============================================================ */
 
+QFrame#windowFrame {
+    background-color: #282C34;
+    border: 1px solid #3C3C3C;
+}
+
 QFrame#titleBar {
     background-color: #21252B;
     border-bottom: 1px solid #181A1F;
@@ -130,10 +135,6 @@ QStackedWidget#contentStack {
  * 事件列表页
  * ============================================================ */
 
-QFrame#headerFrame {
-    background-color: transparent;
-}
-
 QLabel#pageTitle {
     color: #D7DAE0;
 }
@@ -148,20 +149,6 @@ QPushButton#btnAddEvent:hover {
 }
 QPushButton#btnAddEvent:pressed {
     background-color: #4EA1E3;
-}
-
-/* 滚动区域 */
-QScrollArea#scrollArea {
-    background-color: transparent;
-}
-
-QWidget#scrollContent {
-    background-color: transparent;
-}
-
-/* 空状态 */
-QFrame#emptyState {
-    background-color: transparent;
 }
 
 QLabel#emptyText {
@@ -471,15 +458,6 @@ QSpinBox::down-arrow {
     border-top: 5px solid #ABB2BF;
     width: 0px;
     height: 0px;
-}
-
-/* 打开脚本目录按钮 */
-QPushButton#btnOpenScriptsDir {
-    background-color: transparent;
-    color: #ABB2BF;
-}
-QPushButton#btnOpenScriptsDir:hover {
-    background-color: #353B45;
 }
 
 /* 取消按钮 */

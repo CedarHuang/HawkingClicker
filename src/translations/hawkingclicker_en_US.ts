@@ -254,12 +254,12 @@ This action cannot be undone.</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../views/main_window.py" line="82"/>
+        <location filename="../views/main_window.py" line="85"/>
         <source>Toggle navigation bar</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../views/main_window.py" line="98"/>
+        <location filename="../views/main_window.py" line="101"/>
         <source>Double-click to switch theme</source>
         <translation></translation>
     </message>

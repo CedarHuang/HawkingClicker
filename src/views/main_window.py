@@ -5,8 +5,8 @@
 左侧可折叠导航栏、右侧内容区页面切换等 UI 交互。
 """
 
-from PySide6.QtCore import Qt, QSize, Signal
-from PySide6.QtGui import QIcon
+from PySide6.QtCore import Qt, QSize, Signal, QEvent
+from PySide6.QtGui import QIcon, QPainterPath, QRegion
 from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QButtonGroup, QApplication,
 )
@@ -52,7 +52,10 @@ class MainWindow(QWidget):
 
         # ---- 无边框窗口 ----
         self.setWindowFlags(Qt.FramelessWindowHint | Qt.Window)
-        self.setAttribute(Qt.WA_TranslucentBackground, False)
+        self.setAttribute(Qt.WA_TranslucentBackground, True)
+
+        # ---- bodyFrame 圆角裁剪（防止子控件突出） ----
+        self.ui.bodyFrame.installEventFilter(self)
 
         # ---- 标题栏拖拽 ----
         self._dragHelper = TitleBarDragHelper(self.ui.titleBar, self)
@@ -185,6 +188,15 @@ class MainWindow(QWidget):
             applyTheme(app, self._currentTheme)
 
     # ---- 内部方法 ----
+
+    def eventFilter(self, obj, event):
+        """bodyFrame resize 时更新圆角裁剪区域"""
+        if obj is self.ui.bodyFrame and event.type() == QEvent.Type.Resize:
+            r = 10
+            path = QPainterPath()
+            path.addRoundedRect(0, -r, event.size().width() - 1, event.size().height() + r - 1, r, r)
+            obj.setMask(QRegion(path.toFillPolygon().toPolygon()))
+        return super().eventFilter(obj, event)
 
     def _embedPage(self, index: int, page: QWidget):
         """将子页面嵌入 contentStack 的指定索引页"""

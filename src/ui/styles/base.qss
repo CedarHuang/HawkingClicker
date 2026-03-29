@@ -14,9 +14,16 @@
  * 主窗口 (MainWindow)
  * ============================================================ */
 
+/* 窗口外框 — 圆角 + 描边 */
+QFrame#windowFrame {
+    border-radius: 10px;
+}
+
 /* 顶部标题栏 */
 QFrame#titleBar {
     border: none;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
 }
 
 QLabel#appIcon {
@@ -34,21 +41,30 @@ QLabel#versionLabel {
 }
 
 /* 标题栏窗口控制按钮 */
-QPushButton#btnMinimize,
+QPushButton#btnMinimize {
+    border: none;
+    border-radius: 0px;
+    font-size: 14px;
+}
+
 QPushButton#btnClose {
     border: none;
     border-radius: 0px;
+    border-top-right-radius: 10px;
     font-size: 14px;
 }
 
 /* 下方主体区域 */
 QFrame#bodyFrame {
     border: none;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
 }
 
 /* ---- 左侧导航栏 ---- */
 QFrame#navBar {
     border: none;
+    border-bottom-left-radius: 10px;
 }
 
 QPushButton#navBtnEvents,
