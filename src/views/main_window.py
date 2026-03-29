@@ -13,8 +13,10 @@ from PySide6.QtCore import (
     Qt, QPropertyAnimation, QEasingCurve, QPoint,
     QObject, QEvent, QCoreApplication, Signal,
 )
+from PySide6.QtGui import QIcon, QAction
 from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QButtonGroup, QApplication,
+    QSystemTrayIcon, QMenu,
 )
 
 
@@ -33,8 +35,10 @@ from views.settings_page import SettingsPage
 
 
 # 路径常量
-_UI_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "ui")
+_SRC_DIR = os.path.dirname(os.path.abspath(__file__)) + os.sep + ".."
+_UI_DIR = os.path.join(_SRC_DIR, "ui")
 _STYLES_DIR = os.path.join(_UI_DIR, "styles")
+_ASSETS_DIR = os.path.normpath(os.path.join(_SRC_DIR, "..", "assets"))
 
 # 导航栏尺寸常量
 _NAV_COLLAPSED_WIDTH = 48
@@ -236,8 +240,9 @@ class _NavBarController:
 class MainWindow(QWidget):
     """应用主窗口"""
 
-    # 跨线程唤醒信号（子线程 emit → 主线程槽函数）
+    # 跨线程信号（子线程 emit → 主线程槽函数）
     _wakeupSignal = Signal()
+    _trayUpdateSignal = Signal()
 
     def __init__(self, parent: QWidget = None):
         super().__init__(parent)
@@ -318,8 +323,12 @@ class MainWindow(QWidget):
                 self.ui.versionLabel, self._toggleTheme
             )
 
-        # ---- 跨线程唤醒信号 ----
+        # ---- 跨线程信号 ----
         self._wakeupSignal.connect(self._onWakeup)
+        self._trayUpdateSignal.connect(self._onTrayUpdate)
+
+        # ---- 系统托盘 ----
+        self._tray = self._createTrayIcon()
 
         # ---- 初始显示事件列表页 ----
         self.ui.contentStack.setCurrentIndex(0)
@@ -343,6 +352,7 @@ class MainWindow(QWidget):
         """注册 core 层回调"""
         callbacks.register(CallbackEvent.LIST_REFRESH, self.refreshEventList)
         callbacks.register(CallbackEvent.WAKEUP, self._wakeupSignal.emit)
+        callbacks.register(CallbackEvent.TRAY_UPDATE, self._trayUpdateSignal.emit)
 
     def initSettings(self):
         """初始化设置页：检测管理员权限并从配置加载真实设置值"""
@@ -573,6 +583,77 @@ class MainWindow(QWidget):
         self.showNormal()
         self.raise_()
         self.activateWindow()
+
+    # ---- 系统托盘 ----
+
+    def _createTrayIcon(self) -> QSystemTrayIcon:
+        """创建系统托盘图标及右键菜单"""
+        tray = QSystemTrayIcon(self)
+
+        # 设置图标
+        iconPath = os.path.join(_ASSETS_DIR, "icon.png")
+        if os.path.exists(iconPath):
+            tray.setIcon(QIcon(iconPath))
+        else:
+            tray.setIcon(self.style().standardIcon(
+                self.style().StandardPixmap.SP_ComputerIcon
+            ))
+        tray.setToolTip("HawkingClicker")
+
+        # 右键菜单
+        menu = QMenu()
+        actShow = QAction(self.tr("Show"), menu)
+        actShow.triggered.connect(self._onWakeup)
+        menu.addAction(actShow)
+
+        menu.addSeparator()
+
+        actQuit = QAction(self.tr("Quit"), menu)
+        actQuit.triggered.connect(self._onTrayQuit)
+        menu.addAction(actQuit)
+
+        tray.setContextMenu(menu)
+
+        # 双击托盘图标 → 显示主窗口
+        tray.activated.connect(self._onTrayActivated)
+
+        return tray
+
+    def initTray(self):
+        """根据配置初始化托盘显示状态"""
+        if configSettings.enable_tray:
+            self._tray.show()
+        else:
+            self._tray.hide()
+
+    def cleanupTray(self):
+        """退出时清理托盘图标"""
+        self._tray.hide()
+
+    def _onTrayUpdate(self):
+        """TRAY_UPDATE 回调：根据配置更新托盘显示状态"""
+        if configSettings.enable_tray:
+            self._tray.show()
+        else:
+            self._tray.hide()
+
+    def _onTrayActivated(self, reason):
+        """托盘图标激活事件"""
+        if reason == QSystemTrayIcon.ActivationReason.DoubleClick:
+            self._onWakeup()
+
+    def _onTrayQuit(self):
+        """托盘菜单 → 退出应用"""
+        self._tray.hide()
+        QApplication.quit()
+
+    def closeEvent(self, event):
+        """重写关闭事件：托盘启用时最小化到托盘，否则正常关闭"""
+        if configSettings.enable_tray and self._tray.isVisible():
+            self.hide()
+            event.ignore()
+        else:
+            event.accept()
 
     # ---- 主题切换 ----
 

@@ -53,6 +53,9 @@ def main():
     window.refreshEventList()
     window.initSettings()
 
+    # 初始化系统托盘
+    window.initTray()
+
     # 启动后台监听
     foreground_listener.start()
     event_listener.start()
@@ -63,9 +66,10 @@ def main():
     # 进入事件循环
     exitCode = app.exec()
 
-    # 退出时清理后台监听
+    # 退出时清理
     event_listener.stop()
     foreground_listener.stop()
+    window.cleanupTray()
 
     sys.exit(exitCode)
 
