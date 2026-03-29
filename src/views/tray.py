@@ -4,13 +4,14 @@
 管理系统托盘图标、右键菜单及托盘相关事件。
 """
 
+from PySide6.QtCore import QObject
 from PySide6.QtGui import QIcon, QAction
 from PySide6.QtWidgets import QWidget, QApplication, QSystemTrayIcon, QMenu
 
 from core.config import settings as configSettings
 
 
-class TrayManager:
+class TrayManager(QObject):
     """系统托盘管理器
 
     Args:
@@ -19,6 +20,7 @@ class TrayManager:
     """
 
     def __init__(self, window: QWidget, wakeupCallback):
+        super().__init__(window)
         self._window = window
         self._wakeupCallback = wakeupCallback
         self._tray = self._createTrayIcon()
@@ -60,13 +62,13 @@ class TrayManager:
 
         # 右键菜单
         menu = QMenu()
-        actShow = QAction(self._window.tr("Show"), menu)
+        actShow = QAction(self.tr("Show"), menu)
         actShow.triggered.connect(self._wakeupCallback)
         menu.addAction(actShow)
 
         menu.addSeparator()
 
-        actQuit = QAction(self._window.tr("Quit"), menu)
+        actQuit = QAction(self.tr("Quit"), menu)
         actQuit.triggered.connect(self._onQuit)
         menu.addAction(actQuit)
 
