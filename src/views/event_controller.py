@@ -9,11 +9,15 @@ import copy
 import glob
 import os
 
+from PySide6.QtWidgets import QStackedWidget, QPushButton
+
 from core import common
 from core.config import (
     events as configEvents,
     Event,
 )
+from views.event_edit_page import EventEditPage
+from views.event_list_page import EventListPage
 
 
 class EventController:
@@ -26,7 +30,8 @@ class EventController:
         navBtnEvents: 事件列表导航按钮
     """
 
-    def __init__(self, eventListPage, eventEditPage, contentStack, navBtnEvents):
+    def __init__(self, eventListPage: EventListPage, eventEditPage: EventEditPage,
+                 contentStack: QStackedWidget, navBtnEvents: QPushButton):
         self._eventListPage = eventListPage
         self._eventEditPage = eventEditPage
         self._contentStack = contentStack

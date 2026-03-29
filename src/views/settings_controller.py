@@ -9,6 +9,7 @@ import os
 from core import common
 from core.config import settings as configSettings
 from core.utils import is_running_as_admin
+from views.settings_page import SettingsPage
 
 
 class SettingsController:
@@ -18,7 +19,7 @@ class SettingsController:
         settingsPage: 设置页实例
     """
 
-    def __init__(self, settingsPage):
+    def __init__(self, settingsPage: SettingsPage):
         self._settingsPage = settingsPage
 
         # 连接信号
