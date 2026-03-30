@@ -77,6 +77,16 @@ QPushButton#navBtnSettings {
     text-align: center;
 }
 
+QPushButton#navBtnEvents:checked,
+QPushButton#navBtnSettings:checked {
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
+    margin-left: 0px;
+    padding-left: 1px;
+}
+
 QPushButton#navBtnToggle {
     border: none;
     border-radius: 6px;
@@ -249,6 +259,7 @@ QLabel#multiGroupTitle {
     font-size: 14px;
     font-weight: bold;
     padding-bottom: 4px;
+    margin-bottom: 4px;
 }
 
 /* 字段标签 */
@@ -279,6 +290,7 @@ QLabel#yLabel {
 
 /* 类型分段控件容器 */
 QFrame#typeSegmentFrame {
+    border: none;
     border-radius: 8px;
 }
 
@@ -359,6 +371,22 @@ QSpinBox::down-button {
     border-bottom-right-radius: 6px;
 }
 
+QSpinBox::up-arrow {
+    image: none;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    width: 0px;
+    height: 0px;
+}
+
+QSpinBox::down-arrow {
+    image: none;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    width: 0px;
+    height: 0px;
+}
+
 /* 脚本行 */
 QFrame#scriptRow {
     border: none;
@@ -407,6 +435,7 @@ QLabel#aboutGroupTitle {
     font-size: 14px;
     font-weight: bold;
     padding-bottom: 4px;
+    margin-bottom: 4px;
 }
 
 /* 设置项容器 */
@@ -475,6 +504,14 @@ QLabel#aboutCopyright {
 
 QLabel#aboutGithub {
     font-size: 12px;
+}
+
+QLabel#aboutGithub a {
+    text-decoration: none;
+}
+
+QLabel#aboutGithub a:hover {
+    text-decoration: underline;
 }
 
 /* ============================================================
@@ -564,4 +601,8 @@ QMessageBox QPushButton {
     padding: 6px 20px;
     font-size: 13px;
     min-width: 60px;
+}
+
+QMessageBox QPushButton:default {
+    border: none;
 }

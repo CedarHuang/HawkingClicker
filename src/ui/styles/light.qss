@@ -106,9 +106,6 @@ QPushButton#navBtnSettings:checked {
     background-color: #E0E7FA;
     color: #4078F2;
     border-left: 3px solid #4078F2;
-    border-radius: 0px 6px 6px 0px;
-    margin-left: 0px;
-    padding-left: 1px;
 }
 
 /* 展开/折叠按钮 */
@@ -292,7 +289,6 @@ QLabel#conditionGroupTitle,
 QLabel#multiGroupTitle {
     color: #383A42;
     border-bottom: 1px solid #ECECEE;
-    margin-bottom: 4px;
 }
 
 /* 字段标签 */
@@ -321,7 +317,6 @@ QLabel#yLabel {
 /* 类型分段控件容器 */
 QFrame#typeSegmentFrame {
     background-color: #ECECEE;
-    border: none;
 }
 
 /* 类型分段按钮 — 默认 */
@@ -441,20 +436,10 @@ QSpinBox::down-button:hover {
 }
 
 QSpinBox::up-arrow {
-    image: none;
-    border-left: 4px solid transparent;
-    border-right: 4px solid transparent;
     border-bottom: 5px solid #696C77;
-    width: 0px;
-    height: 0px;
 }
 QSpinBox::down-arrow {
-    image: none;
-    border-left: 4px solid transparent;
-    border-right: 4px solid transparent;
     border-top: 5px solid #696C77;
-    width: 0px;
-    height: 0px;
 }
 
 /* 取消按钮 */
@@ -505,7 +490,6 @@ QLabel#shortcutsGroupTitle,
 QLabel#aboutGroupTitle {
     color: #383A42;
     border-bottom: 1px solid #ECECEE;
-    margin-bottom: 4px;
 }
 
 /* 设置项标题 */
@@ -532,7 +516,6 @@ QCheckBox#chkEnableTray::indicator,
 QCheckBox#chkStartup::indicator,
 QCheckBox#chkStartupAsAdmin::indicator {
     background-color: #D0D1D4;
-    border: none;
 }
 
 QCheckBox#chkEnableTray::indicator:checked,
@@ -582,11 +565,9 @@ QLabel#aboutCopyright {
 
 QLabel#aboutGithub a {
     color: #4078F2;
-    text-decoration: none;
 }
 QLabel#aboutGithub a:hover {
     color: #5289F5;
-    text-decoration: underline;
 }
 
 /* ============================================================
@@ -674,7 +655,6 @@ QMessageBox QPushButton:hover {
 QMessageBox QPushButton:default {
     background-color: #4078F2;
     color: #FFFFFF;
-    border: none;
 }
 QMessageBox QPushButton:default:hover {
     background-color: #5289F5;
