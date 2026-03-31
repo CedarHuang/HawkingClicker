@@ -428,7 +428,7 @@
           <item>
            <widget class="QLabel" name="aboutCopyright">
             <property name="text">
-             <string notr="true">© CedarHuang · MIT License</string>
+             <string notr="true">© CedarHuang · Apache License 2.0</string>
             </property>
            </widget>
           </item>
