@@ -1,12 +1,14 @@
-"""
-HawkingClicker — 主入口
-========================
-启动应用主窗口。
+# nuitka-project: --product-name=HawkingClicker
+# nuitka-project: --file-description=HawkingClicker
+# nuitka-project: --company-name=CedarHuang
+# nuitka-project: --copyright=Copyright (C) 2026 CedarHuang. Licensed under the Apache License 2.0.
 
-运行方式:
-    cd src
-    python main.py
-"""
+# nuitka-project: --enable-plugin=pyside6
+# nuitka-project: --output-dir=dist
+# nuitka-project: --output-filename=HawkingClicker
+# nuitka-project: --standalone
+# nuitka-project: --windows-console-mode=disable
+# nuitka-project: --windows-icon-from-ico=src/resources/icons/icon.ico
 
 import sys
 
