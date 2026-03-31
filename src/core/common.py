@@ -10,6 +10,9 @@ builtins_name = '__builtins__.py'
 event_config_name = 'event.json'
 settings_config_name = 'settings.json'
 
+def is_frozen():
+    return '__compiled__' in globals()
+
 def mkdir_if_not_exists(path):
     if not os.path.exists(path):
         os.makedirs(path)
@@ -18,8 +21,8 @@ def exe_path():
     return os.path.abspath(sys.argv[0])
 
 def root_path():
-    if getattr(sys, 'frozen', False):
-        return os.path.dirname(os.path.abspath(sys.executable))
+    if is_frozen():
+        return os.path.dirname(exe_path())
     return os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 
 def config_path():

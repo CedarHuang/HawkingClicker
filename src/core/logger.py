@@ -14,7 +14,7 @@ class IndentedFormatter(logging.Formatter):
         return f'{super().formatException(ei)}\n'
 
 def log_level():
-    if getattr(sys, 'frozen', False):
+    if common.is_frozen():
         return logging.INFO
     return logging.DEBUG
 
