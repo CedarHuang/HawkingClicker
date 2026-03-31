@@ -15,7 +15,7 @@
     python build.py tr              # 提取翻译字符串并编译 .qm（自动触发 rcc）
     python build.py tr --extract    # 仅提取/更新 .ts 文件
     python build.py tr --compile    # 仅编译 .ts → .qm（自动触发 rcc）
-    python build.py clean           # 清空产物目录后全量重新构建
+    python build.py clean           # 清空所有构建产物
     python build.py check           # 仅检查哪些文件需要重新构建
 """
 
@@ -404,19 +404,25 @@ def cmd_all(force: bool = False):
 
 
 def cmd_clean():
-    """清空所有产物目录后全量重新构建"""
+    """清空所有构建产物"""
+    cleaned = False
+
     # 清理资源编译产物
     if _RES_OUTPUT_FILE.exists():
         _RES_OUTPUT_FILE.unlink()
         print(f"已删除 [资源]: {_RES_OUTPUT_FILE.relative_to(_PROJECT_ROOT)}")
+        cleaned = True
 
     for label, directory in [("UI", _UI_OUTPUT_DIR), ("翻译", _TR_OUTPUT_DIR)]:
         if directory.exists():
             shutil.rmtree(directory)
             print(f"已清空 [{label}]: {directory.relative_to(_PROJECT_ROOT)}")
+            cleaned = True
 
-    print()
-    cmd_all(force=True)
+    if cleaned:
+        print("\n✓ 清理完成")
+    else:
+        print("没有需要清理的产物。")
 
 
 def cmd_check():
@@ -496,7 +502,7 @@ def main():
   python build.py tr              提取翻译字符串并编译 .qm（自动触发 rcc）
   python build.py tr --extract    仅提取/更新 .ts 文件
   python build.py tr --compile    仅编译 .ts → .qm 文件（自动触发 rcc）
-  python build.py clean           清空产物目录后全量重新构建
+  python build.py clean           清空所有构建产物
   python build.py check           仅检查，不执行构建
         """,
     )
@@ -519,7 +525,7 @@ def main():
     tr_parser.add_argument("--force", action="store_true", help="强制重新编译")
 
     # 子命令: clean
-    subparsers.add_parser("clean", help="清空产物目录后全量重新构建")
+    subparsers.add_parser("clean", help="清空所有构建产物")
 
     # 子命令: check
     subparsers.add_parser("check", help="仅检查哪些文件需要重新构建")
