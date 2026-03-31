@@ -12,10 +12,8 @@ import os
 from PySide6.QtWidgets import QStackedWidget, QPushButton
 
 from core import common
-from core.config import (
-    events as configEvents,
-    Event,
-)
+from core.config import events as configEvents
+from core.models import Event
 from views.event_edit_page import EventEditPage
 from views.event_list_page import EventListPage
 
@@ -68,17 +66,14 @@ class EventController:
         hotkey = event.hotkey or ""
         button = event.button or ""
         scope = event.range or "*"
-        enabled = event.status == 1 if event.status is not None else True
+        enabled = event.isEnabled
 
         # 构建额外信息文本
         extraParts = []
 
         # 位置信息
-        if event.position is not None and event.position != [-1, -1]:
-            if isinstance(event.position, (list, tuple)) and len(event.position) == 2:
-                x, y = event.position
-                if x != -1 or y != -1:
-                    extraParts.append(f"位置: ({x}, {y})")
+        if event.posX != -1 or event.posY != -1:
+            extraParts.append(f"位置: ({event.posX}, {event.posY})")
 
         if not extraParts and eventType in ("Click", "Press"):
             extraParts.append("位置: 当前")
@@ -133,17 +128,13 @@ class EventController:
         self._eventEditPage.setScriptList(self._scanScripts())
 
         # 将 Event 对象转换为表单数据字典
-        position = event.position if event.position else [-1, -1]
-        posX = position[0] if isinstance(position, (list, tuple)) and len(position) >= 1 else -1
-        posY = position[1] if isinstance(position, (list, tuple)) and len(position) >= 2 else -1
-
         formData = {
             "type": event.type or "Click",
             "hotkey": event.hotkey or "",
             "button": event.button or "Left",
             "range": event.range or "*",
-            "posX": posX,
-            "posY": posY,
+            "posX": event.posX,
+            "posY": event.posY,
             "interval": event.interval if event.interval is not None else 100,
             "clicks": event.clicks if event.clicks is not None else -1,
         }
@@ -208,8 +199,7 @@ class EventController:
     def onCopyEvent(self, index: int):
         """复制事件（深拷贝并追加到列表末尾）"""
         if 0 <= index < len(configEvents):
-            newEvent = Event()
-            newEvent.__dict__ = copy.deepcopy(configEvents[index].__dict__)
+            newEvent = Event.from_dict(copy.deepcopy(configEvents[index].to_dict()))
             configEvents.append(newEvent)
             self.refreshEventList()
 

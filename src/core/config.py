@@ -5,34 +5,15 @@ from core import event_listener
 from core import logger
 from core import utils
 from core.callbacks import callbacks, CallbackEvent
+from core.models import Event, Settings
 
-class Event:
-    def __init__(self):
-        self.range = None
-        self.position = None
-        self.type = None
-        self.button = None
-        self.hotkey = None
-        self.interval = None
-        self.clicks = None
-        self.status = None
 
-    def from_dict(self, dict):
-        self.__dict__ = dict
-        return self
-
-    def to_dict(self):
-        return self.__dict__
-
-    def to_tuple(self):
-        return tuple(value if value != -1 else '--' for value in self.__dict__.values())
-
-class Events(list):
+class EventManager(list):
     def __init__(self):
         super().__init__()
         try:
             with open(common.event_config_path(), 'r', encoding='utf-8') as file:
-                self.extend([Event().from_dict(i) for i in json.load(file)])
+                self.extend([Event.from_dict(i) for i in json.load(file)])
         except FileNotFoundError:
             logger.app.warning(f'Event configuration file not found at {common.event_config_path()}')
         except:
@@ -40,10 +21,7 @@ class Events(list):
 
     def save(self):
         with open(common.event_config_path(), 'w', encoding='utf-8') as file:
-            dicts = [
-                {k: v for k, v in event.to_dict().items() if not k.startswith('_')}
-                for event in self
-            ]
+            dicts = [event.to_dict() for event in self]
             json.dump(dicts, file, indent=4, ensure_ascii=False)
         event_listener.stop()
         event_listener.start()
@@ -51,7 +29,7 @@ class Events(list):
     def append(self, event):
         super().append(event)
         self.save()
-    
+
     def pop(self, index):
         super().pop(index)
         self.save()
@@ -73,31 +51,38 @@ class Events(list):
         self[index] = event
         self.save()
 
-events = Events()
 
-class Settings:
+events = EventManager()
+
+
+class SettingsManager:
     def __init__(self):
-        self.enable_tray = False
-        self.startup = False
-        self.startup_as_admin = False
+        self._settings = Settings()
         try:
             with open(common.settings_config_path(), 'r', encoding='utf-8') as file:
-                self.__dict__.update(json.load(file))
+                self._settings = Settings.from_dict(json.load(file))
         except FileNotFoundError:
             logger.app.warning(f'Settings configuration file not found at {common.settings_config_path()}')
         except:
             logger.app.error(f'Failed to load settings configuration from {common.settings_config_path()}:', exc_info=True)
 
-    def save(self, update_startup = False):
+    def __getattr__(self, name):
+        if name.startswith('_'):
+            raise AttributeError(name)
+        return getattr(self._settings, name)
+
+    def __setattr__(self, name, value):
+        if name.startswith('_'):
+            super().__setattr__(name, value)
+        else:
+            setattr(self._settings, name, value)
+
+    def save(self, update_startup=False):
         with open(common.settings_config_path(), 'w', encoding='utf-8') as file:
-            json.dump(self.__dict__, file, indent=4, ensure_ascii=False)
+            json.dump(self._settings.to_dict(), file, indent=4, ensure_ascii=False)
         callbacks.trigger(CallbackEvent.TRAY_UPDATE)
         if update_startup:
-            utils.update_startup(self.startup, self.startup_as_admin)
+            utils.update_startup(self._settings.startup, self._settings.startup_as_admin)
 
-    def update(self, settings):
-        update_startup = self.startup != settings.startup or self.startup_as_admin != settings.startup_as_admin
-        self.__dict__ = settings.__dict__
-        self.save(update_startup)
 
-settings = Settings()
+settings = SettingsManager()
