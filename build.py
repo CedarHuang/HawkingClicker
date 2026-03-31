@@ -20,6 +20,7 @@
     python build.py clean           # 清空所有构建产物
     python build.py check           # 仅检查哪些文件需要重新构建
 """
+import re
 import sys
 import shutil
 import subprocess
@@ -48,6 +49,7 @@ _TR_PREFIX = "hawkingclicker_"
 # 打包相关路径
 _DIST_DIR = _PROJECT_ROOT / "dist"
 _MAIN_SCRIPT = _SRC_DIR / "main.py"
+_VERSION_FILE = _SRC_DIR / "__version__.py"
 
 # 需要提取翻译的语言列表
 _TR_LANGUAGES = ["zh_CN", "en_US"]
@@ -379,6 +381,20 @@ def cmd_tr(extract: bool = False, compile_only: bool = False,
 # 项目打包（Nuitka）
 # ============================================================
 
+def _read_version() -> str:
+    """从 src/__version__.py 中读取版本号
+
+    Returns:
+        版本号字符串（如 "0.7.2"），读取失败则返回空字符串
+    """
+    try:
+        text = _VERSION_FILE.read_text(encoding="utf-8")
+        match = re.search(r"__version__\s*=\s*['\"]([^'\"]+)['\"]", text)
+        return match.group(1) if match else ""
+    except OSError:
+        return ""
+
+
 def cmd_dist() -> bool:
     """使用 Nuitka 将项目打包为独立可执行文件
 
@@ -422,9 +438,18 @@ def cmd_dist() -> bool:
     print("  步骤 2/2: Nuitka 编译打包")
     print("=" * 50 + "\n")
 
+    # 从 __version__.py 中读取版本号
+    version = _read_version()
+    if not version:
+        print("✗ 无法从 __version__.py 中读取版本号")
+        return False
+    print(f"  产品版本: {version}\n")
+
     # 构建 Nuitka 命令
     # 项目级配置已在 main.py 中通过 # nuitka-project: 注释声明
-    cmd = [sys.executable, "-m", "nuitka", str(_MAIN_SCRIPT)]
+    # --product-version 由 build.py 动态注入
+    cmd = [sys.executable, "-m", "nuitka",
+           f"--product-version={version}", str(_MAIN_SCRIPT)]
 
     print(f"  ▸ 执行: {' '.join(cmd)}\n")
 
