@@ -7,6 +7,7 @@
   3. 翻译编译：将 .ts 文件通过 pyside6-lrelease 编译为 .qm 文件，输出到 src/translations/generated/
   4. 资源编译：将 src/resources/resources.qrc 通过 pyside6-rcc 编译为 Python 模块
      qrc 中统一管理图标(icons)、样式(qss)和翻译(qm)等所有资源
+  5. 项目打包：通过 Nuitka 将项目编译为独立可执行文件，输出到 dist/
 
 用法:
     python build.py                 # 构建全部（UI + 翻译 + 资源编译）
@@ -15,10 +16,10 @@
     python build.py tr              # 提取翻译字符串并编译 .qm（自动触发 rcc）
     python build.py tr --extract    # 仅提取/更新 .ts 文件
     python build.py tr --compile    # 仅编译 .ts → .qm（自动触发 rcc）
+    python build.py dist            # 打包项目（自动先执行全量构建）
     python build.py clean           # 清空所有构建产物
     python build.py check           # 仅检查哪些文件需要重新构建
 """
-
 import sys
 import shutil
 import subprocess
@@ -43,6 +44,10 @@ _RES_OUTPUT_FILE = _RES_DIR / "resources_rc.py"
 _TR_DIR = _SRC_DIR / "translations"
 _TR_OUTPUT_DIR = _TR_DIR / "generated"
 _TR_PREFIX = "hawkingclicker_"
+
+# 打包相关路径
+_DIST_DIR = _PROJECT_ROOT / "dist"
+_MAIN_SCRIPT = _SRC_DIR / "main.py"
 
 # 需要提取翻译的语言列表
 _TR_LANGUAGES = ["zh_CN", "en_US"]
@@ -371,6 +376,73 @@ def cmd_tr(extract: bool = False, compile_only: bool = False,
 
 
 # ============================================================
+# 项目打包（Nuitka）
+# ============================================================
+
+def cmd_dist() -> bool:
+    """使用 Nuitka 将项目打包为独立可执行文件
+
+    打包前会自动执行全量构建（UI + 翻译 + 资源编译），
+    确保所有编译产物就绪后再进行 Nuitka 编译。
+    由于构建步骤有增量检测，开销很低，因此始终执行。
+
+    Nuitka 的项目级配置（产品名、图标、插件等）已通过
+    src/main.py 顶部的 # nuitka-project: 注释声明，
+    此处无需重复指定。
+    """
+    # 检查 Nuitka 是否可用（通过当前 Python 解释器的 -m nuitka 调用）
+    try:
+        subprocess.run(
+            [sys.executable, "-m", "nuitka", "--version"],
+            capture_output=True, text=True, check=True,
+        )
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        print("✗ 未找到 Nuitka，请确认已安装:")
+        print("  pip install nuitka")
+        return False
+
+    # 步骤 1：全量构建
+    print("=" * 50)
+    print("  步骤 1/2: 全量构建")
+    print("=" * 50 + "\n")
+
+    ok1 = cmd_ui(force=False)
+    print()
+    ok2 = cmd_tr(force=False, auto_rcc=False)
+    print()
+    ok0 = cmd_rcc(force=False)
+
+    if not (ok0 and ok1 and ok2):
+        print("\n✗ 构建步骤失败，中止打包。")
+        return False
+    print()
+
+    # 步骤 2：Nuitka 打包
+    print("=" * 50)
+    print("  步骤 2/2: Nuitka 编译打包")
+    print("=" * 50 + "\n")
+
+    # 构建 Nuitka 命令
+    # 项目级配置已在 main.py 中通过 # nuitka-project: 注释声明
+    cmd = [sys.executable, "-m", "nuitka", str(_MAIN_SCRIPT)]
+
+    print(f"  ▸ 执行: {' '.join(cmd)}\n")
+
+    try:
+        # Nuitka 输出较多，直接透传到终端
+        result = subprocess.run(cmd, cwd=str(_PROJECT_ROOT))
+        if result.returncode != 0:
+            print(f"\n✗ Nuitka 打包失败（退出码: {result.returncode}）")
+            return False
+    except FileNotFoundError:
+        print("✗ 无法启动 Nuitka，请检查安装。")
+        return False
+
+    print(f"\n✓ 打包完成，输出目录: {_DIST_DIR.relative_to(_PROJECT_ROOT)}/")
+    return True
+
+
+# ============================================================
 # 综合命令
 # ============================================================
 
@@ -418,6 +490,12 @@ def cmd_clean():
             shutil.rmtree(directory)
             print(f"已清空 [{label}]: {directory.relative_to(_PROJECT_ROOT)}")
             cleaned = True
+
+    # 清理 Nuitka 打包产物
+    if _DIST_DIR.exists():
+        shutil.rmtree(_DIST_DIR)
+        print(f"已清空 [打包]: {_DIST_DIR.relative_to(_PROJECT_ROOT)}")
+        cleaned = True
 
     if cleaned:
         print("\n✓ 清理完成")
@@ -502,6 +580,7 @@ def main():
   python build.py tr              提取翻译字符串并编译 .qm（自动触发 rcc）
   python build.py tr --extract    仅提取/更新 .ts 文件
   python build.py tr --compile    仅编译 .ts → .qm 文件（自动触发 rcc）
+  python build.py dist            打包项目（自动先执行全量构建）
   python build.py clean           清空所有构建产物
   python build.py check           仅检查，不执行构建
         """,
@@ -524,6 +603,9 @@ def main():
     tr_group.add_argument("--compile", action="store_true", help="仅编译 .ts → .qm 文件")
     tr_parser.add_argument("--force", action="store_true", help="强制重新编译")
 
+    # 子命令: dist
+    subparsers.add_parser("dist", help="使用 Nuitka 打包项目为可执行文件")
+
     # 子命令: clean
     subparsers.add_parser("clean", help="清空所有构建产物")
 
@@ -540,6 +622,9 @@ def main():
             sys.exit(1)
     elif args.command == "tr":
         if not cmd_tr(extract=args.extract, compile_only=args.compile, force=args.force):
+            sys.exit(1)
+    elif args.command == "dist":
+        if not cmd_dist():
             sys.exit(1)
     elif args.command == "clean":
         cmd_clean()
