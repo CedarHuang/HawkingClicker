@@ -395,6 +395,4 @@ class EventEditPage(QWidget):
     @staticmethod
     def _onOpenScriptsDir():
         """打开脚本目录"""
-        scriptsDir = common.scripts_path()
-        common.mkdir_if_not_exists(scriptsDir)
-        os.startfile(scriptsDir)
+        os.startfile(common.scripts_path())

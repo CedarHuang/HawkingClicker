@@ -39,3 +39,6 @@ def event_config_path():
 
 def settings_config_path():
     return os.path.join(config_path(), settings_config_name)
+
+mkdir_if_not_exists(config_path())
+mkdir_if_not_exists(scripts_path())

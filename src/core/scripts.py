@@ -12,8 +12,6 @@ from core import api
 from core import common
 from core import logger
 
-common.mkdir_if_not_exists(common.scripts_path())
-
 class ScriptCode:
     instances = {
         # key: script path

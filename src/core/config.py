@@ -6,8 +6,6 @@ from core import logger
 from core import utils
 from core.callbacks import callbacks, CallbackEvent
 
-common.mkdir_if_not_exists(common.config_path())
-
 class Event:
     def __init__(self):
         self.range = None
@@ -35,6 +33,8 @@ class Events(list):
         try:
             with open(common.event_config_path(), 'r', encoding='utf-8') as file:
                 self.extend([Event().from_dict(i) for i in json.load(file)])
+        except FileNotFoundError:
+            logger.app.warning(f'Event configuration file not found at {common.event_config_path()}')
         except:
             logger.app.error(f'Failed to load event configuration from {common.event_config_path()}:', exc_info=True)
 
@@ -83,6 +83,8 @@ class Settings:
         try:
             with open(common.settings_config_path(), 'r', encoding='utf-8') as file:
                 self.__dict__.update(json.load(file))
+        except FileNotFoundError:
+            logger.app.warning(f'Settings configuration file not found at {common.settings_config_path()}')
         except:
             logger.app.error(f'Failed to load settings configuration from {common.settings_config_path()}:', exc_info=True)
 

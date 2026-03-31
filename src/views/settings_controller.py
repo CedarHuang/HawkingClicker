@@ -61,13 +61,9 @@ class SettingsController:
     @staticmethod
     def onOpenConfigDir():
         """打开配置目录"""
-        configDir = common.config_path()
-        common.mkdir_if_not_exists(configDir)
-        os.startfile(configDir)
+        os.startfile(common.config_path())
 
     @staticmethod
     def onOpenScriptsDir():
         """打开脚本目录"""
-        scriptsDir = common.scripts_path()
-        common.mkdir_if_not_exists(scriptsDir)
-        os.startfile(scriptsDir)
+        os.startfile(common.scripts_path())
