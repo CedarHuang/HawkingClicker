@@ -8,13 +8,13 @@ from core import logger
 
 def create_startup_to_winreg():
     key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, r'Software\Microsoft\Windows\CurrentVersion\Run', 0, winreg.KEY_SET_VALUE)
-    winreg.SetValueEx(key, 'HawkingClicker', 0, winreg.REG_SZ, f'{common.exe_path()} silent')
+    winreg.SetValueEx(key, 'HawkingHand', 0, winreg.REG_SZ, f'{common.exe_path()} silent')
     winreg.CloseKey(key)
 
 def delete_startup_from_winreg():
     try:
         key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, r'Software\Microsoft\Windows\CurrentVersion\Run', 0, winreg.KEY_WRITE)
-        winreg.DeleteValue(key, 'HawkingClicker')
+        winreg.DeleteValue(key, 'HawkingHand')
         winreg.CloseKey(key)
     except FileNotFoundError:
         pass  # 注册表项不存在，无需处理
@@ -27,7 +27,7 @@ def create_startup_to_scheduled_task():
     root_folder = scheduler.GetFolder('\\')
 
     task = scheduler.NewTask(0)
-    task.RegistrationInfo.Description = 'HawkingClicker Startup'
+    task.RegistrationInfo.Description = 'HawkingHand Startup'
 
     TASK_RUNLEVEL_HIGHEST = 1
     task.Principal.RunLevel = TASK_RUNLEVEL_HIGHEST
@@ -44,7 +44,7 @@ def create_startup_to_scheduled_task():
     TASK_CREATE_OR_UPDATE = 6
     TASK_LOGON_INTERACTIVE_TOKEN = 3
     root_folder.RegisterTaskDefinition(
-        'HawkingClicker', task, TASK_CREATE_OR_UPDATE, None, None, TASK_LOGON_INTERACTIVE_TOKEN
+        'HawkingHand', task, TASK_CREATE_OR_UPDATE, None, None, TASK_LOGON_INTERACTIVE_TOKEN
     )
 
 def delete_startup_from_scheduled_task():
@@ -52,7 +52,7 @@ def delete_startup_from_scheduled_task():
     scheduler.Connect()
     root_folder = scheduler.GetFolder('\\')
     try:
-        root_folder.DeleteTask('HawkingClicker', 0)
+        root_folder.DeleteTask('HawkingHand', 0)
     except pywintypes.com_error as e:
         # HRESULT 0x80070002 = ERROR_FILE_NOT_FOUND，计划任务不存在，无需处理
         if len(e.args) >= 4 and isinstance(e.args[2], tuple) and e.args[2][-1] == -2147024894:

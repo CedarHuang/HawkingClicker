@@ -1,11 +1,11 @@
-# nuitka-project: --product-name=HawkingClicker
-# nuitka-project: --file-description=HawkingClicker
+# nuitka-project: --product-name=HawkingHand
+# nuitka-project: --file-description=HawkingHand
 # nuitka-project: --company-name=CedarHuang
 # nuitka-project: --copyright=Copyright (C) 2026 CedarHuang. Licensed under the Apache License 2.0.
 
 # nuitka-project: --enable-plugin=pyside6
 # nuitka-project: --output-dir=dist
-# nuitka-project: --output-filename=HawkingClicker
+# nuitka-project: --output-filename=HawkingHand
 # nuitka-project: --standalone
 # nuitka-project: --windows-console-mode=disable
 # nuitka-project: --windows-icon-from-ico=src/resources/icons/icon.ico

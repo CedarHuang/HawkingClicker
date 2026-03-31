@@ -43,6 +43,6 @@ def installTranslator(app: QApplication):
         QTranslator: 翻译器实例（需保持引用以防被回收）
     """
     translator = QTranslator()
-    if translator.load(QLocale(), "hawkingclicker", "_", ":/translations", ".qm"):
+    if translator.load(QLocale(), "hawkinghand", "_", ":/translations", ".qm"):
         app.installTranslator(translator)
     return translator

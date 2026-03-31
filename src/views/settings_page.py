@@ -58,7 +58,7 @@ class SettingsPage(QWidget):
         Args:
             version: 版本号文本 (如 "v0.7.2")
         """
-        self.ui.aboutAppName.setText(f"HawkingClicker  {version}")
+        self.ui.aboutAppName.setText(f"HawkingHand  {version}")
 
     def setSettings(self, tray: bool, startup: bool, admin: bool):
         """批量设置开关状态（阻断信号避免触发回调）

@@ -58,7 +58,7 @@ class TrayManager(QObject):
 
         # 设置图标（使用 Qt 资源系统）
         tray.setIcon(QIcon(":/icons/app.svg"))
-        tray.setToolTip("HawkingClicker")
+        tray.setToolTip("HawkingHand")
 
         # 右键菜单
         menu = QMenu()

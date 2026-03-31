@@ -10,7 +10,7 @@
     </qresource>
 
     <qresource prefix="/translations">
-        <file alias="hawkingclicker_zh_CN.qm">../translations/generated/hawkingclicker_zh_CN.qm</file>
-        <file alias="hawkingclicker_en_US.qm">../translations/generated/hawkingclicker_en_US.qm</file>
+        <file alias="hawkinghand_zh_CN.qm">../translations/generated/hawkinghand_zh_CN.qm</file>
+        <file alias="hawkinghand_en_US.qm">../translations/generated/hawkinghand_en_US.qm</file>
     </qresource>
 </RCC>

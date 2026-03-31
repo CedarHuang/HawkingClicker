@@ -42,7 +42,7 @@ class MainWindow(QWidget):
         # ---- 设置 UI ----
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
-        self.setWindowTitle("HawkingClicker")
+        self.setWindowTitle("HawkingHand")
         self.setWindowIcon(QIcon(":/icons/app.svg"))
 
         # ---- 标题栏应用图标 ----

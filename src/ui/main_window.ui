@@ -17,7 +17,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string notr="true">HawkingClicker</string>
+   <string notr="true">HawkingHand</string>
   </property>
   <layout class="QVBoxLayout" name="rootLayout">
    <property name="spacing">
@@ -105,7 +105,7 @@
       <item>
        <widget class="QLabel" name="appTitle">
         <property name="text">
-         <string notr="true">HawkingClicker</string>
+         <string notr="true">HawkingHand</string>
         </property>
        </widget>
       </item>

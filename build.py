@@ -44,7 +44,7 @@ _RES_OUTPUT_FILE = _RES_DIR / "resources_rc.py"
 # 翻译相关路径
 _TR_DIR = _SRC_DIR / "translations"
 _TR_OUTPUT_DIR = _TR_DIR / "generated"
-_TR_PREFIX = "hawkingclicker_"
+_TR_PREFIX = "hawkinghand_"
 
 # 打包相关路径
 _DIST_DIR = _PROJECT_ROOT / "dist"
@@ -594,7 +594,7 @@ def cmd_check():
 
 def main():
     parser = argparse.ArgumentParser(
-        description="HawkingClicker 项目构建脚本",
+description="HawkingHand 项目构建脚本",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 示例:

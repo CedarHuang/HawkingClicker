@@ -2,7 +2,7 @@ import appdirs
 import os
 import sys
 
-app_name = 'HawkingClicker'
+app_name = 'HawkingHand'
 app_author = 'CedarHuang'
 
 scripts_name = 'scripts'

@@ -421,7 +421,7 @@
           <item>
            <widget class="QLabel" name="aboutAppName">
             <property name="text">
-             <string notr="true">HawkingClicker</string>
+             <string notr="true">HawkingHand</string>
             </property>
            </widget>
           </item>
@@ -435,7 +435,7 @@
           <item>
            <widget class="QLabel" name="aboutGithub">
             <property name="text">
-             <string notr="true">&lt;a href=&quot;https://github.com/CedarHuang/HawkingClicker&quot;&gt;🔗 GitHub&lt;/a&gt;</string>
+             <string notr="true">&lt;a href=&quot;https://github.com/CedarHuang/HawkingHand&quot;&gt;🔗 GitHub&lt;/a&gt;</string>
             </property>
             <property name="openExternalLinks">
              <bool>true</bool>
