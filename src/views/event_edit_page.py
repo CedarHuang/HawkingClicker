@@ -204,6 +204,9 @@ class EventEditPage(QWidget):
         self.ui.intervalInput.valueChanged.connect(self._markDirty)
         self.ui.clicksInput.valueChanged.connect(self._markDirty)
 
+        # ---- 为预设鼠标按钮选项设置内部值（不受翻译影响） ----
+        self._initButtonComboData()
+
         # ---- 初始状态：Click 类型 ----
         self._applyType("Click")
 
@@ -264,7 +267,7 @@ class EventEditPage(QWidget):
 
         # 填充字段
         self.ui.hotkeyInput.setText(data.get("hotkey", ""))
-        self.ui.buttonCombo.setCurrentText(data.get("button", "Left"))
+        self._setButtonComboValue(data.get("button", "Left"))
 
         # range 为 "*" 或空时显示为空，让 placeholder 提示用户格式
         rangeVal = data.get("range", "")
@@ -338,7 +341,7 @@ class EventEditPage(QWidget):
         data = {
             "type": typeName,
             "hotkey": self.ui.hotkeyInput.text().strip(),
-            "button": self.ui.buttonCombo.currentText().strip(),
+            "button": self._getButtonComboValue(),
             "range": self.ui.rangeInput.text().strip(),
             "posX": self.ui.positionX.value(),
             "posY": self.ui.positionY.value(),
@@ -391,6 +394,42 @@ class EventEditPage(QWidget):
     def _markDirty(self, *_args):
         """标记表单已修改"""
         self._isDirty = True
+
+    def _initButtonComboData(self):
+        """为 buttonCombo 的预设选项设置 itemData（内部值），使其不受翻译影响
+
+        .ui 文件中定义的顺序：index 0 = Left, index 1 = Right
+        显示文本会被 Qt 翻译系统翻译（如 "左键"/"右键"），
+        但 itemData 始终保持英文内部值，供数据层使用。
+        """
+        _BUTTON_DATA = ["Left", "Right"]
+        for i, value in enumerate(_BUTTON_DATA):
+            if i < self.ui.buttonCombo.count():
+                self.ui.buttonCombo.setItemData(i, value)
+
+    def _getButtonComboValue(self) -> str:
+        """获取 buttonCombo 的内部值（优先取 itemData，回退到 currentText）
+
+        对于预设的鼠标按钮选项，返回不受翻译影响的内部值（如 "Left"）；
+        对于用户手动输入的键盘按键名，返回输入的文本。
+        """
+        data = self.ui.buttonCombo.currentData()
+        if data is not None:
+            return str(data)
+        # 用户手动输入的键盘按键，无 itemData，直接返回文本
+        return self.ui.buttonCombo.currentText().strip()
+
+    def _setButtonComboValue(self, value: str):
+        """根据内部值设置 buttonCombo 的选中项
+
+        优先通过 itemData 匹配预设选项；若未找到，则作为自定义文本设置。
+        """
+        idx = self.ui.buttonCombo.findData(value)
+        if idx >= 0:
+            self.ui.buttonCombo.setCurrentIndex(idx)
+        else:
+            # 自定义键盘按键名，直接设置文本
+            self.ui.buttonCombo.setCurrentText(value)
 
     @staticmethod
     def _onOpenScriptsDir():
