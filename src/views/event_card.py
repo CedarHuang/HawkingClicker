@@ -16,7 +16,7 @@ class EventCard(QFrame):
     """事件卡片控件，展示单条事件配置的摘要信息"""
 
     # 信号定义
-    clicked = Signal()                # 卡片被点击（进入编辑）
+    clicked = Signal()                # 卡片被双击（进入编辑）
     statusToggled = Signal(bool)      # 启用/禁用开关切换
     editRequested = Signal()          # 右键菜单 → 编辑
     copyRequested = Signal()          # 右键菜单 → 复制
@@ -72,7 +72,7 @@ class EventCard(QFrame):
     # ---- 鼠标事件 ----
 
     def mousePressEvent(self, event):
-        """记录左键按下状态（clicked 信号延迟到 mouseReleaseEvent 发射，以兼容拖拽）"""
+        """记录左键按下状态（用于拖拽判断）"""
         if event.button() == Qt.LeftButton:
             child = self.childAt(event.position().toPoint())
             if child not in (self.ui.btnToggleStatus, self.ui.btnMore):
@@ -80,11 +80,18 @@ class EventCard(QFrame):
         super().mousePressEvent(event)
 
     def mouseReleaseEvent(self, event):
-        """左键释放时，如果没有发生拖拽则发射 clicked 信号"""
-        if event.button() == Qt.LeftButton and getattr(self, "_clickPending", False):
+        """左键释放时重置点击状态"""
+        if event.button() == Qt.LeftButton:
             self._clickPending = False
-            self.clicked.emit()
         super().mouseReleaseEvent(event)
+
+    def mouseDoubleClickEvent(self, event):
+        """双击卡片进入编辑"""
+        if event.button() == Qt.LeftButton:
+            child = self.childAt(event.position().toPoint())
+            if child not in (self.ui.btnToggleStatus, self.ui.btnMore):
+                self.clicked.emit()
+        super().mouseDoubleClickEvent(event)
 
     def contextMenuEvent(self, event):
         """右键点击卡片时显示上下文菜单"""
