@@ -47,41 +47,41 @@
 <context>
     <name>EventEditPage</name>
     <message>
-        <location filename="../views/event_edit_page.py" line="67"/>
+        <location filename="../views/event_edit_page.py" line="68"/>
         <source>Press a key combination...</source>
         <translation>请按下组合键...</translation>
     </message>
     <message>
-        <location filename="../views/event_edit_page.py" line="74"/>
-        <location filename="../views/event_edit_page.py" line="386"/>
+        <location filename="../views/event_edit_page.py" line="75"/>
+        <location filename="../views/event_edit_page.py" line="396"/>
         <location filename="../ui/event_edit_page.ui" line="308"/>
         <source>Click here, then press a key combination...</source>
         <translation>点击此处，然后按下组合键...</translation>
     </message>
     <message>
-        <location filename="../views/event_edit_page.py" line="223"/>
-        <location filename="../views/event_edit_page.py" line="249"/>
+        <location filename="../views/event_edit_page.py" line="227"/>
+        <location filename="../views/event_edit_page.py" line="253"/>
         <location filename="../ui/event_edit_page.ui" line="81"/>
         <source>Edit Event</source>
         <translation>编辑事件</translation>
     </message>
     <message>
-        <location filename="../views/event_edit_page.py" line="223"/>
+        <location filename="../views/event_edit_page.py" line="227"/>
         <source>New Event</source>
         <translation>新建事件</translation>
     </message>
     <message>
-        <location filename="../views/event_edit_page.py" line="319"/>
+        <location filename="../views/event_edit_page.py" line="329"/>
         <source>Discard Changes</source>
         <translation>放弃更改</translation>
     </message>
     <message>
-        <location filename="../views/event_edit_page.py" line="320"/>
+        <location filename="../views/event_edit_page.py" line="330"/>
         <source>Discard unsaved changes?</source>
         <translation>确定放弃未保存的更改吗？</translation>
     </message>
     <message>
-        <location filename="../views/event_edit_page.py" line="364"/>
+        <location filename="../views/event_edit_page.py" line="374"/>
         <source>⚠ Hotkey is required</source>
         <translation>⚠ 请设置热键</translation>
     </message>
@@ -147,37 +147,37 @@
         <translation>进程名:窗口标题（如 chrome.exe:*）</translation>
     </message>
     <message>
-        <location filename="../ui/event_edit_page.ui" line="507"/>
+        <location filename="../ui/event_edit_page.ui" line="551"/>
         <source>Position</source>
         <translation>位置</translation>
     </message>
     <message>
-        <location filename="../ui/event_edit_page.ui" line="566"/>
+        <location filename="../ui/event_edit_page.ui" line="610"/>
         <source>(-1 = current position)</source>
         <translation>（-1 = 当前位置）</translation>
     </message>
     <message>
-        <location filename="../ui/event_edit_page.ui" line="630"/>
+        <location filename="../ui/event_edit_page.ui" line="657"/>
         <source>Interval</source>
         <translation>间隔</translation>
     </message>
     <message>
-        <location filename="../ui/event_edit_page.ui" line="685"/>
+        <location filename="../ui/event_edit_page.ui" line="726"/>
         <source>Count</source>
         <translation>次数</translation>
     </message>
     <message>
-        <location filename="../ui/event_edit_page.ui" line="711"/>
+        <location filename="../ui/event_edit_page.ui" line="752"/>
         <source>(-1 = infinite)</source>
         <translation>（-1 = 无限）</translation>
     </message>
     <message>
-        <location filename="../ui/event_edit_page.ui" line="773"/>
+        <location filename="../ui/event_edit_page.ui" line="815"/>
         <source>Cancel</source>
         <translation>取消</translation>
     </message>
     <message>
-        <location filename="../ui/event_edit_page.ui" line="786"/>
+        <location filename="../ui/event_edit_page.ui" line="828"/>
         <source>💾 Save</source>
         <translation>💾 保存</translation>
     </message>
@@ -192,12 +192,12 @@
         <translation>右键</translation>
     </message>
     <message>
-        <location filename="../ui/event_edit_page.ui" line="612"/>
-        <source>Repeat Click</source>
-        <translation>重复点击</translation>
+        <location filename="../ui/event_edit_page.ui" line="520"/>
+        <source>Parameters</source>
+        <translation>参数设置</translation>
     </message>
     <message>
-        <location filename="../ui/event_edit_page.ui" line="652"/>
+        <location filename="../ui/event_edit_page.ui" line="679"/>
         <source> ms</source>
         <translation> 毫秒</translation>
     </message>

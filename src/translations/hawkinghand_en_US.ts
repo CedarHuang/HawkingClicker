@@ -47,41 +47,41 @@
 <context>
     <name>EventEditPage</name>
     <message>
-        <location filename="../views/event_edit_page.py" line="67"/>
+        <location filename="../views/event_edit_page.py" line="68"/>
         <source>Press a key combination...</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../views/event_edit_page.py" line="74"/>
-        <location filename="../views/event_edit_page.py" line="386"/>
+        <location filename="../views/event_edit_page.py" line="75"/>
+        <location filename="../views/event_edit_page.py" line="396"/>
         <location filename="../ui/event_edit_page.ui" line="308"/>
         <source>Click here, then press a key combination...</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../views/event_edit_page.py" line="223"/>
-        <location filename="../views/event_edit_page.py" line="249"/>
+        <location filename="../views/event_edit_page.py" line="227"/>
+        <location filename="../views/event_edit_page.py" line="253"/>
         <location filename="../ui/event_edit_page.ui" line="81"/>
         <source>Edit Event</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../views/event_edit_page.py" line="223"/>
+        <location filename="../views/event_edit_page.py" line="227"/>
         <source>New Event</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../views/event_edit_page.py" line="319"/>
+        <location filename="../views/event_edit_page.py" line="329"/>
         <source>Discard Changes</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../views/event_edit_page.py" line="320"/>
+        <location filename="../views/event_edit_page.py" line="330"/>
         <source>Discard unsaved changes?</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../views/event_edit_page.py" line="364"/>
+        <location filename="../views/event_edit_page.py" line="374"/>
         <source>⚠ Hotkey is required</source>
         <translation></translation>
     </message>
@@ -147,37 +147,37 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="../ui/event_edit_page.ui" line="507"/>
+        <location filename="../ui/event_edit_page.ui" line="551"/>
         <source>Position</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../ui/event_edit_page.ui" line="566"/>
+        <location filename="../ui/event_edit_page.ui" line="610"/>
         <source>(-1 = current position)</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../ui/event_edit_page.ui" line="630"/>
+        <location filename="../ui/event_edit_page.ui" line="657"/>
         <source>Interval</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../ui/event_edit_page.ui" line="685"/>
+        <location filename="../ui/event_edit_page.ui" line="726"/>
         <source>Count</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../ui/event_edit_page.ui" line="711"/>
+        <location filename="../ui/event_edit_page.ui" line="752"/>
         <source>(-1 = infinite)</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../ui/event_edit_page.ui" line="773"/>
+        <location filename="../ui/event_edit_page.ui" line="815"/>
         <source>Cancel</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../ui/event_edit_page.ui" line="786"/>
+        <location filename="../ui/event_edit_page.ui" line="828"/>
         <source>💾 Save</source>
         <translation></translation>
     </message>
@@ -192,12 +192,12 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="../ui/event_edit_page.ui" line="612"/>
-        <source>Repeat Click</source>
+        <location filename="../ui/event_edit_page.ui" line="520"/>
+        <source>Parameters</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../ui/event_edit_page.ui" line="652"/>
+        <location filename="../ui/event_edit_page.ui" line="679"/>
         <source> ms</source>
         <translation></translation>
     </message>

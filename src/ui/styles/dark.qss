@@ -280,7 +280,7 @@ QPushButton#btnBack:hover {
 /* 表单分组卡片 */
 QFrame#basicGroup,
 QFrame#conditionGroup,
-QFrame#multiGroup {
+QFrame#paramsGroup {
     background-color: #2C313A;
     border: 1px solid #3E4451;
 }
@@ -288,7 +288,7 @@ QFrame#multiGroup {
 /* 分组标题 */
 QLabel#basicGroupTitle,
 QLabel#conditionGroupTitle,
-QLabel#multiGroupTitle {
+QLabel#paramsGroupTitle {
     color: #D7DAE0;
     border-bottom: 1px solid #3E4451;
 }

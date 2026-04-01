@@ -490,107 +490,15 @@
             </item>
            </layout>
           </item>
-          <item>
-           <layout class="QHBoxLayout" name="positionRow">
-            <property name="spacing">
-             <number>12</number>
-            </property>
-            <item>
-             <widget class="QLabel" name="positionFieldLabel">
-              <property name="minimumSize">
-               <size>
-                <width>60</width>
-                <height>0</height>
-               </size>
-              </property>
-              <property name="text">
-               <string>Position</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="xLabel">
-              <property name="text">
-               <string notr="true">X</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QSpinBox" name="positionX">
-              <property name="minimumSize">
-               <size>
-                <width>80</width>
-                <height>32</height>
-               </size>
-              </property>
-              <property name="minimum">
-               <number>-1</number>
-              </property>
-              <property name="maximum">
-               <number>99999</number>
-              </property>
-              <property name="value">
-               <number>-1</number>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="yLabel">
-              <property name="text">
-               <string notr="true">Y</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QSpinBox" name="positionY">
-              <property name="minimumSize">
-               <size>
-                <width>80</width>
-                <height>32</height>
-               </size>
-              </property>
-              <property name="minimum">
-               <number>-1</number>
-              </property>
-              <property name="maximum">
-               <number>99999</number>
-              </property>
-              <property name="value">
-               <number>-1</number>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="positionHint">
-              <property name="text">
-               <string>(-1 = current position)</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <spacer name="positionRowSpacer">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-           </layout>
-          </item>
          </layout>
         </widget>
        </item>
        <item>
-        <widget class="QFrame" name="multiGroup">
+        <widget class="QFrame" name="paramsGroup">
          <property name="visible">
           <bool>false</bool>
          </property>
-         <layout class="QVBoxLayout" name="multiGroupLayout">
+         <layout class="QVBoxLayout" name="paramsGroupLayout">
           <property name="spacing">
            <number>12</number>
           </property>
@@ -607,125 +515,259 @@
            <number>16</number>
           </property>
           <item>
-           <widget class="QLabel" name="multiGroupTitle">
+           <widget class="QLabel" name="paramsGroupTitle">
             <property name="text">
-             <string>Repeat Click</string>
+             <string>Parameters</string>
             </property>
            </widget>
           </item>
           <item>
-           <layout class="QHBoxLayout" name="intervalRow">
-            <property name="spacing">
-             <number>12</number>
-            </property>
-            <item>
-             <widget class="QLabel" name="intervalFieldLabel">
-              <property name="minimumSize">
-               <size>
-                <width>60</width>
-                <height>0</height>
-               </size>
-              </property>
-              <property name="text">
-               <string>Interval</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QSpinBox" name="intervalInput">
-              <property name="minimumSize">
-               <size>
-                <width>100</width>
-                <height>32</height>
-               </size>
-              </property>
-              <property name="minimum">
-               <number>1</number>
-              </property>
-              <property name="maximum">
-               <number>999999</number>
-              </property>
-              <property name="value">
-               <number>100</number>
-              </property>
-              <property name="suffix">
-               <string> ms</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <spacer name="intervalRowSpacer">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-           </layout>
+           <widget class="QFrame" name="positionRow">
+            <layout class="QHBoxLayout" name="positionRowLayout">
+             <property name="spacing">
+              <number>12</number>
+             </property>
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QLabel" name="positionFieldLabel">
+               <property name="minimumSize">
+                <size>
+                 <width>60</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>Position</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="xLabel">
+               <property name="text">
+                <string notr="true">X</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QSpinBox" name="positionX">
+               <property name="minimumSize">
+                <size>
+                 <width>80</width>
+                 <height>32</height>
+                </size>
+               </property>
+               <property name="minimum">
+                <number>-1</number>
+               </property>
+               <property name="maximum">
+                <number>99999</number>
+               </property>
+               <property name="value">
+                <number>-1</number>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="yLabel">
+               <property name="text">
+                <string notr="true">Y</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QSpinBox" name="positionY">
+               <property name="minimumSize">
+                <size>
+                 <width>80</width>
+                 <height>32</height>
+                </size>
+               </property>
+               <property name="minimum">
+                <number>-1</number>
+               </property>
+               <property name="maximum">
+                <number>99999</number>
+               </property>
+               <property name="value">
+                <number>-1</number>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="positionHint">
+               <property name="text">
+                <string>(-1 = current position)</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer name="positionRowSpacer">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
+           </widget>
           </item>
           <item>
-           <layout class="QHBoxLayout" name="clicksRow">
-            <property name="spacing">
-             <number>12</number>
-            </property>
-            <item>
-             <widget class="QLabel" name="clicksFieldLabel">
-              <property name="minimumSize">
-               <size>
-                <width>60</width>
-                <height>0</height>
-               </size>
-              </property>
-              <property name="text">
-               <string>Count</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QSpinBox" name="clicksInput">
-              <property name="minimumSize">
-               <size>
-                <width>100</width>
-                <height>32</height>
-               </size>
-              </property>
-              <property name="minimum">
-               <number>-1</number>
-              </property>
-              <property name="maximum">
-               <number>999999</number>
-              </property>
-              <property name="value">
-               <number>-1</number>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="clicksHint">
-              <property name="text">
-               <string>(-1 = infinite)</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <spacer name="clicksRowSpacer">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-           </layout>
+           <widget class="QFrame" name="intervalRow">
+            <layout class="QHBoxLayout" name="intervalRowLayout">
+             <property name="spacing">
+              <number>12</number>
+             </property>
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QLabel" name="intervalFieldLabel">
+               <property name="minimumSize">
+                <size>
+                 <width>60</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>Interval</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QSpinBox" name="intervalInput">
+               <property name="minimumSize">
+                <size>
+                 <width>100</width>
+                 <height>32</height>
+                </size>
+               </property>
+               <property name="minimum">
+                <number>1</number>
+               </property>
+               <property name="maximum">
+                <number>999999</number>
+               </property>
+               <property name="value">
+                <number>100</number>
+               </property>
+               <property name="suffix">
+                <string> ms</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer name="intervalRowSpacer">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QFrame" name="clicksRow">
+            <layout class="QHBoxLayout" name="clicksRowLayout">
+             <property name="spacing">
+              <number>12</number>
+             </property>
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QLabel" name="clicksFieldLabel">
+               <property name="minimumSize">
+                <size>
+                 <width>60</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>Count</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QSpinBox" name="clicksInput">
+               <property name="minimumSize">
+                <size>
+                 <width>100</width>
+                 <height>32</height>
+                </size>
+               </property>
+               <property name="minimum">
+                <number>-1</number>
+               </property>
+               <property name="maximum">
+                <number>999999</number>
+               </property>
+               <property name="value">
+                <number>-1</number>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="clicksHint">
+               <property name="text">
+                <string>(-1 = infinite)</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer name="clicksRowSpacer">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
+           </widget>
           </item>
          </layout>
         </widget>

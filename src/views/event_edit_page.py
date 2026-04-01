@@ -307,13 +307,19 @@ class EventEditPage(QWidget):
 
     def _applyType(self, typeName: str):
         """根据类型名称显示/隐藏对应字段"""
-        # Multi 类型显示连点配置
-        self.ui.multiGroup.setVisible(typeName == "Multi")
+        isScript = typeName == "Script"
+        isMulti = typeName == "Multi"
 
         # Script 类型显示脚本选择，隐藏按键选择
-        self.ui.scriptRow.setVisible(typeName == "Script")
-        self.ui.buttonFieldLabel.setVisible(typeName != "Script")
-        self.ui.buttonCombo.setVisible(typeName != "Script")
+        self.ui.scriptRow.setVisible(isScript)
+        self.ui.buttonFieldLabel.setVisible(not isScript)
+        self.ui.buttonCombo.setVisible(not isScript)
+
+        # paramsGroup：Script 无参数，整组隐藏；其他类型显示
+        self.ui.paramsGroup.setVisible(not isScript)
+        # intervalRow / clicksRow 仅 Multi 类型可见
+        self.ui.intervalRow.setVisible(isMulti)
+        self.ui.clicksRow.setVisible(isMulti)
 
     def _onBackClicked(self):
         """返回/取消按钮点击"""

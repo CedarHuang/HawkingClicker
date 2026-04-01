@@ -247,7 +247,7 @@ QPushButton#btnBack {
 /* 表单分组卡片 */
 QFrame#basicGroup,
 QFrame#conditionGroup,
-QFrame#multiGroup {
+QFrame#paramsGroup {
     border-radius: 10px;
     border: 1px solid transparent;
 }
@@ -255,7 +255,7 @@ QFrame#multiGroup {
 /* 分组标题 */
 QLabel#basicGroupTitle,
 QLabel#conditionGroupTitle,
-QLabel#multiGroupTitle {
+QLabel#paramsGroupTitle {
     font-size: 14px;
     font-weight: bold;
     padding-bottom: 4px;
@@ -387,8 +387,10 @@ QSpinBox::down-arrow {
     height: 0px;
 }
 
-/* 脚本行 */
-QFrame#scriptRow {
+/* 分组内子行容器统一透明 */
+QFrame#scriptRow,
+QFrame#conditionGroup > QFrame,
+QFrame#paramsGroup > QFrame {
     border: none;
     background: transparent;
 }
