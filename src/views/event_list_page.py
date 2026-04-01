@@ -130,8 +130,6 @@ class EventListPage(QWidget):
         card.editRequested.connect(lambda idx=index: self.editEventRequested.emit(idx))
         card.copyRequested.connect(lambda idx=index: self.copyEventRequested.emit(idx))
         card.deleteRequested.connect(lambda idx=index: self._confirmDelete(idx))
-        card.moveUpRequested.connect(lambda idx=index: self._moveUp(idx))
-        card.moveDownRequested.connect(lambda idx=index: self._moveDown(idx))
         card.statusToggled.connect(lambda checked, idx=index: self.statusToggled.emit(idx, checked))
 
         # 为卡片安装事件过滤器以支持拖拽
@@ -451,12 +449,3 @@ class EventListPage(QWidget):
         if reply == QMessageBox.Yes:
             self.deleteEventRequested.emit(index)
 
-    def _moveUp(self, index: int):
-        """请求上移事件"""
-        if index > 0:
-            self.moveEventRequested.emit(index, index - 1)
-
-    def _moveDown(self, index: int):
-        """请求下移事件"""
-        if index < len(self._cards) - 1:
-            self.moveEventRequested.emit(index, index + 1)

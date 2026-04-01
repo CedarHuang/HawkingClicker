@@ -20,8 +20,6 @@ class EventCard(QFrame):
     statusToggled = Signal(bool)      # 启用/禁用开关切换
     editRequested = Signal()          # 右键菜单 → 编辑
     copyRequested = Signal()          # 右键菜单 → 复制
-    moveUpRequested = Signal()        # 右键菜单 → 上移
-    moveDownRequested = Signal()      # 右键菜单 → 下移
     deleteRequested = Signal()        # 右键菜单 → 删除
 
     def __init__(self, parent: QWidget = None):
@@ -117,16 +115,11 @@ class EventCard(QFrame):
         actionEdit = menu.addAction(self.tr("✏️  Edit"))
         actionCopy = menu.addAction(self.tr("📋  Copy"))
         menu.addSeparator()
-        actionMoveUp = menu.addAction(self.tr("⬆  Move Up"))
-        actionMoveDown = menu.addAction(self.tr("⬇  Move Down"))
-        menu.addSeparator()
         actionDelete = menu.addAction(self.tr("🗑️  Delete"))
 
         # 连接信号
         actionEdit.triggered.connect(self.editRequested.emit)
         actionCopy.triggered.connect(self.copyRequested.emit)
-        actionMoveUp.triggered.connect(self.moveUpRequested.emit)
-        actionMoveDown.triggered.connect(self.moveDownRequested.emit)
         actionDelete.triggered.connect(self.deleteRequested.emit)
 
         menu.exec(globalPos)

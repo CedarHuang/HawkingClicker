@@ -4,32 +4,22 @@
 <context>
     <name>EventCard</name>
     <message>
-        <location filename="../views/event_card.py" line="64"/>
+        <location filename="../views/event_card.py" line="62"/>
         <source>Scope: {scope}</source>
         <translation>范围: {scope}</translation>
     </message>
     <message>
-        <location filename="../views/event_card.py" line="110"/>
+        <location filename="../views/event_card.py" line="115"/>
         <source>✏️  Edit</source>
         <translation>✏️  编辑</translation>
     </message>
     <message>
-        <location filename="../views/event_card.py" line="111"/>
+        <location filename="../views/event_card.py" line="116"/>
         <source>📋  Copy</source>
         <translation>📋  复制</translation>
     </message>
     <message>
-        <location filename="../views/event_card.py" line="113"/>
-        <source>⬆  Move Up</source>
-        <translation>⬆  上移</translation>
-    </message>
-    <message>
-        <location filename="../views/event_card.py" line="114"/>
-        <source>⬇  Move Down</source>
-        <translation>⬇  下移</translation>
-    </message>
-    <message>
-        <location filename="../views/event_card.py" line="116"/>
+        <location filename="../views/event_card.py" line="118"/>
         <source>🗑️  Delete</source>
         <translation>🗑️  删除</translation>
     </message>
@@ -53,35 +43,35 @@
     </message>
     <message>
         <location filename="../views/event_edit_page.py" line="75"/>
-        <location filename="../views/event_edit_page.py" line="396"/>
+        <location filename="../views/event_edit_page.py" line="399"/>
         <location filename="../ui/event_edit_page.ui" line="308"/>
         <source>Click here, then press a key combination...</source>
         <translation>点击此处，然后按下组合键...</translation>
     </message>
     <message>
-        <location filename="../views/event_edit_page.py" line="227"/>
-        <location filename="../views/event_edit_page.py" line="253"/>
+        <location filename="../views/event_edit_page.py" line="230"/>
+        <location filename="../views/event_edit_page.py" line="256"/>
         <location filename="../ui/event_edit_page.ui" line="81"/>
         <source>Edit Event</source>
         <translation>编辑事件</translation>
     </message>
     <message>
-        <location filename="../views/event_edit_page.py" line="227"/>
+        <location filename="../views/event_edit_page.py" line="230"/>
         <source>New Event</source>
         <translation>新建事件</translation>
     </message>
     <message>
-        <location filename="../views/event_edit_page.py" line="329"/>
+        <location filename="../views/event_edit_page.py" line="332"/>
         <source>Discard Changes</source>
         <translation>放弃更改</translation>
     </message>
     <message>
-        <location filename="../views/event_edit_page.py" line="330"/>
+        <location filename="../views/event_edit_page.py" line="333"/>
         <source>Discard unsaved changes?</source>
         <translation>确定放弃未保存的更改吗？</translation>
     </message>
     <message>
-        <location filename="../views/event_edit_page.py" line="374"/>
+        <location filename="../views/event_edit_page.py" line="377"/>
         <source>⚠ Hotkey is required</source>
         <translation>⚠ 请设置热键</translation>
     </message>
@@ -205,12 +195,12 @@
 <context>
     <name>EventListPage</name>
     <message>
-        <location filename="../views/event_list_page.py" line="446"/>
+        <location filename="../views/event_list_page.py" line="444"/>
         <source>Confirm Delete</source>
         <translation>确认删除</translation>
     </message>
     <message>
-        <location filename="../views/event_list_page.py" line="447"/>
+        <location filename="../views/event_list_page.py" line="445"/>
         <source>Are you sure you want to delete this event?
 This action cannot be undone.</source>
         <translation>确定要删除此事件吗？
