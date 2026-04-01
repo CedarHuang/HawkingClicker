@@ -11,9 +11,11 @@ from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QButtonGroup, QApplication,
 )
 
+from core import common
 from core.callbacks import callbacks, CallbackEvent
+from core.config import settings as configSettings
 from ui.generated.ui_main_window import Ui_MainWindow
-from views.appearance import applyTheme
+from views.appearance import applyTheme, resolveTheme
 from views.event_controller import EventController
 from views.event_edit_page import EventEditPage
 from views.event_list_page import EventListPage
@@ -95,10 +97,9 @@ class MainWindow(QWidget):
         )
         self._settingsCtrl = SettingsController(self.settingsPage)
 
-        # ---- 主题切换（隐藏功能：双击版本号） ----
-        self._currentTheme = "dark"
-        if self.ui.versionLabel:
-            self.ui.versionLabel.setToolTip(self.tr("Double-click to switch theme"))
+        # ---- 主题快速切换（仅开发环境：双击版本号） ----
+        if not common.is_frozen():
+            self._currentTheme = resolveTheme(configSettings.theme)
             self._themeFilter = DoubleClickFilter(
                 self.ui.versionLabel, self._toggleTheme
             )
@@ -123,10 +124,6 @@ class MainWindow(QWidget):
         """
         self.ui.versionLabel.setText(version)
         self.settingsPage.setVersionText(version)
-
-    def currentTheme(self) -> str:
-        """返回当前主题名称"""
-        return self._currentTheme
 
     def registerCallbacks(self):
         """注册 core 层回调"""
@@ -178,7 +175,7 @@ class MainWindow(QWidget):
         else:
             event.accept()
 
-    # ---- 主题切换 ----
+    # ---- 主题快速切换（仅开发环境） ----
 
     def _toggleTheme(self):
         """切换深色/浅色主题"""

@@ -435,6 +435,7 @@ QLabel#aboutGroupTitle {
 }
 
 /* 设置项容器 */
+QFrame#themeSettingItem,
 QFrame#traySettingItem,
 QFrame#startupSettingItem,
 QFrame#adminSettingItem {
@@ -443,6 +444,7 @@ QFrame#adminSettingItem {
 }
 
 /* 设置项标题 */
+QLabel#themeTitle,
 QLabel#trayTitle,
 QLabel#startupTitle,
 QLabel#adminTitle {
@@ -451,6 +453,7 @@ QLabel#adminTitle {
 }
 
 /* 设置项描述 */
+QLabel#themeDesc,
 QLabel#trayDesc,
 QLabel#startupDesc,
 QLabel#adminDesc {

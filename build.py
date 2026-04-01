@@ -266,7 +266,7 @@ def _qm_path(lang: str) -> Path:
 
 
 def cmd_tr_extract(locations: bool = False) -> bool:
-    """从源文件中提取可翻译字符串，更新 .ts 文件
+    """从源文件中提取可翻译字符串到 .ts 文件
 
     Args:
         locations: 是否在 .ts 文件中保留源码位置信息（默认 False）。
@@ -295,6 +295,7 @@ def cmd_tr_extract(locations: bool = False) -> bool:
         cmd = [lupdate_path] + [str(f) for f in sources]
         if not locations:
             cmd += ["-locations", "none"]
+        cmd += ["-no-obsolete"]
         cmd += ["-ts", str(ts_file)]
         print(f"  ▸ 提取: {lang}.ts")
         try:

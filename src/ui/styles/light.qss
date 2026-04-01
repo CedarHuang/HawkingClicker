@@ -501,6 +501,7 @@ QLabel#aboutGroupTitle {
 }
 
 /* 设置项标题 */
+QLabel#themeTitle,
 QLabel#trayTitle,
 QLabel#startupTitle,
 QLabel#adminTitle {
@@ -508,6 +509,7 @@ QLabel#adminTitle {
 }
 
 /* 设置项描述 */
+QLabel#themeDesc,
 QLabel#trayDesc,
 QLabel#startupDesc,
 QLabel#adminDesc {
@@ -528,6 +530,41 @@ ToggleSwitch#chkStartupAsAdmin {
     qproperty-thumbColor: #FFFFFF;
     qproperty-trackColorOffHover: #B8B9BC;
     qproperty-trackColorOnHover: #5289F5;
+}
+
+/* 主题选择下拉框 */
+QComboBox#themeCombo {
+    background-color: #FFFFFF;
+    color: #383A42;
+    border: 1px solid #D0D1D4;
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-size: 13px;
+    min-height: 20px;
+}
+QComboBox#themeCombo:hover {
+    border: 1px solid #B0B1B4;
+}
+QComboBox#themeCombo:on {
+    border: 1px solid #4078F2;
+}
+QComboBox#themeCombo::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 24px;
+    border: none;
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
+}
+QComboBox#themeCombo::down-arrow {
+    image: url(:/icons/arrow-down-light.svg);
+    width: 10px;
+    height: 6px;
+}
+QComboBox#themeCombo::down-arrow:on {
+    image: url(:/icons/arrow-up-light.svg);
+    width: 10px;
+    height: 6px;
 }
 
 /* 快捷操作按钮 */

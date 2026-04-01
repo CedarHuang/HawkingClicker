@@ -197,13 +197,21 @@ This action cannot be undone.</source>
         <source>Toggle navigation bar</source>
         <translation></translation>
     </message>
-    <message>
-        <source>Double-click to switch theme</source>
-        <translation></translation>
-    </message>
 </context>
 <context>
     <name>SettingsPage</name>
+    <message>
+        <source>Follow system</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Light</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Dark</source>
+        <translation></translation>
+    </message>
     <message>
         <source>Requires running as administrator</source>
         <translation></translation>
@@ -214,6 +222,14 @@ This action cannot be undone.</source>
     </message>
     <message>
         <source>General</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Theme</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Choose the application color theme</source>
         <translation></translation>
     </message>
     <message>

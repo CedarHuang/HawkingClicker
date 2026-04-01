@@ -18,8 +18,9 @@ from __version__ import __version__
 from core import event_listener
 from core import foreground_listener
 from core import single_instance
+from core.config import settings as configSettings
 from resources import resources_rc  # noqa: F401  注册 Qt 资源
-from views.appearance import applyTheme, installTranslator
+from views.appearance import applyTheme, resolveTheme, installTranslator
 from views.main_window import MainWindow
 
 
@@ -33,8 +34,8 @@ def main():
     # 加载翻译
     _translator = installTranslator(app)
 
-    # 应用深色主题
-    applyTheme(app, "dark")
+    # 根据配置应用主题
+    applyTheme(app, resolveTheme(configSettings.theme))
 
     # 创建主窗口
     window = MainWindow()

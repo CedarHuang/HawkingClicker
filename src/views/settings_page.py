@@ -1,7 +1,7 @@
 """
 设置页
 ======
-管理应用全局设置（系统托盘、开机自启、管理员启动），
+管理应用全局设置（主题、系统托盘、开机自启、管理员启动），
 提供快捷操作按钮和关于信息展示。
 """
 
@@ -15,6 +15,7 @@ class SettingsPage(QWidget):
     """设置页面"""
 
     # 信号定义
+    themeChanged = Signal(str)            # 主题切换（配置值: system/light/dark）
     trayToggled = Signal(bool)            # 系统托盘开关切换
     startupToggled = Signal(bool)         # 开机自启开关切换
     adminToggled = Signal(bool)           # 管理员启动开关切换
@@ -29,7 +30,13 @@ class SettingsPage(QWidget):
         # 是否以管理员身份运行（UI 演示默认为 False）
         self._isAdmin = False
 
+        # ---- 初始化主题下拉框 ----
+        self.ui.themeCombo.addItem(self.tr("Follow system"), "system")
+        self.ui.themeCombo.addItem(self.tr("Light"), "light")
+        self.ui.themeCombo.addItem(self.tr("Dark"), "dark")
+
         # ---- 连接信号 ----
+        self.ui.themeCombo.currentIndexChanged.connect(self._onThemeChanged)
         self.ui.chkEnableTray.toggled.connect(self._onTrayToggled)
         self.ui.chkStartup.toggled.connect(self._onStartupToggled)
         self.ui.chkStartupAsAdmin.toggled.connect(self._onAdminToggled)
@@ -60,22 +67,30 @@ class SettingsPage(QWidget):
         """
         self.ui.aboutAppName.setText(f"HawkingHand  {version}")
 
-    def setSettings(self, tray: bool, startup: bool, admin: bool):
+    def setSettings(self, tray: bool, startup: bool, admin: bool, theme: str = "system"):
         """批量设置开关状态（阻断信号避免触发回调）
 
         Args:
             tray: 系统托盘开关
             startup: 开机自启开关
             admin: 管理员启动开关
+            theme: 主题设置 (system/light/dark)
         """
+        self.ui.themeCombo.blockSignals(True)
         self.ui.chkEnableTray.blockSignals(True)
         self.ui.chkStartup.blockSignals(True)
         self.ui.chkStartupAsAdmin.blockSignals(True)
+
+        # 设置主题下拉框
+        themeIndex = self.ui.themeCombo.findData(theme)
+        if themeIndex >= 0:
+            self.ui.themeCombo.setCurrentIndex(themeIndex)
 
         self.ui.chkEnableTray.setChecked(tray)
         self.ui.chkStartup.setChecked(startup)
         self.ui.chkStartupAsAdmin.setChecked(admin)
 
+        self.ui.themeCombo.blockSignals(False)
         self.ui.chkEnableTray.blockSignals(False)
         self.ui.chkStartup.blockSignals(False)
         self.ui.chkStartupAsAdmin.blockSignals(False)
@@ -84,6 +99,12 @@ class SettingsPage(QWidget):
         self._updateStartupUI(startup)
 
     # ---- 内部方法 ----
+
+    def _onThemeChanged(self, index: int):
+        """主题下拉框切换"""
+        value = self.ui.themeCombo.itemData(index)
+        if value:
+            self.themeChanged.emit(value)
 
     def _onTrayToggled(self, checked: bool):
         """系统托盘开关切换"""

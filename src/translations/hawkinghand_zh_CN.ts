@@ -198,10 +198,6 @@ This action cannot be undone.</source>
         <source>Toggle navigation bar</source>
         <translation>展开/折叠导航栏</translation>
     </message>
-    <message>
-        <source>Double-click to switch theme</source>
-        <translation>双击切换主题</translation>
-    </message>
 </context>
 <context>
     <name>SettingsPage</name>
@@ -256,6 +252,26 @@ This action cannot be undone.</source>
     <message>
         <source>About</source>
         <translation>关于</translation>
+    </message>
+    <message>
+        <source>Theme</source>
+        <translation>主题</translation>
+    </message>
+    <message>
+        <source>Choose the application color theme</source>
+        <translation>选择应用的颜色主题</translation>
+    </message>
+    <message>
+        <source>Follow system</source>
+        <translation>跟随系统</translation>
+    </message>
+    <message>
+        <source>Light</source>
+        <translation>浅色</translation>
+    </message>
+    <message>
+        <source>Dark</source>
+        <translation>深色</translation>
     </message>
 </context>
 <context>
