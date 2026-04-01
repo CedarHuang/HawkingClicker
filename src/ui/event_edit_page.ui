@@ -458,12 +458,12 @@
            </widget>
           </item>
           <item>
-           <layout class="QHBoxLayout" name="rangeRow">
+           <layout class="QHBoxLayout" name="scopeRow">
             <property name="spacing">
              <number>12</number>
             </property>
             <item>
-             <widget class="QLabel" name="rangeFieldLabel">
+             <widget class="QLabel" name="scopeFieldLabel">
               <property name="minimumSize">
                <size>
                 <width>60</width>
@@ -476,7 +476,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="rangeInput">
+             <widget class="QLineEdit" name="scopeInput">
               <property name="minimumSize">
                <size>
                 <width>0</width>

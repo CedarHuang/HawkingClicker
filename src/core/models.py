@@ -34,8 +34,8 @@ class Event:
     type: str = 'Click'
     hotkey: str = ''
     target: str = 'mouse_left'
-    range: str = '*'
-    status: bool = True
+    scope: str = '*'
+    enabled: bool = True
     params: ClickParams | PressParams | MultiParams | ScriptParams = field(default_factory=ClickParams)
 
 

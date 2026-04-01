@@ -11,7 +11,7 @@ from core.scripts import scripts
 
 def start():
     for event in config.events:
-        if not event.status:
+        if not event.enabled:
             continue
         if event.hotkey == None or event.hotkey == '':
             continue
@@ -21,10 +21,10 @@ def stop():
     keyboard.unhook_all()
     foreground_listener.clear_event_callback_list()
 
-special_range = ['CHECK_WINDOW']
+special_scope = ['CHECK_WINDOW']
 
 def callback_factory(event):
-    parse_range(event)
+    parse_scope(event)
     match event.type:
         case 'Click':
             return click_factory(event)
@@ -41,7 +41,7 @@ def callback_factory(event):
 
 def click_factory(event):
     def callback():
-        if not check_range(event):
+        if not check_scope(event):
             return
         button_click(event)
 
@@ -50,7 +50,7 @@ def click_factory(event):
 def press_factory(event):
     already_down = False
     def callback():
-        if not check_range(event):
+        if not check_scope(event):
             return
         nonlocal already_down
         if not already_down:
@@ -87,7 +87,7 @@ def multi_factory(event):
         return ing
 
     def callback():
-        if not check_range(event):
+        if not check_scope(event):
             return
         if if_ing_then_stop():
             return
@@ -109,7 +109,7 @@ def script_factory(event):
 
     def callback():
         nonlocal thread
-        if not check_range(event):
+        if not check_scope(event):
             return
         if if_ing_then_stop():
             return
@@ -127,26 +127,26 @@ def check_window(event):
 
     return callback
 
-def parse_range(event):
-    if event.range in special_range:
-        event.type = event.range
-    _range = []
-    for i in event.range.split(':', 1):
+def parse_scope(event):
+    if event.scope in special_scope:
+        event.type = event.scope
+    _scope = []
+    for i in event.scope.split(':', 1):
         i = i.strip()
         if i == '':
             i = '*'
-        _range.append(i)
-    _range.extend(['*'] * (2 - len(_range)))
-    event._range = _range
+        _scope.append(i)
+    _scope.extend(['*'] * (2 - len(_scope)))
+    event._scope = _scope
     event._version = 0
     event._passed = False
 
-def check_range(event):
+def check_scope(event):
     process_name, window_title, data_version = foreground_listener.active_window_info()
     if event._version == data_version:
         return event._passed
 
-    e_p_name, e_w_title = event._range
+    e_p_name, e_w_title = event._scope
     process_name_passed = fnmatch.fnmatchcase(process_name, e_p_name)
     window_title_passed = fnmatch.fnmatchcase(window_title, e_w_title)
     passed = process_name_passed and window_title_passed

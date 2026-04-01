@@ -197,7 +197,7 @@ class EventEditPage(QWidget):
 
         # ---- 表单变更追踪 ----
         self.ui.hotkeyInput.textChanged.connect(self._markDirty)
-        self.ui.rangeInput.textChanged.connect(self._markDirty)
+        self.ui.scopeInput.textChanged.connect(self._markDirty)
         self.ui.buttonCombo.currentTextChanged.connect(self._markDirty)
         self.ui.scriptCombo.currentTextChanged.connect(self._markDirty)
         self.ui.positionX.valueChanged.connect(self._markDirty)
@@ -234,7 +234,7 @@ class EventEditPage(QWidget):
         self.ui.typeBtnClick.setChecked(True)
         self.ui.hotkeyInput.clear()
         self.ui.buttonCombo.setCurrentIndex(0)
-        self.ui.rangeInput.clear()
+        self.ui.scopeInput.clear()
         self.ui.positionX.setValue(-1)
         self.ui.positionY.setValue(-1)
         self.ui.intervalInput.setValue(100)
@@ -250,7 +250,7 @@ class EventEditPage(QWidget):
         """用数据填充表单
 
         Args:
-            data: 包含 type, hotkey, target, range, posX, posY, interval, clicks 的字典
+            data: 包含 type, hotkey, target, scope, posX, posY, interval, clicks 的字典
         """
         self._isEditing = True
         self.ui.pageTitle.setText(self.tr("Edit Event"))
@@ -273,9 +273,9 @@ class EventEditPage(QWidget):
         self.ui.hotkeyInput.setText(data.get("hotkey", ""))
         self._setButtonComboValue(data.get("target", MOUSE_LEFT))
 
-        # range 为 "*" 或空时显示为空，让 placeholder 提示用户格式
-        rangeVal = data.get("range", "")
-        self.ui.rangeInput.setText("" if rangeVal in ("", "*") else rangeVal)
+        # scope 为 "*" 或空时显示为空，让 placeholder 提示用户格式
+        scopeVal = data.get("scope", "")
+        self.ui.scopeInput.setText("" if scopeVal in ("", "*") else scopeVal)
 
         self.ui.positionX.setValue(data.get("posX", -1))
         self.ui.positionY.setValue(data.get("posY", -1))
@@ -352,7 +352,7 @@ class EventEditPage(QWidget):
             "type": typeName,
             "hotkey": self.ui.hotkeyInput.text().strip(),
             "target": self._getButtonComboValue(),
-            "range": self.ui.rangeInput.text().strip(),
+            "scope": self.ui.scopeInput.text().strip(),
             "posX": self.ui.positionX.value(),
             "posY": self.ui.positionY.value(),
             "interval": self.ui.intervalInput.value(),

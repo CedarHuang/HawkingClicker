@@ -236,13 +236,13 @@ QLabel#targetLabel {
 }
 
 /* 范围 & 额外信息 */
-QLabel#rangeLabel,
+QLabel#scopeLabel,
 QLabel#extraInfoLabel {
     color: #5C6370;
 }
 
 /* 启用/禁用开关（ToggleSwitch 自绘） */
-ToggleSwitch#btnToggleStatus {
+ToggleSwitch#btnToggleEnabled {
     qproperty-trackColorOff: #3E4451;
     qproperty-trackColorOn: #98C379;
     qproperty-thumbColor: #FFFFFF;
@@ -295,7 +295,7 @@ QLabel#typeFieldLabel,
 QLabel#hotkeyFieldLabel,
 QLabel#buttonFieldLabel,
 QLabel#scriptFieldLabel,
-QLabel#rangeFieldLabel,
+QLabel#scopeFieldLabel,
 QLabel#positionFieldLabel,
 QLabel#intervalFieldLabel,
 QLabel#clicksFieldLabel {
@@ -360,7 +360,7 @@ QPushButton#typeBtnScript:checked {
 
 /* 文本输入框 */
 QLineEdit#hotkeyInput,
-QLineEdit#rangeInput {
+QLineEdit#scopeInput {
     background-color: #1B1D23;
     color: #ABB2BF;
     border: 1px solid #3E4451;
@@ -368,7 +368,7 @@ QLineEdit#rangeInput {
     selection-color: #D7DAE0;
 }
 QLineEdit#hotkeyInput:focus,
-QLineEdit#rangeInput:focus {
+QLineEdit#scopeInput:focus {
     border: 1px solid #61AFEF;
 }
 QLineEdit#hotkeyInput:read-only {

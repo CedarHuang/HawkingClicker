@@ -43,7 +43,7 @@ class EventListPage(QWidget):
     deleteEventRequested = Signal(int)    # 请求删除事件（传递索引）
     copyEventRequested = Signal(int)      # 请求复制事件（传递索引）
     moveEventRequested = Signal(int, int) # 请求移动事件（原索引, 目标索引）
-    statusToggled = Signal(int, bool)     # 事件启用/禁用切换（索引, 状态）
+    enabledToggled = Signal(int, bool)     # 事件启用/禁用切换（索引, 状态）
 
     def __init__(self, parent: QWidget = None):
         super().__init__(parent)
@@ -130,7 +130,7 @@ class EventListPage(QWidget):
         card.editRequested.connect(lambda idx=index: self.editEventRequested.emit(idx))
         card.copyRequested.connect(lambda idx=index: self.copyEventRequested.emit(idx))
         card.deleteRequested.connect(lambda idx=index: self._confirmDelete(idx))
-        card.statusToggled.connect(lambda checked, idx=index: self.statusToggled.emit(idx, checked))
+        card.enabledToggled.connect(lambda checked, idx=index: self.enabledToggled.emit(idx, checked))
 
         # 为卡片安装事件过滤器以支持拖拽
         card.installEventFilter(self)
@@ -155,7 +155,7 @@ class EventListPage(QWidget):
             if event.button() == Qt.LeftButton:
                 # 检查是否点击在按钮上，如果是则不启动拖拽
                 child = obj.childAt(event.position().toPoint())
-                if child in (obj.ui.btnToggleStatus, obj.ui.btnMore):
+                if child in (obj.ui.btnToggleEnabled, obj.ui.btnMore):
                     return False
                 # 记录拖拽起始信息
                 self._dragCard = obj

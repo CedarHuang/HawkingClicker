@@ -53,7 +53,7 @@ class EventController:
         self._eventListPage.deleteEventRequested.connect(self.onDeleteEvent)
         self._eventListPage.copyEventRequested.connect(self.onCopyEvent)
         self._eventListPage.moveEventRequested.connect(self.onMoveEvent)
-        self._eventListPage.statusToggled.connect(self.onStatusToggled)
+        self._eventListPage.enabledToggled.connect(self.onEnabledToggled)
         self._eventEditPage.backRequested.connect(self.goToEventList)
         self._eventEditPage.saveRequested.connect(self.onEventSaved)
 
@@ -76,8 +76,8 @@ class EventController:
         eventType = event.type or "Click"
         hotkey = event.hotkey or ""
         target = _displayTarget(event.target or "")
-        scope = event.range or "*"
-        enabled = event.status
+        scope = event.scope or "*"
+        enabled = event.enabled
 
         # 构建额外信息文本
         extraParts = []
@@ -143,7 +143,7 @@ class EventController:
             "type": event.type or "Click",
             "hotkey": event.hotkey or "",
             "target": event.target or MOUSE_LEFT,
-            "range": event.range or "*",
+            "scope": event.scope or "*",
             "posX": event.posX,
             "posY": event.posY,
             "interval": event.interval if event.interval is not None else 100,
@@ -163,16 +163,16 @@ class EventController:
         eventType = data.get("type", "Click")
         hotkey = data.get("hotkey", "")
 
-        # range 为空时默认为 "*"
-        rangeVal = data.get("range", "").strip()
-        rangeVal = rangeVal if rangeVal else "*"
+        # scope 为空时默认为 "*"
+        scopeVal = data.get("scope", "").strip()
+        scopeVal = scopeVal if scopeVal else "*"
 
         # 编辑已有事件时保留原有启用状态，新建事件默认启用
         if (0 <= self._editingIndex < len(configEvents)
-                and configEvents[self._editingIndex].status is not None):
-            status = configEvents[self._editingIndex].status
+                and configEvents[self._editingIndex].enabled is not None):
+            enabled = configEvents[self._editingIndex].enabled
         else:
-            status = True
+            enabled = True
 
         posX = data.get("posX", -1)
         posY = data.get("posY", -1)
@@ -199,8 +199,8 @@ class EventController:
             type=eventType,
             hotkey=hotkey,
             target=target,
-            range=rangeVal,
-            status=status,
+            scope=scopeVal,
+            enabled=enabled,
             params=params,
         )
 
@@ -235,8 +235,8 @@ class EventController:
             self.refreshEventList()
 
     @staticmethod
-    def onStatusToggled(index: int, enabled: bool):
+    def onEnabledToggled(index: int, enabled: bool):
         """切换事件启用/禁用状态"""
         if 0 <= index < len(configEvents):
-            configEvents[index].status = enabled
+            configEvents[index].enabled = enabled
             configEvents.save()

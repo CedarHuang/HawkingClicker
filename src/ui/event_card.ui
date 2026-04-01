@@ -138,7 +138,7 @@
          <number>16</number>
         </property>
         <item>
-         <widget class="QLabel" name="rangeLabel">
+         <widget class="QLabel" name="scopeLabel">
           <property name="text">
            <string notr="true">Scope: *</string>
           </property>
@@ -170,7 +170,7 @@
     </widget>
    </item>
    <item>
-    <widget class="ToggleSwitch" name="btnToggleStatus">
+    <widget class="ToggleSwitch" name="btnToggleEnabled">
      <property name="minimumSize">
       <size>
        <width>40</width>

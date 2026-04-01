@@ -17,7 +17,7 @@ class EventCard(QFrame):
 
     # 信号定义
     clicked = Signal()                # 卡片被双击（进入编辑）
-    statusToggled = Signal(bool)      # 启用/禁用开关切换
+    enabledToggled = Signal(bool)     # 启用/禁用开关切换
     editRequested = Signal()          # 右键菜单 → 编辑
     copyRequested = Signal()          # 右键菜单 → 复制
     deleteRequested = Signal()        # 右键菜单 → 删除
@@ -28,7 +28,7 @@ class EventCard(QFrame):
         self.ui.setupUi(self)
 
         # 连接内部信号
-        self.ui.btnToggleStatus.toggled.connect(self._onStatusToggled)
+        self.ui.btnToggleEnabled.toggled.connect(self._onEnabledToggled)
         self.ui.btnMore.clicked.connect(self._showContextMenu)
 
         # 设置鼠标指针为手型，暗示可点击
@@ -59,13 +59,13 @@ class EventCard(QFrame):
         # 填充文字
         self.ui.hotkeyLabel.setText(hotkey)
         self.ui.targetLabel.setText(target)
-        self.ui.rangeLabel.setText(self.tr("Scope: {scope}").format(scope=scope))
+        self.ui.scopeLabel.setText(self.tr("Scope: {scope}").format(scope=scope))
         self.ui.extraInfoLabel.setText(extra)
 
         # 启用状态（阻断信号避免触发回调）
-        self.ui.btnToggleStatus.blockSignals(True)
-        self.ui.btnToggleStatus.setChecked(enabled)
-        self.ui.btnToggleStatus.blockSignals(False)
+        self.ui.btnToggleEnabled.blockSignals(True)
+        self.ui.btnToggleEnabled.setChecked(enabled)
+        self.ui.btnToggleEnabled.blockSignals(False)
 
     # ---- 鼠标事件 ----
 
@@ -73,7 +73,7 @@ class EventCard(QFrame):
         """记录左键按下状态（用于拖拽判断）"""
         if event.button() == Qt.LeftButton:
             child = self.childAt(event.position().toPoint())
-            if child not in (self.ui.btnToggleStatus, self.ui.btnMore):
+            if child not in (self.ui.btnToggleEnabled, self.ui.btnMore):
                 self._clickPending = True
         super().mousePressEvent(event)
 
@@ -87,7 +87,7 @@ class EventCard(QFrame):
         """双击卡片进入编辑"""
         if event.button() == Qt.LeftButton:
             child = self.childAt(event.position().toPoint())
-            if child not in (self.ui.btnToggleStatus, self.ui.btnMore):
+            if child not in (self.ui.btnToggleEnabled, self.ui.btnMore):
                 self.clicked.emit()
         super().mouseDoubleClickEvent(event)
 
@@ -97,9 +97,9 @@ class EventCard(QFrame):
 
     # ---- 内部方法 ----
 
-    def _onStatusToggled(self, checked: bool):
+    def _onEnabledToggled(self, checked: bool):
         """启用/禁用开关切换"""
-        self.statusToggled.emit(checked)
+        self.enabledToggled.emit(checked)
 
     def _showContextMenu(self):
         """更多按钮点击时显示上下文菜单"""

@@ -210,7 +210,7 @@ QLabel#targetLabel {
 }
 
 /* 范围标签 */
-QLabel#rangeLabel {
+QLabel#scopeLabel {
     font-size: 11px;
 }
 
@@ -260,7 +260,7 @@ QLabel#typeFieldLabel,
 QLabel#hotkeyFieldLabel,
 QLabel#buttonFieldLabel,
 QLabel#scriptFieldLabel,
-QLabel#rangeFieldLabel,
+QLabel#scopeFieldLabel,
 QLabel#positionFieldLabel,
 QLabel#intervalFieldLabel,
 QLabel#clicksFieldLabel {
@@ -302,7 +302,7 @@ QPushButton#typeBtnScript {
 
 /* 文本输入框 */
 QLineEdit#hotkeyInput,
-QLineEdit#rangeInput {
+QLineEdit#scopeInput {
     border-radius: 6px;
     padding: 4px 10px;
     font-size: 13px;
