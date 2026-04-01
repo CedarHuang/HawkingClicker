@@ -243,7 +243,7 @@ def _create_context(event):
         
         :meta private: 内部使用。
         """
-        script_name = event.button
+        script_name = event.target
         if script_name not in _script_cache:
             _script_cache[script_name] = {}
         return _script_cache[script_name]

@@ -14,7 +14,7 @@ from PySide6.QtWidgets import QStackedWidget, QPushButton
 from core import common
 from core.input_backend import MOUSE_LEFT, MOUSE_RIGHT
 from core.config import events as configEvents
-from core.models import Event
+from core.models import Event, ClickParams, PressParams, MultiParams, ScriptParams
 from views.event_edit_page import EventEditPage
 from views.event_list_page import EventListPage
 
@@ -24,9 +24,9 @@ _MOUSE_BUTTON_DISPLAY = {
     MOUSE_RIGHT: 'Right',
 }
 
-def _displayButton(button: str) -> str:
+def _displayTarget(target: str) -> str:
     """将内部按钮值转换为用户友好的显示名称"""
-    return _MOUSE_BUTTON_DISPLAY.get(button, button)
+    return _MOUSE_BUTTON_DISPLAY.get(target, target)
 
 
 class EventController:
@@ -75,9 +75,9 @@ class EventController:
         """
         eventType = event.type or "Click"
         hotkey = event.hotkey or ""
-        button = _displayButton(event.button or "")
+        button = _displayTarget(event.target or "")
         scope = event.range or "*"
-        enabled = event.isEnabled
+        enabled = event.status
 
         # 构建额外信息文本
         extraParts = []
@@ -142,7 +142,7 @@ class EventController:
         formData = {
             "type": event.type or "Click",
             "hotkey": event.hotkey or "",
-            "button": event.button or MOUSE_LEFT,
+            "target": event.target or MOUSE_LEFT,
             "range": event.range or "*",
             "posX": event.posX,
             "posY": event.posY,
@@ -151,7 +151,7 @@ class EventController:
         }
 
         if event.type == "Script":
-            formData["script"] = event.button or ""
+            formData["script"] = event.target or ""
 
         self._eventEditPage.setFormData(formData)
         self._contentStack.setCurrentIndex(1)
@@ -160,37 +160,49 @@ class EventController:
 
     def onEventSaved(self, data: dict):
         """事件保存：将表单数据写入 config.events 并刷新列表"""
-        event = Event()
-        event.type = data.get("type", "Click")
-        event.hotkey = data.get("hotkey", "")
+        eventType = data.get("type", "Click")
+        hotkey = data.get("hotkey", "")
 
         # range 为空时默认为 "*"
         rangeVal = data.get("range", "").strip()
-        event.range = rangeVal if rangeVal else "*"
+        rangeVal = rangeVal if rangeVal else "*"
 
         # 编辑已有事件时保留原有启用状态，新建事件默认启用
         if (0 <= self._editingIndex < len(configEvents)
                 and configEvents[self._editingIndex].status is not None):
-            event.status = configEvents[self._editingIndex].status
+            status = configEvents[self._editingIndex].status
         else:
-            event.status = 1
+            status = True
 
         posX = data.get("posX", -1)
         posY = data.get("posY", -1)
-        event.position = [posX, posY]
 
-        if event.type == "Script":
-            event.button = data.get("script", "")
-            event.interval = None
-            event.clicks = None
-        elif event.type == "Multi":
-            event.button = data.get("button", MOUSE_LEFT)
-            event.interval = data.get("interval", 100)
-            event.clicks = data.get("clicks", -1)
+        # 根据类型构建对应的 params
+        if eventType == "Script":
+            target = data.get("script", "")
+            params = ScriptParams()
+        elif eventType == "Multi":
+            target = data.get("target", MOUSE_LEFT)
+            params = MultiParams(
+                position=[posX, posY],
+                interval=data.get("interval", 100),
+                clicks=data.get("clicks", -1),
+            )
+        elif eventType == "Press":
+            target = data.get("target", MOUSE_LEFT)
+            params = PressParams(position=[posX, posY])
         else:
-            event.button = data.get("button", MOUSE_LEFT)
-            event.interval = None
-            event.clicks = None
+            target = data.get("target", MOUSE_LEFT)
+            params = ClickParams(position=[posX, posY])
+
+        event = Event(
+            type=eventType,
+            hotkey=hotkey,
+            target=target,
+            range=rangeVal,
+            status=status,
+            params=params,
+        )
 
         # 保存到配置
         configEvents.update(self._editingIndex, event)
@@ -226,5 +238,5 @@ class EventController:
     def onStatusToggled(index: int, enabled: bool):
         """切换事件启用/禁用状态"""
         if 0 <= index < len(configEvents):
-            configEvents[index].status = 1 if enabled else 0
+            configEvents[index].status = enabled
             configEvents.save()

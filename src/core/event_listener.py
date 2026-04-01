@@ -11,7 +11,7 @@ from core.scripts import scripts
 
 def start():
     for event in config.events:
-        if event.status != 1:
+        if not event.status:
             continue
         if event.hotkey == None or event.hotkey == '':
             continue
@@ -122,7 +122,7 @@ def script_factory(event):
 
 def check_window(event):
     def callback():
-        event.position = foreground_listener.active_window_info()[:2]
+        event.params.position = list(foreground_listener.active_window_info()[:2])
         callbacks.trigger(CallbackEvent.LIST_REFRESH)
 
     return callback
@@ -160,10 +160,10 @@ def get_mouse_position(event):
     return input_backend.position(*event.position)
 
 def button_click(event):
-    return input_backend.click(event.button, *event.position)
+    return input_backend.click(event.target, *event.position)
 
 def button_down(event):
-    return input_backend.down(event.button, *event.position)
+    return input_backend.down(event.target, *event.position)
 
 def button_up(event):
-    return input_backend.up(event.button, *event.position)
+    return input_backend.up(event.target, *event.position)

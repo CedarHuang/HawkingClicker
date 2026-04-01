@@ -247,7 +247,7 @@ class EventEditPage(QWidget):
         """用数据填充表单
 
         Args:
-            data: 包含 type, hotkey, button, range, posX, posY, interval, clicks 的字典
+            data: 包含 type, hotkey, target, range, posX, posY, interval, clicks 的字典
         """
         self._isEditing = True
         self.ui.pageTitle.setText(self.tr("Edit Event"))
@@ -268,7 +268,7 @@ class EventEditPage(QWidget):
 
         # 填充字段
         self.ui.hotkeyInput.setText(data.get("hotkey", ""))
-        self._setButtonComboValue(data.get("button", MOUSE_LEFT))
+        self._setButtonComboValue(data.get("target", MOUSE_LEFT))
 
         # range 为 "*" 或空时显示为空，让 placeholder 提示用户格式
         rangeVal = data.get("range", "")
@@ -342,7 +342,7 @@ class EventEditPage(QWidget):
         data = {
             "type": typeName,
             "hotkey": self.ui.hotkeyInput.text().strip(),
-            "button": self._getButtonComboValue(),
+            "target": self._getButtonComboValue(),
             "range": self.ui.rangeInput.text().strip(),
             "posX": self.ui.positionX.value(),
             "posY": self.ui.positionY.value(),
