@@ -330,7 +330,14 @@ QComboBox#scriptCombo::drop-down {
 QComboBox#buttonCombo::down-arrow,
 QComboBox#scriptCombo::down-arrow {
     width: 10px;
-    height: 10px;
+    height: 6px;
+}
+
+/* 展开态箭头翻转为向上 */
+QComboBox#buttonCombo::down-arrow:on,
+QComboBox#scriptCombo::down-arrow:on {
+    width: 10px;
+    height: 6px;
 }
 
 QComboBox QAbstractItemView {
@@ -365,19 +372,13 @@ QSpinBox::down-button {
 }
 
 QSpinBox::up-arrow {
-    image: none;
-    border-left: 4px solid transparent;
-    border-right: 4px solid transparent;
-    width: 0px;
-    height: 0px;
+    width: 10px;
+    height: 6px;
 }
 
 QSpinBox::down-arrow {
-    image: none;
-    border-left: 4px solid transparent;
-    border-right: 4px solid transparent;
-    width: 0px;
-    height: 0px;
+    width: 10px;
+    height: 6px;
 }
 
 /* 分组内子行容器统一透明 */
@@ -483,14 +484,6 @@ QLabel#aboutCopyright {
 
 QLabel#aboutGithub {
     font-size: 12px;
-}
-
-QLabel#aboutGithub a {
-    text-decoration: none;
-}
-
-QLabel#aboutGithub a:hover {
-    text-decoration: underline;
 }
 
 /* ============================================================

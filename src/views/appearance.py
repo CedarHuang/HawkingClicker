@@ -7,8 +7,17 @@
 使用 :/ 前缀路径引用编译到 resources_rc.py 中的资源。
 """
 
+import re
+
 from PySide6.QtCore import QFile, QIODevice, QTranslator, QLocale
+from PySide6.QtGui import QColor, QPalette
 from PySide6.QtWidgets import QApplication
+
+# 用于从 QSS 中提取 QLabel#aboutGithub 的 color 值的正则
+# 匹配形如 QLabel#aboutGithub { ... color: #RRGGBB; ... }
+_RE_LINK_COLOR = re.compile(
+    r"QLabel#aboutGithub\s*\{[^}]*?\bcolor\s*:\s*(#[0-9A-Fa-f]{6})", re.DOTALL
+)
 
 
 def _loadQss(name: str) -> str:
@@ -24,13 +33,26 @@ def _loadQss(name: str) -> str:
 def applyTheme(app: QApplication, theme: str):
     """合并 base.qss + 主题 qss 并应用到 QApplication
 
+    链接颜色从 QSS 中 QLabel#aboutGithub 的 color 属性提取，
+    通过 QPalette 设置，确保 QLabel 富文本 <a> 标签颜色正确显示。
+
     Args:
         app: QApplication 实例
         theme: 主题名称 ("dark" 或 "light")
     """
     base = _loadQss("base.qss")
     themeQss = _loadQss(f"{theme}.qss")
-    app.setStyleSheet(base + "\n\n" + themeQss)
+    combined = base + "\n\n" + themeQss
+    app.setStyleSheet(combined)
+
+    # 从 QSS 中提取链接颜色并设置到 QPalette（QSS 无法直接控制 <a> 标签颜色）
+    palette = app.palette()
+    match = _RE_LINK_COLOR.search(themeQss)
+    if match:
+        linkColor = QColor(match.group(1))
+        palette.setColor(QPalette.ColorRole.Link, linkColor)
+        palette.setColor(QPalette.ColorRole.LinkVisited, linkColor)
+    app.setPalette(palette)
 
 
 def installTranslator(app: QApplication):

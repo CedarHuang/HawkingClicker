@@ -393,6 +393,17 @@ QComboBox#scriptCombo:on {
     border: 1px solid #4078F2;
 }
 
+QComboBox#buttonCombo::down-arrow,
+QComboBox#scriptCombo::down-arrow {
+    image: url(:/icons/arrow-down-light.svg);
+}
+
+/* 展开态箭头翻转为向上 */
+QComboBox#buttonCombo::down-arrow:on,
+QComboBox#scriptCombo::down-arrow:on {
+    image: url(:/icons/arrow-up-light.svg);
+}
+
 QComboBox QAbstractItemView {
     background-color: #FFFFFF;
     color: #383A42;
@@ -433,10 +444,10 @@ QSpinBox::down-button:hover {
 }
 
 QSpinBox::up-arrow {
-    border-bottom: 5px solid #696C77;
+    image: url(:/icons/arrow-up-light.svg);
 }
 QSpinBox::down-arrow {
-    border-top: 5px solid #696C77;
+    image: url(:/icons/arrow-down-light.svg);
 }
 
 /* 取消按钮 */
@@ -540,11 +551,8 @@ QLabel#aboutCopyright {
     color: #A0A1A7;
 }
 
-QLabel#aboutGithub a {
+QLabel#aboutGithub {
     color: #4078F2;
-}
-QLabel#aboutGithub a:hover {
-    color: #5289F5;
 }
 
 /* ============================================================
