@@ -9,6 +9,7 @@ from PySide6.QtWidgets import QWidget
 from PySide6.QtCore import Signal
 
 from ui.generated.ui_settings_page import Ui_SettingsPage
+from views import polishInputWidgets
 
 
 class SettingsPage(QWidget):
@@ -46,6 +47,9 @@ class SettingsPage(QWidget):
         # ---- 初始化联动状态 ----
         self._applyAdminState()
         self._updateStartupUI(self.ui.chkStartup.isChecked())
+
+        # ---- 修饰输入控件（滚轮过滤 + 弹出圆角修复）----
+        polishInputWidgets(self)
 
     # ---- 公共方法 ----
 
