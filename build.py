@@ -16,6 +16,7 @@
     python build.py tr              # 提取翻译字符串并编译 .qm（自动触发 rcc）
     python build.py tr --extract    # 仅提取/更新 .ts 文件
     python build.py tr --compile    # 仅编译 .ts → .qm（自动触发 rcc）
+    python build.py tr --locations  # 提取时保留源码位置信息（默认不保留）
     python build.py dist            # 打包项目（自动先执行全量构建）
     python build.py clean           # 清空所有构建产物
     python build.py check           # 仅检查哪些文件需要重新构建
@@ -264,8 +265,13 @@ def _qm_path(lang: str) -> Path:
     return _TR_OUTPUT_DIR / f"{_TR_PREFIX}{lang}.qm"
 
 
-def cmd_tr_extract() -> bool:
-    """从源文件中提取可翻译字符串，更新 .ts 文件"""
+def cmd_tr_extract(locations: bool = False) -> bool:
+    """从源文件中提取可翻译字符串，更新 .ts 文件
+
+    Args:
+        locations: 是否在 .ts 文件中保留源码位置信息（默认 False）。
+                   不保留位置信息可避免因代码行号变动导致 .ts 文件频繁变更。
+    """
     lupdate_path = _find_pyside6_tool("lupdate")
     if not lupdate_path:
         print("✗ 未找到 pyside6-lupdate，请确认已安装 PySide6:")
@@ -279,13 +285,17 @@ def cmd_tr_extract() -> bool:
 
     _ensure_dir(_TR_DIR)
 
-    print(f"[翻译] 从 {len(sources)} 个源文件中提取翻译字符串\n")
+    loc_hint = "（保留位置信息）" if locations else "（不含位置信息）"
+    print(f"[翻译] 从 {len(sources)} 个源文件中提取翻译字符串 {loc_hint}\n")
 
     success = True
     for lang in _TR_LANGUAGES:
         ts_file = _ts_path(lang)
         # pyside6-lupdate <源文件...> -ts <输出.ts>
-        cmd = [lupdate_path] + [str(f) for f in sources] + ["-ts", str(ts_file)]
+        cmd = [lupdate_path] + [str(f) for f in sources]
+        if not locations:
+            cmd += ["-locations", "none"]
+        cmd += ["-ts", str(ts_file)]
         print(f"  ▸ 提取: {lang}.ts")
         try:
             subprocess.run(cmd, capture_output=True, text=True, check=True)
@@ -346,7 +356,8 @@ def cmd_tr_compile(force: bool = False) -> bool:
 
 
 def cmd_tr(extract: bool = False, compile_only: bool = False,
-           force: bool = False, auto_rcc: bool = True) -> bool:
+           force: bool = False, auto_rcc: bool = True,
+           locations: bool = False) -> bool:
     """翻译工作流：提取 + 编译
 
     当翻译编译完成后，默认会自动触发 rcc 重新编译，
@@ -358,7 +369,7 @@ def cmd_tr(extract: bool = False, compile_only: bool = False,
     """
     if extract and not compile_only:
         # 仅提取
-        return cmd_tr_extract()
+        return cmd_tr_extract(locations=locations)
     elif compile_only and not extract:
         # 仅编译
         ok = cmd_tr_compile(force=force)
@@ -368,7 +379,7 @@ def cmd_tr(extract: bool = False, compile_only: bool = False,
         return ok
     else:
         # 默认：提取 + 编译
-        ok1 = cmd_tr_extract()
+        ok1 = cmd_tr_extract(locations=locations)
         print()
         ok2 = cmd_tr_compile(force=True)  # 提取后强制重新编译
         if ok2 and auto_rcc:
@@ -605,6 +616,7 @@ description="HawkingHand 项目构建脚本",
   python build.py tr              提取翻译字符串并编译 .qm（自动触发 rcc）
   python build.py tr --extract    仅提取/更新 .ts 文件
   python build.py tr --compile    仅编译 .ts → .qm 文件（自动触发 rcc）
+  python build.py tr --locations  提取时保留源码位置信息（默认不保留）
   python build.py dist            打包项目（自动先执行全量构建）
   python build.py clean           清空所有构建产物
   python build.py check           仅检查，不执行构建
@@ -627,6 +639,8 @@ description="HawkingHand 项目构建脚本",
     tr_group.add_argument("--extract", action="store_true", help="仅提取/更新 .ts 文件")
     tr_group.add_argument("--compile", action="store_true", help="仅编译 .ts → .qm 文件")
     tr_parser.add_argument("--force", action="store_true", help="强制重新编译")
+    tr_parser.add_argument("--locations", action="store_true",
+                           help="提取时保留源码位置信息（默认不保留，避免行号变动导致无意义的 diff）")
 
     # 子命令: dist
     subparsers.add_parser("dist", help="使用 Nuitka 打包项目为可执行文件")
@@ -646,7 +660,8 @@ description="HawkingHand 项目构建脚本",
         if not cmd_ui(force=args.force):
             sys.exit(1)
     elif args.command == "tr":
-        if not cmd_tr(extract=args.extract, compile_only=args.compile, force=args.force):
+        if not cmd_tr(extract=args.extract, compile_only=args.compile,
+                     force=args.force, locations=args.locations):
             sys.exit(1)
     elif args.command == "dist":
         if not cmd_dist():
