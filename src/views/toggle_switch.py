@@ -135,8 +135,9 @@ class ToggleSwitch(QAbstractButton):
 
     def setChecked(self, checked: bool):
         """重写 setChecked，支持无动画的直接设置（如初始化时）"""
-        # 如果信号被阻断，直接跳到目标位置（无动画）
+        # 如果信号被阻断，停止动画并直接跳到目标位置（无动画）
         if self.signalsBlocked():
+            self._animation.stop()
             self._thumbPosition = 1.0 if checked else 0.0
         super().setChecked(checked)
 
