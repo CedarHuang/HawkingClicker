@@ -205,7 +205,7 @@ QLabel#arrowLabel {
 }
 
 /* 按键/脚本名标签 */
-QLabel#buttonLabel {
+QLabel#targetLabel {
     font-size: 13px;
 }
 

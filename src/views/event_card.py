@@ -38,14 +38,14 @@ class EventCard(QFrame):
 
     # ---- 数据填充 ----
 
-    def setEventData(self, eventType: str, hotkey: str, button: str,
+    def setEventData(self, eventType: str, hotkey: str, target: str,
                      scope: str, extra: str = "", enabled: bool = True):
         """填充卡片显示数据
 
         Args:
             eventType: 事件类型 (Click/Press/Multi/Script)
             hotkey: 热键文本 (如 "Ctrl+F1")
-            button: 按键或脚本名
+            target: 按键或脚本名
             scope: 范围摘要
             extra: 额外信息 (如位置、频率等)
             enabled: 是否启用
@@ -60,7 +60,7 @@ class EventCard(QFrame):
 
         # 填充文字
         self.ui.hotkeyLabel.setText(hotkey)
-        self.ui.buttonLabel.setText(button)
+        self.ui.targetLabel.setText(target)
         self.ui.rangeLabel.setText(self.tr("Scope: {scope}").format(scope=scope))
         self.ui.extraInfoLabel.setText(extra)
 

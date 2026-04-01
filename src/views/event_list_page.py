@@ -99,7 +99,7 @@ class EventListPage(QWidget):
 
         self._updateEmptyState()
 
-    def addCard(self, eventType: str, hotkey: str, button: str,
+    def addCard(self, eventType: str, hotkey: str, target: str,
                 scope: str, extra: str = "", enabled: bool = True) -> EventCard:
         """添加一张事件卡片
 
@@ -107,7 +107,7 @@ class EventListPage(QWidget):
             创建的 EventCard 实例
         """
         card = EventCard(self)
-        card.setEventData(eventType, hotkey, button, scope, extra, enabled)
+        card.setEventData(eventType, hotkey, target, scope, extra, enabled)
 
         index = len(self._cards)
         self._cards.append(card)

@@ -63,19 +63,19 @@ class EventController:
         """从 config.events 加载真实数据并刷新事件列表卡片"""
         self._eventListPage.clearCards()
         for event in configEvents:
-            eventType, hotkey, button, scope, extra, enabled = self._eventToCardData(event)
-            self._eventListPage.addCard(eventType, hotkey, button, scope, extra, enabled)
+            eventType, hotkey, target, scope, extra, enabled = self._eventToCardData(event)
+            self._eventListPage.addCard(eventType, hotkey, target, scope, extra, enabled)
 
     @staticmethod
     def _eventToCardData(event: Event) -> tuple:
         """将 Event 对象转换为卡片显示所需的参数元组
 
         Returns:
-            (eventType, hotkey, button, scope, extra, enabled)
+            (eventType, hotkey, target, scope, extra, enabled)
         """
         eventType = event.type or "Click"
         hotkey = event.hotkey or ""
-        button = _displayTarget(event.target or "")
+        target = _displayTarget(event.target or "")
         scope = event.range or "*"
         enabled = event.status
 
@@ -98,7 +98,7 @@ class EventController:
             extraParts.append(f"次数: {clicksText}")
 
         extra = " · ".join(extraParts)
-        return eventType, hotkey, button, scope, extra, enabled
+        return eventType, hotkey, target, scope, extra, enabled
 
     @staticmethod
     def _scanScripts() -> list[str]:

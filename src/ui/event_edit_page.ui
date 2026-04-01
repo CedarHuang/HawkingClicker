@@ -315,7 +315,7 @@
            </layout>
           </item>
           <item>
-           <layout class="QHBoxLayout" name="buttonRow">
+           <layout class="QHBoxLayout" name="targetRow">
             <property name="spacing">
              <number>12</number>
             </property>

@@ -229,7 +229,7 @@ QLabel#arrowLabel {
 }
 
 /* 按键/脚本名 */
-QLabel#buttonLabel {
+QLabel#targetLabel {
     color: #696C77;
 }
 
