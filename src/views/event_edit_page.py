@@ -16,7 +16,7 @@ from PySide6.QtWidgets import (
 from core import common
 from core.input_backend import MOUSE_LEFT, MOUSE_RIGHT
 from ui.generated.ui_event_edit_page import Ui_EventEditPage
-from views import _polishWidget
+from views import _polishWidget, installNoScrollFilter
 
 
 class HotkeyRecorder(QObject):
@@ -207,6 +207,9 @@ class EventEditPage(QWidget):
 
         # ---- 为预设鼠标按钮选项设置内部值（不受翻译影响） ----
         self._initButtonComboData()
+
+        # ---- 禁止未聚焦时滚轮修改数值 ----
+        installNoScrollFilter(self)
 
         # ---- 初始状态：Click 类型 ----
         self._applyType("Click")
