@@ -241,16 +241,13 @@ QLabel#extraInfoLabel {
     color: #5C6370;
 }
 
-/* 启用/禁用开关 */
-QPushButton#btnToggleStatus {
-    background-color: transparent;
-    color: #5C6370;
-}
-QPushButton#btnToggleStatus:hover {
-    background-color: #353B45;
-}
-QPushButton#btnToggleStatus:checked {
-    color: #98C379;
+/* 启用/禁用开关（ToggleSwitch 自绘） */
+ToggleSwitch#btnToggleStatus {
+    qproperty-trackColorOff: #3E4451;
+    qproperty-trackColorOn: #98C379;
+    qproperty-thumbColor: #FFFFFF;
+    qproperty-trackColorOffHover: #4B5263;
+    qproperty-trackColorOnHover: #A9D18A;
 }
 
 /* 更多操作按钮 */
@@ -514,35 +511,15 @@ QLabel#adminLockIcon {
     color: #E5C07B;
 }
 
-/* 复选框（开关样式） */
-QCheckBox#chkEnableTray::indicator,
-QCheckBox#chkStartup::indicator,
-QCheckBox#chkStartupAsAdmin::indicator {
-    background-color: #3E4451;
-}
-
-QCheckBox#chkEnableTray::indicator:checked,
-QCheckBox#chkStartup::indicator:checked,
-QCheckBox#chkStartupAsAdmin::indicator:checked {
-    background-color: #61AFEF;
-}
-
-QCheckBox#chkEnableTray::indicator:hover,
-QCheckBox#chkStartup::indicator:hover,
-QCheckBox#chkStartupAsAdmin::indicator:hover {
-    background-color: #4B5263;
-}
-
-QCheckBox#chkEnableTray::indicator:checked:hover,
-QCheckBox#chkStartup::indicator:checked:hover,
-QCheckBox#chkStartupAsAdmin::indicator:checked:hover {
-    background-color: #74BAF2;
-}
-
-QCheckBox#chkEnableTray::indicator:disabled,
-QCheckBox#chkStartup::indicator:disabled,
-QCheckBox#chkStartupAsAdmin::indicator:disabled {
-    background-color: #353B45;
+/* 设置页开关（ToggleSwitch 自绘） */
+ToggleSwitch#chkEnableTray,
+ToggleSwitch#chkStartup,
+ToggleSwitch#chkStartupAsAdmin {
+    qproperty-trackColorOff: #3E4451;
+    qproperty-trackColorOn: #61AFEF;
+    qproperty-thumbColor: #FFFFFF;
+    qproperty-trackColorOffHover: #4B5263;
+    qproperty-trackColorOnHover: #74BAF2;
 }
 
 /* 快捷操作按钮 */

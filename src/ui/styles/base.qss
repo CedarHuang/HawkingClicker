@@ -219,13 +219,6 @@ QLabel#extraInfoLabel {
     font-size: 11px;
 }
 
-/* 启用/禁用开关按钮 */
-QPushButton#btnToggleStatus {
-    border: none;
-    border-radius: 6px;
-    font-size: 14px;
-}
-
 /* 更多操作按钮 */
 QPushButton#btnMore {
     border: none;
@@ -466,22 +459,6 @@ QLabel#adminDesc {
 /* 锁定图标 */
 QLabel#adminLockIcon {
     font-size: 12px;
-}
-
-/* 复选框（开关样式） */
-QCheckBox#chkEnableTray,
-QCheckBox#chkStartup,
-QCheckBox#chkStartupAsAdmin {
-    spacing: 0px;
-    background-color: transparent;
-}
-
-QCheckBox#chkEnableTray::indicator,
-QCheckBox#chkStartup::indicator,
-QCheckBox#chkStartupAsAdmin::indicator {
-    width: 40px;
-    height: 22px;
-    border-radius: 11px;
 }
 
 /* 快捷操作按钮 */

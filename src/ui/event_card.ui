@@ -170,29 +170,23 @@
     </widget>
    </item>
    <item>
-    <widget class="QPushButton" name="btnToggleStatus">
+    <widget class="ToggleSwitch" name="btnToggleStatus">
      <property name="minimumSize">
       <size>
-       <width>32</width>
-       <height>32</height>
+       <width>40</width>
+       <height>22</height>
       </size>
      </property>
      <property name="maximumSize">
       <size>
-       <width>32</width>
-       <height>32</height>
+       <width>40</width>
+       <height>22</height>
       </size>
-     </property>
-        <property name="text">
-      <string notr="true">⏻</string>
      </property>
      <property name="checkable">
       <bool>true</bool>
      </property>
      <property name="checked">
-      <bool>true</bool>
-     </property>
-     <property name="flat">
       <bool>true</bool>
      </property>
      <property name="toolTip">
@@ -227,6 +221,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>ToggleSwitch</class>
+   <extends>QAbstractButton</extends>
+   <header>views.toggle_switch</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

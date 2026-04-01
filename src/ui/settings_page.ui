@@ -173,9 +173,18 @@
               </spacer>
              </item>
              <item>
-              <widget class="QCheckBox" name="chkEnableTray">
-               <property name="text">
-                <string/>
+              <widget class="ToggleSwitch" name="chkEnableTray">
+               <property name="minimumSize">
+                <size>
+                 <width>40</width>
+                 <height>22</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>40</width>
+                 <height>22</height>
+                </size>
                </property>
               </widget>
              </item>
@@ -232,9 +241,18 @@
               </spacer>
              </item>
              <item>
-              <widget class="QCheckBox" name="chkStartup">
-               <property name="text">
-                <string/>
+              <widget class="ToggleSwitch" name="chkStartup">
+               <property name="minimumSize">
+                <size>
+                 <width>40</width>
+                 <height>22</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>40</width>
+                 <height>22</height>
+                </size>
                </property>
               </widget>
              </item>
@@ -321,9 +339,18 @@
               </spacer>
              </item>
              <item>
-              <widget class="QCheckBox" name="chkStartupAsAdmin">
-               <property name="text">
-                <string/>
+              <widget class="ToggleSwitch" name="chkStartupAsAdmin">
+               <property name="minimumSize">
+                <size>
+                 <width>40</width>
+                 <height>22</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>40</width>
+                 <height>22</height>
+                </size>
                </property>
               </widget>
              </item>
@@ -464,6 +491,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>ToggleSwitch</class>
+   <extends>QAbstractButton</extends>
+   <header>views.toggle_switch</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
