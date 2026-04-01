@@ -5,7 +5,7 @@ from dataclasses import dataclass, field, fields
 class Event:
     type: str = 'Click'
     hotkey: str = ''
-    button: str = 'Left'
+    button: str = 'mouse_left'
     range: str = '*'
     position: list = field(default_factory=lambda: [-1, -1])
     interval: int = None

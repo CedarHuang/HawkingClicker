@@ -14,6 +14,7 @@ from PySide6.QtWidgets import (
 )
 
 from core import common
+from core.input_backend import MOUSE_LEFT, MOUSE_RIGHT
 from ui.generated.ui_event_edit_page import Ui_EventEditPage
 from views import _polishWidget
 
@@ -267,7 +268,7 @@ class EventEditPage(QWidget):
 
         # 填充字段
         self.ui.hotkeyInput.setText(data.get("hotkey", ""))
-        self._setButtonComboValue(data.get("button", "Left"))
+        self._setButtonComboValue(data.get("button", MOUSE_LEFT))
 
         # range 为 "*" 或空时显示为空，让 placeholder 提示用户格式
         rangeVal = data.get("range", "")
@@ -402,7 +403,7 @@ class EventEditPage(QWidget):
         显示文本会被 Qt 翻译系统翻译（如 "左键"/"右键"），
         但 itemData 始终保持英文内部值，供数据层使用。
         """
-        _BUTTON_DATA = ["Left", "Right"]
+        _BUTTON_DATA = [MOUSE_LEFT, MOUSE_RIGHT]
         for i, value in enumerate(_BUTTON_DATA):
             if i < self.ui.buttonCombo.count():
                 self.ui.buttonCombo.setItemData(i, value)
@@ -410,7 +411,7 @@ class EventEditPage(QWidget):
     def _getButtonComboValue(self) -> str:
         """获取 buttonCombo 的内部值（优先取 itemData，回退到 currentText）
 
-        对于预设的鼠标按钮选项，返回不受翻译影响的内部值（如 "Left"）；
+        对于预设的鼠标按钮选项，返回不受翻译影响的内部值（如 "mouse_left"）；
         对于用户手动输入的键盘按键名，返回输入的文本。
         """
         data = self.ui.buttonCombo.currentData()

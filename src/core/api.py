@@ -5,7 +5,7 @@ import threading
 import win32api
 import win32con
 
-from core import button_op
+from core import input_backend
 from core import common
 from core import foreground_listener
 from core import logger
@@ -357,7 +357,7 @@ def _create_context(event):
         Returns:
             tuple[int, int]: 鼠标的坐标 (x, y)。
         """
-        return button_op.position(x, y)
+        return input_backend.position(x, y)
 
     @register()
     @delay
@@ -371,7 +371,7 @@ def _create_context(event):
             y (int, optional): 鼠标点击的Y坐标。仅当 'button' 为鼠标按钮时有效。
                 默认为 -1（表示当前鼠标Y坐标）。
         """
-        button_op.click(button, x, y)
+        input_backend.click(button, x, y)
 
     @register('press')
     @register()
@@ -386,7 +386,7 @@ def _create_context(event):
             y (int, optional): 鼠标按下的Y坐标。仅当 'button' 为鼠标按钮时有效。
                 默认为 -1（表示当前鼠标Y坐标）。
         """
-        button_op.down(button, x, y)
+        input_backend.down(button, x, y)
 
     @register('release')
     @register()
@@ -403,7 +403,7 @@ def _create_context(event):
             y (int, optional): 鼠标释放的Y坐标。仅当 'button' 为鼠标按钮时有效。
                 默认为 -1（表示当前鼠标Y坐标）。
         """
-        button_op.up(button, x, y)
+        input_backend.up(button, x, y)
 
     @register()
     @delay

@@ -3,7 +3,7 @@ import keyboard
 import sys
 import threading
 
-from core import button_op
+from core import input_backend
 from core import config
 from core import foreground_listener
 from core.callbacks import callbacks, CallbackEvent
@@ -157,13 +157,13 @@ def check_range(event):
     return passed
 
 def get_mouse_position(event):
-    return button_op.position(*event.position)
+    return input_backend.position(*event.position)
 
 def button_click(event):
-    return button_op.click(event.button, *event.position)
+    return input_backend.click(event.button, *event.position)
 
 def button_down(event):
-    return button_op.down(event.button, *event.position)
+    return input_backend.down(event.button, *event.position)
 
 def button_up(event):
-    return button_op.up(event.button, *event.position)
+    return input_backend.up(event.button, *event.position)

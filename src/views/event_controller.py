@@ -12,10 +12,21 @@ import os
 from PySide6.QtWidgets import QStackedWidget, QPushButton
 
 from core import common
+from core.input_backend import MOUSE_LEFT, MOUSE_RIGHT
 from core.config import events as configEvents
 from core.models import Event
 from views.event_edit_page import EventEditPage
 from views.event_list_page import EventListPage
+
+# 鼠标按钮内部值 → 显示名称映射
+_MOUSE_BUTTON_DISPLAY = {
+    MOUSE_LEFT: 'Left',
+    MOUSE_RIGHT: 'Right',
+}
+
+def _displayButton(button: str) -> str:
+    """将内部按钮值转换为用户友好的显示名称"""
+    return _MOUSE_BUTTON_DISPLAY.get(button, button)
 
 
 class EventController:
@@ -64,7 +75,7 @@ class EventController:
         """
         eventType = event.type or "Click"
         hotkey = event.hotkey or ""
-        button = event.button or ""
+        button = _displayButton(event.button or "")
         scope = event.range or "*"
         enabled = event.isEnabled
 
@@ -131,7 +142,7 @@ class EventController:
         formData = {
             "type": event.type or "Click",
             "hotkey": event.hotkey or "",
-            "button": event.button or "Left",
+            "button": event.button or MOUSE_LEFT,
             "range": event.range or "*",
             "posX": event.posX,
             "posY": event.posY,
@@ -173,11 +184,11 @@ class EventController:
             event.interval = None
             event.clicks = None
         elif event.type == "Multi":
-            event.button = data.get("button", "Left")
+            event.button = data.get("button", MOUSE_LEFT)
             event.interval = data.get("interval", 100)
             event.clicks = data.get("clicks", -1)
         else:
-            event.button = data.get("button", "Left")
+            event.button = data.get("button", MOUSE_LEFT)
             event.interval = None
             event.clicks = None
 
