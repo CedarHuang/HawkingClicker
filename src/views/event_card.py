@@ -111,6 +111,8 @@ class EventCard(QFrame):
     def _showContextMenuAt(self, globalPos):
         """在指定全局坐标显示上下文菜单"""
         menu = QMenu(self)
+        # 移除 Qt 自动添加的 QGraphicsDropShadowEffect（偏移右下，导致圆角右下角露黑边）
+        menu.aboutToShow.connect(lambda: menu.setGraphicsEffect(None))
 
         actionEdit = menu.addAction(self.tr("✏️  Edit"))
         actionCopy = menu.addAction(self.tr("📋  Copy"))
