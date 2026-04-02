@@ -320,22 +320,22 @@ QFrame#typeSegmentFrame > QPushButton:hover {
 }
 
 /* 类型分段按钮 — 选中 */
-QPushButton#typeBtnClick:checked {
+QFrame#typeSegmentFrame > QPushButton#typeBtnClick:checked {
     background-color: #2C313A;
     color: #98C379;
     font-weight: bold;
 }
-QPushButton#typeBtnPress:checked {
+QFrame#typeSegmentFrame > QPushButton#typeBtnPress:checked {
     background-color: #2C313A;
     color: #61AFEF;
     font-weight: bold;
 }
-QPushButton#typeBtnMulti:checked {
+QFrame#typeSegmentFrame > QPushButton#typeBtnMulti:checked {
     background-color: #2C313A;
     color: #E5C07B;
     font-weight: bold;
 }
-QPushButton#typeBtnScript:checked {
+QFrame#typeSegmentFrame > QPushButton#typeBtnScript:checked {
     background-color: #2C313A;
     color: #C678DD;
     font-weight: bold;
