@@ -7,57 +7,68 @@
 
 import os
 
-from PySide6.QtCore import Signal, Qt, QEvent, QObject, QCoreApplication
-from PySide6.QtGui import QKeyEvent
+import keyboard
+from PySide6.QtCore import Signal, QEvent, QObject, QCoreApplication
 from PySide6.QtWidgets import (
     QWidget, QButtonGroup, QMessageBox,
 )
 
 from core import common
+from core import event_listener
 from core.input_backend import MOUSE_LEFT, MOUSE_RIGHT
 from ui.generated.ui_event_edit_page import Ui_EventEditPage
 from views import _polishWidget, polishInputWidgets
 
 
-class HotkeyRecorder(QObject):
-    """热键录入辅助类，捕获组合键并显示文本"""
+def prettifyHotkey(hotkey: str) -> str:
+    """将热键字符串规范化并美化为用户友好的展示格式。
 
-    # 修饰键映射
-    _MODIFIER_MAP = {
-        Qt.Key_Control: "Ctrl",
-        Qt.Key_Shift: "Shift",
-        Qt.Key_Alt: "Alt",
-        Qt.Key_Meta: "Win",
-    }
+    内部调用 keyboard.get_hotkey_name() 完成排序与去重（去除 left/right 前缀、
+    修饰键按 Ctrl→Alt→Shift→Win 排列），再将每个键名首字母大写，
+    转为常见展示风格（如 'Ctrl+Shift+A'）。
+    美化后的字符串仍可直接传给 keyboard.add_hotkey()，因为该库大小写不敏感。
+    """
+    if not hotkey:
+        return hotkey
+    normalized = keyboard.get_hotkey_name(hotkey.split("+"))
+    return "+".join(part.strip().capitalize() for part in normalized.split("+"))
+
+
+class HotkeyRecorder(QObject):
+    """热键录入辅助类，使用 keyboard 库捕获组合键并显示文本
+
+    使用 keyboard 库进行录制，确保录制出的键名与 keyboard.add_hotkey() 一致。
+    录制结果经过 prettifyHotkey() 规范化并美化：
+    - 去除 left/right 前缀
+    - 修饰键按固定顺序排列（Ctrl → Alt → Shift → Windows）
+    - 每个键名首字母大写
+    """
 
     def __init__(self, lineEdit):
         super().__init__(lineEdit)
         self._lineEdit = lineEdit
         self._recording = False
-        self._modifiers = []
-        self._key = None
+        self._currentKeys = set()
 
-        # 安装事件过滤器
+        # 设为只读，防止用户直接输入
+        lineEdit.setReadOnly(True)
+        # 安装事件过滤器，拦截鼠标点击和焦点事件
         lineEdit.installEventFilter(self)
 
     def eventFilter(self, obj, event):
-        """拦截热键输入框的键盘事件"""
+        """拦截输入框事件"""
         if obj is not self._lineEdit:
             return False
 
-        if event.type() == QEvent.Type.FocusIn:
+        # 点击输入框时开始录制
+        if event.type() == QEvent.Type.MouseButtonPress and not self._recording:
             self._startRecording()
-            return False
-
-        if event.type() == QEvent.Type.FocusOut:
-            self._stopRecording()
-            return False
-
-        if event.type() == QEvent.Type.KeyPress and self._recording:
-            self._handleKeyPress(event)
             return True
 
-        if event.type() == QEvent.Type.KeyRelease and self._recording:
+        # 录制中拦截所有键盘事件，交由 keyboard 库处理
+        if self._recording and event.type() in (
+            QEvent.Type.KeyPress, QEvent.Type.KeyRelease
+        ):
             return True
 
         return False
@@ -65,91 +76,51 @@ class HotkeyRecorder(QObject):
     def _startRecording(self):
         """开始录入状态"""
         self._recording = True
-        self._lineEdit.setPlaceholderText(QCoreApplication.translate("EventEditPage", "Press a key combination..."))
+        self._currentKeys = set()
+        self._lineEdit.setText("...")
+        self._lineEdit.setPlaceholderText(
+            QCoreApplication.translate("EventEditPage", "Press a key combination...")
+        )
         self._lineEdit.setProperty("recording", True)
         _polishWidget(self._lineEdit)
+
+        # 停止事件监听器，避免录制时触发已有热键
+        event_listener.stop()
+
+        # 使用 keyboard 库进行录制
+        keyboard.hook(self._onKeyboardEvent)
 
     def _stopRecording(self):
         """停止录入状态"""
         self._recording = False
-        self._lineEdit.setPlaceholderText(QCoreApplication.translate("EventEditPage", "Click here, then press a key combination..."))
+        keyboard.unhook_all()
+
+        # 美化最终结果
+        currentText = self._lineEdit.text()
+        if currentText and currentText != "...":
+            self._lineEdit.setText(prettifyHotkey(currentText))
+
+        self._lineEdit.setPlaceholderText(
+            QCoreApplication.translate("EventEditPage", "Click here, then press a key combination...")
+        )
         self._lineEdit.setProperty("recording", False)
         _polishWidget(self._lineEdit)
 
-    def _handleKeyPress(self, event: QKeyEvent):
-        """处理按键事件，组合修饰键+普通键"""
-        key = event.key()
+        # 恢复事件监听器
+        event_listener.start()
 
-        # 如果是修饰键，暂不处理
-        if key in self._MODIFIER_MAP:
-            return
-
-        # Escape 取消录入
-        if key == Qt.Key_Escape:
-            self._lineEdit.clearFocus()
-            return
-
-        # 构建组合键文本
-        parts = []
-        modifiers = event.modifiers()
-        if modifiers & Qt.ControlModifier:
-            parts.append("Ctrl")
-        if modifiers & Qt.ShiftModifier:
-            parts.append("Shift")
-        if modifiers & Qt.AltModifier:
-            parts.append("Alt")
-
-        # 获取按键名称
-        keyText = QKeyEvent.keyValueToText(key) if hasattr(QKeyEvent, 'keyValueToText') else ""
-        if not keyText:
-            from PySide6.QtCore import QKeyCombination
-            seq = QKeyCombination(Qt.KeyboardModifier(0), Qt.Key(key))
-            keyText = seq.toCombined().name if hasattr(seq, 'name') else str(key)
-
-        # 使用 Qt 内置的键名映射
-        keyName = _keyToString(key)
-        if keyName:
-            parts.append(keyName)
-
-        if parts:
-            self._lineEdit.setText("+".join(parts))
-
-        self._lineEdit.clearFocus()
-
-
-def _keyToString(key: int) -> str:
-    """将 Qt Key 枚举转换为可读字符串"""
-    # 常用功能键
-    _KEY_NAMES = {
-        Qt.Key_F1: "F1", Qt.Key_F2: "F2", Qt.Key_F3: "F3", Qt.Key_F4: "F4",
-        Qt.Key_F5: "F5", Qt.Key_F6: "F6", Qt.Key_F7: "F7", Qt.Key_F8: "F8",
-        Qt.Key_F9: "F9", Qt.Key_F10: "F10", Qt.Key_F11: "F11", Qt.Key_F12: "F12",
-        Qt.Key_Space: "Space", Qt.Key_Return: "Enter", Qt.Key_Enter: "Enter",
-        Qt.Key_Tab: "Tab", Qt.Key_Backspace: "Backspace", Qt.Key_Delete: "Delete",
-        Qt.Key_Insert: "Insert", Qt.Key_Home: "Home", Qt.Key_End: "End",
-        Qt.Key_PageUp: "PageUp", Qt.Key_PageDown: "PageDown",
-        Qt.Key_Up: "Up", Qt.Key_Down: "Down", Qt.Key_Left: "Left", Qt.Key_Right: "Right",
-        Qt.Key_CapsLock: "CapsLock", Qt.Key_NumLock: "NumLock",
-        Qt.Key_ScrollLock: "ScrollLock", Qt.Key_Pause: "Pause",
-        Qt.Key_Print: "PrintScreen",
-    }
-
-    if key in _KEY_NAMES:
-        return _KEY_NAMES[key]
-
-    # 字母键 A-Z
-    if Qt.Key_A <= key <= Qt.Key_Z:
-        return chr(key)
-
-    # 数字键 0-9
-    if Qt.Key_0 <= key <= Qt.Key_9:
-        return chr(key)
-
-    # 小键盘数字
-    if Qt.Key_0 <= key - 0x01000000 + ord('0') <= Qt.Key_9:
-        pass  # 不常用，跳过
-
-    return ""
+    def _onKeyboardEvent(self, event):
+        """keyboard 库的按键回调"""
+        if event.event_type == keyboard.KEY_DOWN:
+            self._currentKeys.add(event.name)
+            # 实时显示时也进行美化排序
+            self._lineEdit.setText(
+                prettifyHotkey("+".join(self._currentKeys))
+            )
+        elif event.event_type == keyboard.KEY_UP:
+            self._currentKeys.discard(event.name)
+            if len(self._currentKeys) == 0:
+                self._stopRecording()
 
 
 class EventEditPage(QWidget):
