@@ -12,6 +12,7 @@
 
 import sys
 
+from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QApplication
 
 from __version__ import __version__
@@ -26,6 +27,7 @@ from views.main_window import MainWindow
 
 def main():
     app = QApplication(sys.argv)
+    app.setEffectEnabled(Qt.UIEffect.UI_AnimateCombo, False)
 
     # 单实例检查：若已有实例运行则唤醒并退出
     if not single_instance.check():
