@@ -95,6 +95,7 @@ class Settings:
     startup: bool = False
     startup_as_admin: bool = False
     theme: str = 'system'
+    language: str = 'system'
 
     @classmethod
     def from_dict(cls, data: dict) -> 'Settings':

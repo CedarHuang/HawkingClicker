@@ -34,7 +34,7 @@ def main():
         sys.exit(0)
 
     # 加载翻译
-    _translator = installTranslator(app)
+    _translator = installTranslator(app, configSettings.language)
 
     # 根据配置应用主题
     applyTheme(app, resolveTheme(configSettings.theme))

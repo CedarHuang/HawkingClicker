@@ -15,6 +15,18 @@ from views.appearance import applyTheme, resolveTheme
 from views.settings_page import SettingsPage
 
 
+# 需要重启才能生效的提示消息框
+def _showRestartHint(parent):
+    """显示需要重启的提示"""
+    from PySide6.QtWidgets import QMessageBox
+    QMessageBox.information(
+        parent,
+        QApplication.translate("SettingsController", "Restart required"),
+        QApplication.translate("SettingsController",
+                               "Language change will take effect after restart."),
+    )
+
+
 class SettingsController:
     """设置业务控制器
 
@@ -27,6 +39,7 @@ class SettingsController:
 
         # 连接信号
         self._settingsPage.themeChanged.connect(self.onThemeChanged)
+        self._settingsPage.languageChanged.connect(self._onLanguageChanged)
         self._settingsPage.trayToggled.connect(self.onTrayToggled)
         self._settingsPage.startupToggled.connect(self.onStartupToggled)
         self._settingsPage.adminToggled.connect(self.onAdminToggled)
@@ -41,6 +54,7 @@ class SettingsController:
             startup=configSettings.startup,
             admin=configSettings.startup_as_admin,
             theme=configSettings.theme,
+            language=configSettings.language,
         )
 
     @staticmethod
@@ -51,6 +65,12 @@ class SettingsController:
         app = QApplication.instance()
         if app:
             applyTheme(app, resolveTheme(theme))
+
+    def _onLanguageChanged(self, language: str):
+        """语言切换 → 保存到配置并提示重启"""
+        configSettings.language = language
+        configSettings.save()
+        _showRestartHint(self._settingsPage)
 
     @staticmethod
     def onTrayToggled(checked: bool):

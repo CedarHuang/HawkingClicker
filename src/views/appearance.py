@@ -91,16 +91,18 @@ def applyTheme(app: QApplication, theme: str):
     app.setPalette(palette)
 
 
-def installTranslator(app: QApplication):
+def installTranslator(app: QApplication, language: str = "system"):
     """从 Qt 资源系统加载并安装翻译文件
 
     Args:
         app: QApplication 实例
+        language: 语言设置 ("system"、"zh_CN"、"en_US")
 
     Returns:
         QTranslator: 翻译器实例（需保持引用以防被回收）
     """
     translator = QTranslator()
-    if translator.load(QLocale(), "hawkinghand", "_", ":/translations", ".qm"):
+    locale = QLocale() if language == "system" else QLocale(language)
+    if translator.load(locale, "hawkinghand", "_", ":/translations", ".qm"):
         app.installTranslator(translator)
     return translator

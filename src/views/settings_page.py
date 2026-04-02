@@ -17,6 +17,7 @@ class SettingsPage(QWidget):
 
     # 信号定义
     themeChanged = Signal(str)            # 主题切换（配置值: system/light/dark）
+    languageChanged = Signal(str)         # 语言切换（配置值: system/zh_CN/en_US）
     trayToggled = Signal(bool)            # 系统托盘开关切换
     startupToggled = Signal(bool)         # 开机自启开关切换
     adminToggled = Signal(bool)           # 管理员启动开关切换
@@ -36,8 +37,14 @@ class SettingsPage(QWidget):
         self.ui.themeCombo.addItem(self.tr("Light"), "light")
         self.ui.themeCombo.addItem(self.tr("Dark"), "dark")
 
+        # ---- 初始化语言下拉框 ----
+        self.ui.languageCombo.addItem(self.tr("Follow system"), "system")
+        self.ui.languageCombo.addItem("简体中文", "zh_CN")
+        self.ui.languageCombo.addItem("English", "en_US")
+
         # ---- 连接信号 ----
         self.ui.themeCombo.currentIndexChanged.connect(self._onThemeChanged)
+        self.ui.languageCombo.currentIndexChanged.connect(self._onLanguageChanged)
         self.ui.chkEnableTray.toggled.connect(self._onTrayToggled)
         self.ui.chkStartup.toggled.connect(self._onStartupToggled)
         self.ui.chkStartupAsAdmin.toggled.connect(self._onAdminToggled)
@@ -71,7 +78,8 @@ class SettingsPage(QWidget):
         """
         self.ui.aboutAppName.setText(f"HawkingHand  {version}")
 
-    def setSettings(self, tray: bool, startup: bool, admin: bool, theme: str = "system"):
+    def setSettings(self, tray: bool, startup: bool, admin: bool,
+                    theme: str = "system", language: str = "system"):
         """批量设置开关状态（阻断信号避免触发回调）
 
         Args:
@@ -79,8 +87,10 @@ class SettingsPage(QWidget):
             startup: 开机自启开关
             admin: 管理员启动开关
             theme: 主题设置 (system/light/dark)
+            language: 语言设置 (system/zh_CN/en_US)
         """
         self.ui.themeCombo.blockSignals(True)
+        self.ui.languageCombo.blockSignals(True)
         self.ui.chkEnableTray.blockSignals(True)
         self.ui.chkStartup.blockSignals(True)
         self.ui.chkStartupAsAdmin.blockSignals(True)
@@ -90,11 +100,17 @@ class SettingsPage(QWidget):
         if themeIndex >= 0:
             self.ui.themeCombo.setCurrentIndex(themeIndex)
 
+        # 设置语言下拉框
+        langIndex = self.ui.languageCombo.findData(language)
+        if langIndex >= 0:
+            self.ui.languageCombo.setCurrentIndex(langIndex)
+
         self.ui.chkEnableTray.setChecked(tray)
         self.ui.chkStartup.setChecked(startup)
         self.ui.chkStartupAsAdmin.setChecked(admin)
 
         self.ui.themeCombo.blockSignals(False)
+        self.ui.languageCombo.blockSignals(False)
         self.ui.chkEnableTray.blockSignals(False)
         self.ui.chkStartup.blockSignals(False)
         self.ui.chkStartupAsAdmin.blockSignals(False)
@@ -109,6 +125,12 @@ class SettingsPage(QWidget):
         value = self.ui.themeCombo.itemData(index)
         if value:
             self.themeChanged.emit(value)
+
+    def _onLanguageChanged(self, index: int):
+        """语言下拉框切换"""
+        value = self.ui.languageCombo.itemData(index)
+        if value:
+            self.languageChanged.emit(value)
 
     def _onTrayToggled(self, checked: bool):
         """系统托盘开关切换"""

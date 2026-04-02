@@ -200,6 +200,17 @@ This action cannot be undone.</source>
     </message>
 </context>
 <context>
+    <name>SettingsController</name>
+    <message>
+        <source>Restart required</source>
+        <translation>需要重启</translation>
+    </message>
+    <message>
+        <source>Language change will take effect after restart.</source>
+        <translation>语言更改将在重启后生效。</translation>
+    </message>
+</context>
+<context>
     <name>SettingsPage</name>
     <message>
         <source>Requires running as administrator</source>
@@ -212,6 +223,14 @@ This action cannot be undone.</source>
     <message>
         <source>General</source>
         <translation>通用</translation>
+    </message>
+    <message>
+        <source>Language</source>
+        <translation>语言</translation>
+    </message>
+    <message>
+        <source>Choose the display language (restart required)</source>
+        <translation>选择界面显示语言（需要重启）</translation>
     </message>
     <message>
         <source>Enable system tray</source>

@@ -199,6 +199,17 @@ This action cannot be undone.</source>
     </message>
 </context>
 <context>
+    <name>SettingsController</name>
+    <message>
+        <source>Restart required</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Language change will take effect after restart.</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
     <name>SettingsPage</name>
     <message>
         <source>Follow system</source>
@@ -230,6 +241,14 @@ This action cannot be undone.</source>
     </message>
     <message>
         <source>Choose the application color theme</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Language</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Choose the display language (restart required)</source>
         <translation></translation>
     </message>
     <message>
