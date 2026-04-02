@@ -100,6 +100,9 @@
        </property>
        <item>
         <widget class="QFrame" name="generalGroup">
+         <property name="role" stdset="0">
+          <string notr="true">formGroup</string>
+         </property>
          <layout class="QVBoxLayout" name="generalGroupLayout">
           <property name="spacing">
            <number>0</number>
@@ -120,6 +123,9 @@
            <widget class="QLabel" name="generalGroupTitle">
             <property name="text">
              <string>General</string>
+            </property>
+            <property name="role" stdset="0">
+             <string notr="true">groupTitle</string>
             </property>
            </widget>
           </item>
@@ -148,12 +154,18 @@
                  <property name="text">
                  <string>Theme</string>
                  </property>
+                 <property name="role" stdset="0">
+                  <string notr="true">title</string>
+                 </property>
                 </widget>
                </item>
                <item>
                 <widget class="QLabel" name="themeDesc">
                  <property name="text">
                  <string>Choose the application color theme</string>
+                 </property>
+                 <property name="role" stdset="0">
+                  <string notr="true">desc</string>
                  </property>
                 </widget>
                </item>
@@ -216,12 +228,18 @@
                  <property name="text">
                  <string>Language</string>
                  </property>
+                 <property name="role" stdset="0">
+                  <string notr="true">title</string>
+                 </property>
                 </widget>
                </item>
                <item>
                 <widget class="QLabel" name="languageDesc">
                  <property name="text">
                  <string>Choose the display language (restart required)</string>
+                 </property>
+                 <property name="role" stdset="0">
+                  <string notr="true">desc</string>
                  </property>
                 </widget>
                </item>
@@ -284,12 +302,18 @@
                  <property name="text">
                  <string>Enable system tray</string>
                  </property>
+                 <property name="role" stdset="0">
+                  <string notr="true">title</string>
+                 </property>
                 </widget>
                </item>
                <item>
                 <widget class="QLabel" name="trayDesc">
                  <property name="text">
                  <string>Minimize to tray when closing window</string>
+                 </property>
+                 <property name="role" stdset="0">
+                  <string notr="true">desc</string>
                  </property>
                 </widget>
                </item>
@@ -352,12 +376,18 @@
                  <property name="text">
                  <string>Launch at startup</string>
                  </property>
+                 <property name="role" stdset="0">
+                  <string notr="true">title</string>
+                 </property>
                 </widget>
                </item>
                <item>
                 <widget class="QLabel" name="startupDesc">
                  <property name="text">
                  <string>Automatically start when logging into Windows</string>
+                 </property>
+                 <property name="role" stdset="0">
+                  <string notr="true">desc</string>
                  </property>
                 </widget>
                </item>
@@ -425,6 +455,9 @@
                    <property name="text">
                     <string>Run as administrator</string>
                    </property>
+                   <property name="role" stdset="0">
+                    <string notr="true">title</string>
+                   </property>
                   </widget>
                  </item>
                  <item>
@@ -456,6 +489,9 @@
                 <widget class="QLabel" name="adminDesc">
                  <property name="text">
                  <string>Administrator privileges required to control admin windows</string>
+                 </property>
+                 <property name="role" stdset="0">
+                  <string notr="true">desc</string>
                  </property>
                 </widget>
                </item>
@@ -498,6 +534,9 @@
        </item>
        <item>
         <widget class="QFrame" name="shortcutsGroup">
+         <property name="role" stdset="0">
+          <string notr="true">formGroup</string>
+         </property>
          <layout class="QVBoxLayout" name="shortcutsGroupLayout">
           <property name="spacing">
            <number>0</number>
@@ -518,6 +557,9 @@
            <widget class="QLabel" name="shortcutsGroupTitle">
             <property name="text">
              <string>Quick Actions</string>
+            </property>
+            <property name="role" stdset="0">
+             <string notr="true">groupTitle</string>
             </property>
            </widget>
           </item>
@@ -558,6 +600,9 @@
        </item>
        <item>
         <widget class="QFrame" name="aboutGroup">
+         <property name="role" stdset="0">
+          <string notr="true">formGroup</string>
+         </property>
          <layout class="QVBoxLayout" name="aboutGroupLayout">
           <property name="spacing">
            <number>6</number>
@@ -578,6 +623,9 @@
            <widget class="QLabel" name="aboutGroupTitle">
             <property name="text">
              <string>About</string>
+            </property>
+            <property name="role" stdset="0">
+             <string notr="true">groupTitle</string>
             </property>
            </widget>
           </item>

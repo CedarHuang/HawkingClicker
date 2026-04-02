@@ -275,30 +275,19 @@ QPushButton#btnBack:hover {
 }
 
 /* 表单分组卡片 */
-QFrame#basicGroup,
-QFrame#conditionGroup,
-QFrame#paramsGroup {
+QFrame[role="formGroup"] {
     background-color: #2C313A;
     border: 1px solid #3E4451;
 }
 
 /* 分组标题 */
-QLabel#basicGroupTitle,
-QLabel#conditionGroupTitle,
-QLabel#paramsGroupTitle {
+QLabel[role="groupTitle"] {
     color: #D7DAE0;
     border-bottom: 1px solid #3E4451;
 }
 
 /* 字段标签 */
-QLabel#typeFieldLabel,
-QLabel#hotkeyFieldLabel,
-QLabel#buttonFieldLabel,
-QLabel#scriptFieldLabel,
-QLabel#scopeFieldLabel,
-QLabel#positionFieldLabel,
-QLabel#intervalFieldLabel,
-QLabel#clicksFieldLabel {
+QLabel[role="fieldLabel"] {
     color: #ABB2BF;
 }
 
@@ -319,19 +308,13 @@ QFrame#typeSegmentFrame {
 }
 
 /* 类型分段按钮 — 默认 */
-QPushButton#typeBtnClick,
-QPushButton#typeBtnPress,
-QPushButton#typeBtnMulti,
-QPushButton#typeBtnScript {
+QFrame#typeSegmentFrame > QPushButton {
     background-color: transparent;
     color: #5C6370;
 }
 
 /* 类型分段按钮 — 悬停 */
-QPushButton#typeBtnClick:hover,
-QPushButton#typeBtnPress:hover,
-QPushButton#typeBtnMulti:hover,
-QPushButton#typeBtnScript:hover {
+QFrame#typeSegmentFrame > QPushButton:hover {
     background-color: #353B45;
     color: #ABB2BF;
 }
@@ -377,33 +360,27 @@ QLineEdit#hotkeyInput:read-only {
 }
 
 /* 下拉选择框 */
-QComboBox#buttonCombo,
-QComboBox#scriptCombo {
+QFrame[role="formGroup"] QComboBox {
     background-color: #1B1D23;
     color: #ABB2BF;
     border: 1px solid #3E4451;
 }
-QComboBox#buttonCombo:hover,
-QComboBox#scriptCombo:hover {
+QFrame[role="formGroup"] QComboBox:hover {
     border: 1px solid #4B5263;
 }
-QComboBox#buttonCombo:focus,
-QComboBox#scriptCombo:focus {
+QFrame[role="formGroup"] QComboBox:focus {
     border: 1px solid #61AFEF;
 }
-QComboBox#buttonCombo:on,
-QComboBox#scriptCombo:on {
+QFrame[role="formGroup"] QComboBox:on {
     border: 1px solid #61AFEF;
 }
 
-QComboBox#buttonCombo::down-arrow,
-QComboBox#scriptCombo::down-arrow {
+QFrame[role="formGroup"] QComboBox::down-arrow {
     image: url(:/icons/arrow-down-dark.svg);
 }
 
 /* 展开态箭头翻转为向上 */
-QComboBox#buttonCombo::down-arrow:on,
-QComboBox#scriptCombo::down-arrow:on {
+QFrame[role="formGroup"] QComboBox::down-arrow:on {
     image: url(:/icons/arrow-up-dark.svg);
 }
 
@@ -416,20 +393,14 @@ QComboBox QAbstractItemView {
 }
 
 /* 数值输入框 */
-QSpinBox#positionX,
-QSpinBox#positionY,
-QSpinBox#intervalInput,
-QSpinBox#clicksInput {
+QFrame#paramsGroup QSpinBox {
     background-color: #1B1D23;
     color: #ABB2BF;
     border: 1px solid #3E4451;
     selection-background-color: #3E4451;
     selection-color: #D7DAE0;
 }
-QSpinBox#positionX:focus,
-QSpinBox#positionY:focus,
-QSpinBox#intervalInput:focus,
-QSpinBox#clicksInput:focus {
+QFrame#paramsGroup QSpinBox:focus {
     border: 1px solid #61AFEF;
 }
 
@@ -487,37 +458,15 @@ QPushButton#btnSave:disabled {
  * 设置页
  * ============================================================ */
 
-/* 设置分组卡片 */
-QFrame#generalGroup,
-QFrame#shortcutsGroup,
-QFrame#aboutGroup {
-    background-color: #2C313A;
-    border: 1px solid #3E4451;
-}
-
-/* 分组标题 */
-QLabel#generalGroupTitle,
-QLabel#shortcutsGroupTitle,
-QLabel#aboutGroupTitle {
-    color: #D7DAE0;
-    border-bottom: 1px solid #3E4451;
-}
+/* 设置页分组卡片和标题已由通用 QFrame[role="formGroup"] 和 QLabel[role="groupTitle"] 覆盖 */
 
 /* 设置项标题 */
-QLabel#themeTitle,
-QLabel#languageTitle,
-QLabel#trayTitle,
-QLabel#startupTitle,
-QLabel#adminTitle {
+QFrame#generalGroup > QFrame QLabel[role="title"] {
     color: #D7DAE0;
 }
 
 /* 设置项描述 */
-QLabel#themeDesc,
-QLabel#languageDesc,
-QLabel#trayDesc,
-QLabel#startupDesc,
-QLabel#adminDesc {
+QFrame#generalGroup > QFrame QLabel[role="desc"] {
     color: #5C6370;
 }
 
@@ -527,9 +476,7 @@ QLabel#adminLockIcon {
 }
 
 /* 设置页开关（ToggleSwitch 自绘） */
-ToggleSwitch#chkEnableTray,
-ToggleSwitch#chkStartup,
-ToggleSwitch#chkStartupAsAdmin {
+QFrame#generalGroup > QFrame > ToggleSwitch {
     qproperty-trackColorOff: #3E4451;
     qproperty-trackColorOn: #61AFEF;
     qproperty-thumbColor: #FFFFFF;
@@ -537,45 +484,9 @@ ToggleSwitch#chkStartupAsAdmin {
     qproperty-trackColorOnHover: #74BAF2;
 }
 
-/* 主题/语言选择下拉框 */
-QComboBox#themeCombo,
-QComboBox#languageCombo {
-    background-color: #1B1D23;
-    color: #ABB2BF;
-    border: 1px solid #3E4451;
-    border-radius: 6px;
-    padding: 4px 10px;
-    font-size: 13px;
+/* 设置项下拉框（覆盙通用规则的差异部分） */
+QFrame#generalGroup > QFrame > QComboBox {
     min-height: 20px;
-}
-QComboBox#themeCombo:hover,
-QComboBox#languageCombo:hover {
-    border: 1px solid #4B5263;
-}
-QComboBox#themeCombo:on,
-QComboBox#languageCombo:on {
-    border: 1px solid #61AFEF;
-}
-QComboBox#themeCombo::drop-down,
-QComboBox#languageCombo::drop-down {
-    subcontrol-origin: padding;
-    subcontrol-position: top right;
-    width: 24px;
-    border: none;
-    border-top-right-radius: 6px;
-    border-bottom-right-radius: 6px;
-}
-QComboBox#themeCombo::down-arrow,
-QComboBox#languageCombo::down-arrow {
-    image: url(:/icons/arrow-down-dark.svg);
-    width: 10px;
-    height: 6px;
-}
-QComboBox#themeCombo::down-arrow:on,
-QComboBox#languageCombo::down-arrow:on {
-    image: url(:/icons/arrow-up-dark.svg);
-    width: 10px;
-    height: 6px;
 }
 
 /* 快捷操作按钮 */

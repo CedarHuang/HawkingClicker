@@ -238,17 +238,13 @@ QPushButton#btnBack {
 }
 
 /* 表单分组卡片 */
-QFrame#basicGroup,
-QFrame#conditionGroup,
-QFrame#paramsGroup {
+QFrame[role="formGroup"] {
     border-radius: 10px;
     border: 1px solid transparent;
 }
 
 /* 分组标题 */
-QLabel#basicGroupTitle,
-QLabel#conditionGroupTitle,
-QLabel#paramsGroupTitle {
+QLabel[role="groupTitle"] {
     font-size: 14px;
     font-weight: bold;
     padding-bottom: 4px;
@@ -256,14 +252,7 @@ QLabel#paramsGroupTitle {
 }
 
 /* 字段标签 */
-QLabel#typeFieldLabel,
-QLabel#hotkeyFieldLabel,
-QLabel#buttonFieldLabel,
-QLabel#scriptFieldLabel,
-QLabel#scopeFieldLabel,
-QLabel#positionFieldLabel,
-QLabel#intervalFieldLabel,
-QLabel#clicksFieldLabel {
+QLabel[role="fieldLabel"] {
     font-size: 13px;
     min-width: 60px;
 }
@@ -288,10 +277,7 @@ QFrame#typeSegmentFrame {
 }
 
 /* 类型分段按钮 */
-QPushButton#typeBtnClick,
-QPushButton#typeBtnPress,
-QPushButton#typeBtnMulti,
-QPushButton#typeBtnScript {
+QFrame#typeSegmentFrame > QPushButton {
     border: none;
     border-radius: 6px;
     font-size: 12px;
@@ -309,16 +295,14 @@ QLineEdit#scopeInput {
 }
 
 /* 下拉选择框 */
-QComboBox#buttonCombo,
-QComboBox#scriptCombo {
+QFrame[role="formGroup"] QComboBox {
     border-radius: 6px;
     padding: 4px 10px;
     font-size: 13px;
     min-height: 24px;
 }
 
-QComboBox#buttonCombo::drop-down,
-QComboBox#scriptCombo::drop-down {
+QFrame[role="formGroup"] QComboBox::drop-down {
     subcontrol-origin: padding;
     subcontrol-position: top right;
     width: 24px;
@@ -327,15 +311,13 @@ QComboBox#scriptCombo::drop-down {
     border-bottom-right-radius: 6px;
 }
 
-QComboBox#buttonCombo::down-arrow,
-QComboBox#scriptCombo::down-arrow {
+QFrame[role="formGroup"] QComboBox::down-arrow {
     width: 10px;
     height: 6px;
 }
 
 /* 展开态箭头翻转为向上 */
-QComboBox#buttonCombo::down-arrow:on,
-QComboBox#scriptCombo::down-arrow:on {
+QFrame[role="formGroup"] QComboBox::down-arrow:on {
     width: 10px;
     height: 6px;
 }
@@ -347,10 +329,7 @@ QComboBox QAbstractItemView {
 }
 
 /* 数值输入框 */
-QSpinBox#positionX,
-QSpinBox#positionY,
-QSpinBox#intervalInput,
-QSpinBox#clicksInput {
+QFrame#paramsGroup QSpinBox {
     border-radius: 6px;
     padding: 4px 8px;
     font-size: 13px;
@@ -416,51 +395,28 @@ QPushButton#btnSave {
  * 设置页 (SettingsPage)
  * ============================================================ */
 
-/* 设置分组卡片 */
-QFrame#generalGroup,
-QFrame#shortcutsGroup,
-QFrame#aboutGroup {
-    border-radius: 10px;
-    border: 1px solid transparent;
-}
-
-/* 分组标题 */
-QLabel#generalGroupTitle,
-QLabel#shortcutsGroupTitle,
-QLabel#aboutGroupTitle {
-    font-size: 14px;
-    font-weight: bold;
-    padding-bottom: 4px;
-    margin-bottom: 4px;
-}
+/* 设置页分组卡片和标题已由通用 QFrame[role="formGroup"] 和 QLabel[role="groupTitle"] 覆盖 */
 
 /* 设置项容器 */
-QFrame#themeSettingItem,
-QFrame#languageSettingItem,
-QFrame#traySettingItem,
-QFrame#startupSettingItem,
-QFrame#adminSettingItem {
+QFrame#generalGroup > QFrame {
     border: none;
     background: transparent;
 }
 
 /* 设置项标题 */
-QLabel#themeTitle,
-QLabel#languageTitle,
-QLabel#trayTitle,
-QLabel#startupTitle,
-QLabel#adminTitle {
+QFrame#generalGroup > QFrame QLabel[role="title"] {
     font-size: 13px;
     font-weight: 500;
 }
 
 /* 设置项描述 */
-QLabel#themeDesc,
-QLabel#languageDesc,
-QLabel#trayDesc,
-QLabel#startupDesc,
-QLabel#adminDesc {
+QFrame#generalGroup > QFrame QLabel[role="desc"] {
     font-size: 11px;
+}
+
+/* 设置项下拉框（覆盖通用规则的差异部分） */
+QFrame#generalGroup > QFrame > QComboBox {
+    min-height: 20px;
 }
 
 /* 锁定图标 */
