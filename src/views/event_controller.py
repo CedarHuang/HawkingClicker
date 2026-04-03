@@ -9,6 +9,7 @@ import copy
 import glob
 import os
 
+from PySide6.QtCore import QCoreApplication
 from PySide6.QtWidgets import QStackedWidget, QPushButton
 
 from core import common
@@ -84,18 +85,21 @@ class EventController:
 
         # 位置信息
         if event.posX != -1 or event.posY != -1:
-            extraParts.append(f"位置: ({event.posX}, {event.posY})")
+            extraParts.append(
+                QCoreApplication.translate("EventController", "Position: ({x}, {y})").format(x=event.posX, y=event.posY))
 
         if not extraParts and eventType in ("Click", "Press"):
-            extraParts.append("位置: 当前")
+            extraParts.append(QCoreApplication.translate("EventController", "Position: Current"))
 
         # Multi 类型的频率和次数
         if eventType == "Multi":
             interval = event.interval if event.interval is not None else 100
             clicks = event.clicks if event.clicks is not None else -1
-            extraParts.append(f"频率: {interval}ms")
+            extraParts.append(
+                QCoreApplication.translate("EventController", "Interval: {interval}ms").format(interval=interval))
             clicksText = "∞" if clicks == -1 else str(clicks)
-            extraParts.append(f"次数: {clicksText}")
+            extraParts.append(
+                QCoreApplication.translate("EventController", "Count: {clicks}").format(clicks=clicksText))
 
         extra = " · ".join(extraParts)
         return eventType, hotkey, target, scope, extra, enabled

@@ -29,6 +29,25 @@
     </message>
 </context>
 <context>
+    <name>EventController</name>
+    <message>
+        <source>Position: ({x}, {y})</source>
+        <translation>位置: ({x}, {y})</translation>
+    </message>
+    <message>
+        <source>Position: Current</source>
+        <translation>位置: 当前</translation>
+    </message>
+    <message>
+        <source>Interval: {interval}ms</source>
+        <translation>频率: {interval}ms</translation>
+    </message>
+    <message>
+        <source>Count: {clicks}</source>
+        <translation>次数: {clicks}</translation>
+    </message>
+</context>
+<context>
     <name>EventEditPage</name>
     <message>
         <source>Press a key combination...</source>
