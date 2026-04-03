@@ -10,7 +10,6 @@ from PySide6.QtWidgets import QApplication
 
 from core import common
 from core.config import settings as configSettings
-from core.utils import is_running_as_admin
 from views.appearance import applyTheme, resolveTheme
 from views.settings_page import SettingsPage
 
@@ -48,7 +47,7 @@ class SettingsController:
 
     def initSettings(self):
         """初始化设置页：检测管理员权限并从配置加载真实设置值"""
-        self._settingsPage.setAdminMode(is_running_as_admin())
+        self._settingsPage.setAdminMode(common.is_running_as_admin())
         self._settingsPage.setSettings(
             tray=configSettings.enable_tray,
             startup=configSettings.startup,

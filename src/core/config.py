@@ -3,7 +3,7 @@ import json
 from core import common
 from core import event_listener
 from core import logger
-from core import utils
+from core import startup
 from core.callbacks import callbacks, CallbackEvent
 from core.models import Event, Settings
 
@@ -82,7 +82,7 @@ class SettingsManager:
             json.dump(self._settings.to_dict(), file, indent=4, ensure_ascii=False)
         callbacks.trigger(CallbackEvent.TRAY_UPDATE)
         if update_startup:
-            utils.update_startup(self._settings.startup, self._settings.startup_as_admin)
+            startup.update_startup(self._settings.startup, self._settings.startup_as_admin)
 
 
 settings = SettingsManager()

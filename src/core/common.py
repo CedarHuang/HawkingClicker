@@ -1,3 +1,4 @@
+import ctypes
 import os
 import sys
 
@@ -11,6 +12,12 @@ settings_config_name = 'settings.json'
 
 def is_frozen():
     return '__compiled__' in globals()
+
+def is_running_as_admin():
+    try:
+        return ctypes.windll.shell32.IsUserAnAdmin()
+    except:
+        return False
 
 def mkdir_if_not_exists(path):
     if not os.path.exists(path):
