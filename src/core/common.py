@@ -1,4 +1,3 @@
-import appdirs
 import os
 import sys
 
@@ -26,7 +25,7 @@ def root_path():
     return os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 
 def config_path():
-    return appdirs.user_config_dir(app_name, app_author, roaming=True)
+    return os.path.join(os.environ['APPDATA'], app_author, app_name)
 
 def scripts_path():
     return os.path.join(config_path(), scripts_name)
