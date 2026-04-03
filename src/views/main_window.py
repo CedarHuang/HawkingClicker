@@ -127,7 +127,6 @@ class MainWindow(QWidget):
 
     def registerCallbacks(self):
         """注册 core 层回调"""
-        callbacks.register(CallbackEvent.LIST_REFRESH, self._eventCtrl.refreshEventList)
         callbacks.register(CallbackEvent.WAKEUP, self._wakeupSignal.emit)
         callbacks.register(CallbackEvent.TRAY_UPDATE, self._trayUpdateSignal.emit)
 

@@ -3,9 +3,6 @@ from enum import Enum, auto
 class CallbackEvent(Enum):
     """回调事件类型枚举"""
 
-    LIST_REFRESH = auto()
-    """列表刷新事件"""
-
     TRAY_UPDATE = auto()
     """托盘更新事件"""
 

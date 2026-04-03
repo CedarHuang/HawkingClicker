@@ -6,7 +6,6 @@ import threading
 from core import input_backend
 from core import config
 from core import foreground_listener
-from core.callbacks import callbacks, CallbackEvent
 from core.scripts import scripts
 
 def start():
@@ -21,8 +20,6 @@ def stop():
     keyboard.unhook_all()
     foreground_listener.clear_event_callback_list()
 
-special_scope = ['CHECK_WINDOW']
-
 def callback_factory(event):
     parse_scope(event)
     match event.type:
@@ -34,8 +31,6 @@ def callback_factory(event):
             return multi_factory(event)
         case 'Script':
             return script_factory(event)
-        case 'CHECK_WINDOW':
-            return check_window(event)
         case _:
             return lambda: None
 
@@ -120,16 +115,7 @@ def script_factory(event):
 
     return callback
 
-def check_window(event):
-    def callback():
-        event.params.position = list(foreground_listener.active_window_info()[:2])
-        callbacks.trigger(CallbackEvent.LIST_REFRESH)
-
-    return callback
-
 def parse_scope(event):
-    if event.scope in special_scope:
-        event.type = event.scope
     _scope = []
     for i in event.scope.split(':', 1):
         i = i.strip()
