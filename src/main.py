@@ -26,12 +26,12 @@ from views.main_window import MainWindow
 
 
 def main():
-    app = QApplication(sys.argv)
-    app.setEffectEnabled(Qt.UIEffect.UI_AnimateCombo, False)
-
     # 单实例检查：若已有实例运行则唤醒并退出
     if not single_instance.check():
         sys.exit(0)
+
+    app = QApplication(sys.argv)
+    app.setEffectEnabled(Qt.UIEffect.UI_AnimateCombo, False)
 
     # 加载翻译
     _translator = installTranslator(app, configSettings.language)
@@ -53,12 +53,14 @@ def main():
     # 初始化系统托盘
     window.initTray()
 
+    # 非静默启动则显示窗口
+    silent = 'silent' in sys.argv
+    if not (silent and configSettings.enable_tray):
+        window.show()
+
     # 启动后台监听
     foreground_listener.start()
     event_listener.start()
-
-    # 显示窗口
-    window.show()
 
     # 进入事件循环
     exitCode = app.exec()
