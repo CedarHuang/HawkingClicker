@@ -1,6 +1,5 @@
 import functools
 import inspect
-import pyautogui
 import sys
 import threading
 import win32api
@@ -416,7 +415,7 @@ def _create_context(event):
             x_offset (int): X轴方向的偏移量。正值向右，负值向左。
             y_offset (int): Y轴方向的偏移量。正值向下，负值向上。
         """
-        pyautogui.move(x_offset, y_offset, _pause=False)
+        input_backend.move(x_offset, y_offset)
 
     @register()
     @delay
@@ -427,7 +426,7 @@ def _create_context(event):
             x (int): 目标X坐标。
             y (int): 目标Y坐标。
         """
-        pyautogui.moveTo(x, y, _pause=False)
+        input_backend.move_to(x, y)
 
     @register()
     def is_caps_lock_on():

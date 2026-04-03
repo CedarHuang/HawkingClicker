@@ -1,57 +1,64 @@
 import keyboard
-import pyautogui
+import win32api
+import win32con
 
 MOUSE_LEFT = 'mouse_left'
 MOUSE_RIGHT = 'mouse_right'
 
-MOUSE_BUTTON = {
-    MOUSE_LEFT: 'left',
-    MOUSE_RIGHT: 'right',
+_MOUSE_FLAGS = {
+    MOUSE_LEFT: (win32con.MOUSEEVENTF_LEFTDOWN, win32con.MOUSEEVENTF_LEFTUP),
+    MOUSE_RIGHT: (win32con.MOUSEEVENTF_RIGHTDOWN, win32con.MOUSEEVENTF_RIGHTUP),
 }
+_DOWN, _UP = 0, 1
+
+MOUSE_BUTTON = tuple(_MOUSE_FLAGS)
 
 _CONST_DOCS = {
-    'MOUSE_LEFT': '鼠标左键的内部标准值。\n\n用于 click()、down()、up() 等函数的 button 参数，表示鼠标左键。',
-    'MOUSE_RIGHT': '鼠标右键的内部标准值。\n\n用于 click()、down()、up() 等函数的 button 参数，表示鼠标右键。',
-    'MOUSE_BUTTON': '鼠标按键映射字典。\n\n将内部标准值映射到底层库使用的按键名称。\n键为 MOUSE_LEFT / MOUSE_RIGHT，值为对应的底层按键名。',
+    'MOUSE_LEFT': '鼠标左键的标准值。\n\n用于 click()、down()、up() 等函数的 button 参数，表示鼠标左键。',
+    'MOUSE_RIGHT': '鼠标右键的标准值。\n\n用于 click()、down()、up() 等函数的 button 参数，表示鼠标右键。',
+    'MOUSE_BUTTON': '所有鼠标按键的集合。\n\n用于快速判断一个值是否为鼠标按键。',
 }
 
 def _resolve_button(button):
     button = button.lower()
-    if button in MOUSE_BUTTON:
-        return True, MOUSE_BUTTON[button]
+    if button in _MOUSE_FLAGS:
+        return True, button
     return False, button
 
 def position(x=-1, y=-1):
-    if x >= 0 and y >= 0:
-        return x, y
-    nx, ny = pyautogui.position()
-    if x < 0:
-        x = nx
-    if y < 0:
-        y = ny
-    return x, y
+    cx, cy = win32api.GetCursorPos()
+    return (x if x >= 0 else cx, y if y >= 0 else cy)
+
+def _mouse_event(button, action, x, y):
+    if x >= 0 or y >= 0:
+        win32api.SetCursorPos(position(x, y))
+    win32api.mouse_event(_MOUSE_FLAGS[button][action], 0, 0, 0, 0)
 
 def click(button, x=-1, y=-1):
     is_mouse, actual = _resolve_button(button)
     if is_mouse:
-        x, y = position(x, y)
-        pyautogui.mouseDown(x, y, button=actual, _pause=False)
-        pyautogui.mouseUp(x, y, button=actual, _pause=False)
+        _mouse_event(actual, _DOWN, x, y)
+        _mouse_event(actual, _UP, x, y)
     else:
         keyboard.press_and_release(actual)
 
 def down(button, x=-1, y=-1):
     is_mouse, actual = _resolve_button(button)
     if is_mouse:
-        x, y = position(x, y)
-        pyautogui.mouseDown(x, y, button=actual, _pause=False)
+        _mouse_event(actual, _DOWN, x, y)
     else:
         keyboard.press(actual)
 
 def up(button, x=-1, y=-1):
     is_mouse, actual = _resolve_button(button)
     if is_mouse:
-        x, y = position(x, y)
-        pyautogui.mouseUp(x, y, button=actual, _pause=False)
+        _mouse_event(actual, _UP, x, y)
     else:
         keyboard.release(actual)
+
+def move(x_offset, y_offset):
+    cx, cy = win32api.GetCursorPos()
+    win32api.SetCursorPos((cx + x_offset, cy + y_offset))
+
+def move_to(x, y):
+    win32api.SetCursorPos((x, y))

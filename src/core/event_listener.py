@@ -43,7 +43,7 @@ def click_factory(event):
     def callback():
         if not check_scope(event):
             return
-        button_click(event)
+        input_backend.click(event.target, *event.position)
 
     return callback
 
@@ -54,10 +54,10 @@ def press_factory(event):
             return
         nonlocal already_down
         if not already_down:
-            button_down(event)
+            input_backend.down(event.target, *event.position)
             already_down = True
         else:
-            button_up(event)
+            input_backend.up(event.target, *event.position)
             already_down = False
 
     return callback
@@ -72,7 +72,7 @@ def multi_factory(event):
         clicks = event.clicks if event.clicks >= 0 else sys.maxsize
         count = 0
         while not stop.is_set():
-            button_click(event)
+            input_backend.click(event.target, *event.position)
             count += 1
             if count >= clicks:
                 break
@@ -156,14 +156,3 @@ def check_scope(event):
 
     return passed
 
-def get_mouse_position(event):
-    return input_backend.position(*event.position)
-
-def button_click(event):
-    return input_backend.click(event.target, *event.position)
-
-def button_down(event):
-    return input_backend.down(event.target, *event.position)
-
-def button_up(event):
-    return input_backend.up(event.target, *event.position)
