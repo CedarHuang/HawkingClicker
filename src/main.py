@@ -1,7 +1,7 @@
 # nuitka-project: --product-name=HawkingHand
 # nuitka-project: --file-description=HawkingHand
 # nuitka-project: --company-name=CedarHuang
-# nuitka-project: --copyright=Copyright (C) 2026 CedarHuang. Licensed under the Apache License 2.0.
+# nuitka-project: --copyright=Copyright (C) 2024-2026 CedarHuang. Licensed under the Apache License 2.0.
 
 # nuitka-project: --enable-plugin=pyside6
 # nuitka-project: --output-dir=dist
