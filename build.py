@@ -467,6 +467,7 @@ def cmd_dist() -> bool:
     # 项目级配置已在 main.py 中通过 # nuitka-project: 注释声明
     # --product-version 由 build.py 动态注入
     cmd = [sys.executable, "-m", "nuitka",
+           "--assume-yes-for-downloads",
            f"--product-version={version}", str(_MAIN_SCRIPT)]
 
     print(f"  ▸ 执行: {' '.join(cmd)}\n")
