@@ -5,52 +5,41 @@ on:
     tags:
       - 'v*.*.*'
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: windows-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.12'
-        architecture: 'x86'
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          architecture: 'x64'
 
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-        pip install pyinstaller
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
 
-    - name: Build with PyInstaller
-      run: |
-        pyinstaller -w --name=HawkingClicker --icon=assets/icon.ico --add-data 'assets:assets' src/main.py
+      - name: Build with Nuitka
+        run: python build.py dist
 
-    - name: Compress build artifacts
-      run: |
-        cd dist
-        7z a HawkingClicker-${{ github.ref_name }}-windows-x86.zip HawkingClicker
+      - name: Compress build artifacts
+        run: |
+          cd dist
+          Rename-Item -Path main.dist -NewName HawkingHand
+          7z a ../HawkingHand-${{ github.ref_name }}-windows-x64.zip HawkingHand
 
-    - name: Create GitHub Release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: ${{ github.ref_name }}
-        release_name: Release ${{ github.ref_name }}
-        draft: false
-        prerelease: false
-
-    - name: Upload Release Asset
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: dist/HawkingClicker-${{ github.ref_name }}-windows-x86.zip
-        asset_name: HawkingClicker-${{ github.ref_name }}-windows-x86.zip
-        asset_content_type: application/zip
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: Release ${{ github.ref_name }}
+          draft: false
+          prerelease: false
+          files: HawkingHand-${{ github.ref_name }}-windows-x64.zip
