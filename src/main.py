@@ -10,6 +10,25 @@
 # nuitka-project: --windows-console-mode=disable
 # nuitka-project: --windows-icon-from-ico=src/resources/icons/icon.ico
 
+# 排除未使用的 Qt 模块
+# nuitka-project: --nofollow-import-to=PySide6.QtNetwork
+# nuitka-project: --nofollow-import-to=PySide6.QtPdf
+
+# 排除未使用的 win32ui（及其依赖 mfc140u.dll）
+# nuitka-project: --nofollow-import-to=win32ui
+
+# 排除未使用的 Qt 插件（PDF、TLS、数据库驱动）
+# nuitka-project: --noinclude-qt-plugins=qpdf
+# nuitka-project: --noinclude-qt-plugins=sqldrivers
+# nuitka-project: --noinclude-qt-plugins=tls
+
+# 排除未使用的大体积 DLL
+# nuitka-project: --noinclude-dlls=libcrypto*
+# nuitka-project: --noinclude-dlls=libssl*
+# nuitka-project: --noinclude-dlls=mfc140u*
+# nuitka-project: --noinclude-dlls=qt6network*
+# nuitka-project: --noinclude-dlls=qt6pdf*
+
 import sys
 
 from PySide6.QtCore import Qt
