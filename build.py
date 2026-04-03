@@ -21,12 +21,18 @@
     python build.py clean           # 清空所有构建产物
     python build.py check           # 仅检查哪些文件需要重新构建
 """
+import io
 import re
 import sys
 import shutil
 import subprocess
 import argparse
 from pathlib import Path
+
+# ---- 修复非 UTF-8 终端（如 CI 环境的 cp1252）下中文输出崩溃 ----
+if sys.stdout.encoding and sys.stdout.encoding.lower().replace("-", "") != "utf8":
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
+    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8", errors="replace")
 
 # ---- 路径常量 ----
 _PROJECT_ROOT = Path(__file__).resolve().parent
