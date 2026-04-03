@@ -1,11 +1,13 @@
 import functools
 import inspect
 import pyautogui
+import sys
 import threading
 import win32api
 import win32con
 
 from core import input_backend
+from core.input_backend import MOUSE_LEFT, MOUSE_RIGHT, MOUSE_BUTTON
 from core import common
 from core import foreground_listener
 from core import logger
@@ -450,17 +452,47 @@ def _generate_builtins():
     '',
     ]
 
-    context = _create_context(None)
-    for name, func in context.items():
+    # 常量文档
+    const_docs = getattr(input_backend, '_CONST_DOCS', {})
+
+    def _append_doc(doc, indent=''):
+        if doc:
+            doc = doc.replace('\n', '\n' + indent)
+            lines.append(f'{indent}"""{doc}')
+            lines.append(f'{indent}"""')
+
+    # 收集所有可用符号
+    this_module = sys.modules[__name__]
+    env = {}
+    for name in dir(this_module):
         if name.startswith('_'):
             continue
 
-        sig = inspect.signature(func)
-        doc = inspect.getdoc(func)
+        member = getattr(this_module, name)
+        if inspect.ismodule(member) or inspect.isfunction(member):
+            continue
+        env[name] = member
+    env.update(_create_context(None))
 
-        lines.append(f'def {name}{sig}:')
-        lines.append(f'    """{doc}\n"""'.replace('\n', '\n    '))
-        lines.append('    ...\n')
+    # 处理符号
+    for name, member in env.items():
+        if name.startswith('_'):
+            continue
+
+        if inspect.isclass(member):
+            bases = ', '.join(b.__name__ for b in member.__bases__)
+            lines.append(f'class {name}({bases}):')
+            _append_doc(inspect.getdoc(member), '    ')
+            lines.append('    ...\n')
+        elif callable(member):
+            sig = inspect.signature(member)
+            lines.append(f'def {name}{sig}:')
+            _append_doc(inspect.getdoc(member), '    ')
+            lines.append('    ...\n')
+        else:
+            lines.append(f'{name}: {type(member).__name__} = {member!r}')
+            _append_doc(const_docs.get(name))
+            lines.append('')
 
     with open(common.builtins_path(), 'w', encoding='utf-8') as f:
         f.write('\n'.join(lines))

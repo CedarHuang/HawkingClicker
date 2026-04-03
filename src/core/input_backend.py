@@ -1,13 +1,18 @@
 import keyboard
 import pyautogui
 
-# 鼠标按键内部标准值
 MOUSE_LEFT = 'mouse_left'
 MOUSE_RIGHT = 'mouse_right'
 
 MOUSE_BUTTON = {
     MOUSE_LEFT: 'left',
     MOUSE_RIGHT: 'right',
+}
+
+_CONST_DOCS = {
+    'MOUSE_LEFT': '鼠标左键的内部标准值。\n\n用于 click()、down()、up() 等函数的 button 参数，表示鼠标左键。',
+    'MOUSE_RIGHT': '鼠标右键的内部标准值。\n\n用于 click()、down()、up() 等函数的 button 参数，表示鼠标右键。',
+    'MOUSE_BUTTON': '鼠标按键映射字典。\n\n将内部标准值映射到底层库使用的按键名称。\n键为 MOUSE_LEFT / MOUSE_RIGHT，值为对应的底层按键名。',
 }
 
 def _resolve_button(button):
