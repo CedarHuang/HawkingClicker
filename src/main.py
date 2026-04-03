@@ -29,6 +29,9 @@
 # nuitka-project: --noinclude-dlls=qt6network*
 # nuitka-project: --noinclude-dlls=qt6pdf*
 
+# 包含 Windows 运行时 DLL，确保用户无需额外安装 VC++ 运行时
+# nuitka-project: --include-windows-runtime-dlls=yes
+
 import sys
 
 from PySide6.QtCore import Qt
